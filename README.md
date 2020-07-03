@@ -1,7 +1,7 @@
 # Covid relief app
 
 ## About
-This app will centralize information and general advice, matching people who can help and those who need that help
+This app will centralize information and general advice, matching people who can help and those who need that help.
 
 ## Setup:
 
