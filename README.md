@@ -9,3 +9,8 @@ Firebase CLI
 ```
 npm install -g firebase-tools
 ```
+
+Run emulator
+```
+npm run serve
+```
