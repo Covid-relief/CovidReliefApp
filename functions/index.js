@@ -23,6 +23,7 @@ exports.app = functions.https.onRequest(app);
 
 // Database calls
 
+// Key here
 var serviceAccount = require("PATH-TO-FILE.json");
 
 admin.initializeApp({
@@ -30,12 +31,12 @@ admin.initializeApp({
   databaseURL: "https://covid-relief-1d6c0.firebaseio.com"
 });
 
-//<-----FIX ERROR: db is not defined------->
 // create
+const db = admin.firestore();
 app.post('/api/create', (req, res) => {
     (async () => {
         try {
-          await db.collection('usuarios').doc('/' + req.body.id + '/')
+          await db.collection('items').doc('/' + req.body.id + '/')
               .create({item: req.body.item});
           return res.status(200).send();
         } catch (error) {
