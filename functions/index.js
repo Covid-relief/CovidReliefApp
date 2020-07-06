@@ -45,3 +45,34 @@ app.post('/api/create', (req, res) => {
         }
       })();
   });
+
+// read 
+app.get('/api/read/:item_id', (req, res) => {
+  (async () => {
+      try {
+          const document = db.collection('usuario').doc(req.params.item_id);
+          let item = await document.get();
+          let response = item.data();
+          return res.status(200).send(response);
+      } catch (error) {
+          console.log(error);
+          return res.status(500).send(error);
+      }
+      })();
+  });
+
+// update
+app.put('/api/update/:item_id', (req, res) => {
+  (async () => {
+      try {
+          const document = db.collection('usuario').doc(req.params.item_id);
+          await document.update({
+              item: req.body.item
+          });
+          return res.status(200).send();
+      } catch (error) {
+          console.log(error);
+          return res.status(500).send(error);
+      }
+      })();
+  });
