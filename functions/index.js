@@ -87,7 +87,7 @@ app.get('/api/read/:email', (req, res) => {
   })();
 });
 
-// update
+// update (usuarios)
 app.put('/api/update/:email', (req, res) => {
   (async () => {
       try {
