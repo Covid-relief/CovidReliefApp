@@ -25,9 +25,9 @@ admin.initializeApp({
   databaseURL: "https://covid-relief-1d6c0.firebaseio.com"
 });
 
-// create
+// create user
 const db = admin.firestore();
-app.post('/api/create', (req, res) => {
+app.post('/api/create-user', (req, res) => {
   (async () => {
     try {
       await db.collection('usuarios').doc('/' + req.body.email + '/')
@@ -38,6 +38,19 @@ app.post('/api/create', (req, res) => {
           creation:req.body.creation, 
           state:req.body.state
         });
+      return res.status(200).send();
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send(error);
+    }
+  })();
+});
+
+// create profile
+// Needs a prior GET from user to obtain creation and state data (to be done in frontend)
+app.post('/api/create-profile', (req, res) => {
+  (async () => {
+    try {
       await db.collection('perfiles').doc('/' + req.body.email + '/')
         .create({
           name:req.body.name, 
