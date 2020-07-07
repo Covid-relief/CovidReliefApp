@@ -100,7 +100,7 @@ app.get('/api/read-profile/:email', (req, res) => {
   })();
 });
 
-// update
+// update 
 app.put('/api/update-user/:email', (req, res) => {
   (async () => {
       try {
