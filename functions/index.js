@@ -8,16 +8,10 @@ const functions = require('firebase-functions');
 // });
 
 const admin = require('firebase-admin');
-
-// Hello world (to check in Postman)
 const express = require('express');
 const cors = require('cors');
 const app = express();
 app.use(cors({ origin: true }));
-
-app.get('/hello-world', (req, res) => {
-  return res.status(200).send('Hello World!');
-});
 
 exports.app = functions.https.onRequest(app);
 
@@ -34,19 +28,36 @@ admin.initializeApp({
 // create
 const db = admin.firestore();
 app.post('/api/create', (req, res) => {
-    (async () => {
-        try {
-          await db.collection('items').doc('/' + req.body.id + '/')
-              .create({item: req.body.item});
-          return res.status(200).send();
-        } catch (error) {
-          console.log(error);
-          return res.status(500).send(error);
-        }
-      })();
-  });
+  (async () => {
+    try {
+      await db.collection('usuarios').doc('/' + req.body.email + '/')
+        .create({
+          username:req.body.username, 
+          password: req.body.password, 
+          origin: req.body.origin, 
+          creation:req.body.creation, 
+          state:req.body.state
+        });
+      await db.collection('perfiles').doc('/' + req.body.email + '/')
+        .create({
+          name:req.body.name, 
+          country: req.body.country, 
+          birthday: req.body.birthday, 
+          gender: req.body.gender, 
+          type:req.body.type, 
+          phone:req.body.phone, 
+          creation:req.body.creation, 
+          state:req.body.state
+        });
+      return res.status(200).send();
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send(error);
+    }
+  })();
+});
 
-// read 
+// read (usuarios)
 app.get('/api/read/:email', (req, res) => {
   (async () => {
       try {
@@ -60,6 +71,21 @@ app.get('/api/read/:email', (req, res) => {
       }
       })();
   });
+
+// read (perfiles)
+app.get('/api/read/:email', (req, res) => {
+  (async () => {
+    try {
+      const document = db.collection('perfiles').doc(req.params.email);
+      let birthday = await document.get();
+      let response = birthday.data();
+      return res.status(200).send(response);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send(error);
+    }
+  })();
+});
 
 // update
 app.put('/api/update/:email', (req, res) => {
@@ -76,3 +102,24 @@ app.put('/api/update/:email', (req, res) => {
       }
       })();
   });
+
+// update (perfiles)
+app.put('/api/update/:email', (req, res) => {
+  (async () => {
+    try {
+      const document = db.collection('perfiles').doc(req.params.email);
+      await document.update({
+        name:req.body.name, 
+        country: req.body.country, 
+        birthday: req.body.birthday, 
+        gender: req.body.gender, 
+        type:req.body.type, 
+        phone:req.body.phone
+        });
+      return res.status(200).send();
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send(error);
+    }
+  })();
+});
