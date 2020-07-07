@@ -58,12 +58,12 @@ app.post('/api/create', (req, res) => {
 });
 
 // read (usuarios)
-app.get('/api/read/:email', (req, res) => {
+app.get('/api/read-user/:email', (req, res) => {
   (async () => {
       try {
           const document = db.collection('usuarios').doc(req.params.email);
-          let username = await document.get();
-          let response = username.data();
+          let userData = await document.get();
+          let response = userData.data();
           return res.status(200).send(response);
       } catch (error) {
           console.log(error);
@@ -73,12 +73,12 @@ app.get('/api/read/:email', (req, res) => {
   });
 
 // read (perfiles)
-app.get('/api/read/:email', (req, res) => {
+app.get('/api/read-profile/:email', (req, res) => {
   (async () => {
     try {
       const document = db.collection('perfiles').doc(req.params.email);
-      let birthday = await document.get();
-      let response = birthday.data();
+      let profileData = await document.get();
+      let response = profileData.data();
       return res.status(200).send(response);
     } catch (error) {
       console.log(error);
@@ -88,7 +88,7 @@ app.get('/api/read/:email', (req, res) => {
 });
 
 // update
-app.put('/api/update/:email', (req, res) => {
+app.put('/api/update-user/:email', (req, res) => {
   (async () => {
       try {
           const document = db.collection('usuarios').doc(req.params.email);
@@ -104,7 +104,7 @@ app.put('/api/update/:email', (req, res) => {
   });
 
 // update (perfiles)
-app.put('/api/update/:email', (req, res) => {
+app.put('/api/update-profile/:email', (req, res) => {
   (async () => {
     try {
       const document = db.collection('perfiles').doc(req.params.email);
