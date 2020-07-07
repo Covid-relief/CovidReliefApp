@@ -47,12 +47,12 @@ app.post('/api/create', (req, res) => {
   });
 
 // read 
-app.get('/api/read/:item_id', (req, res) => {
+app.get('/api/read/:email', (req, res) => {
   (async () => {
       try {
-          const document = db.collection('usuario').doc(req.params.item_id);
-          let item = await document.get();
-          let response = item.data();
+          const document = db.collection('usuarios').doc(req.params.email);
+          let username = await document.get();
+          let response = username.data();
           return res.status(200).send(response);
       } catch (error) {
           console.log(error);
@@ -62,12 +62,12 @@ app.get('/api/read/:item_id', (req, res) => {
   });
 
 // update
-app.put('/api/update/:item_id', (req, res) => {
+app.put('/api/update/:email', (req, res) => {
   (async () => {
       try {
-          const document = db.collection('usuario').doc(req.params.item_id);
+          const document = db.collection('usuarios').doc(req.params.email);
           await document.update({
-              item: req.body.item
+              state: req.body.state
           });
           return res.status(200).send();
       } catch (error) {
