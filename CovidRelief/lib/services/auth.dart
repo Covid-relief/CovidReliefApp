@@ -1,3 +1,4 @@
+import 'package:CovidRelief/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:CovidRelief/models/user.dart';
 
@@ -32,6 +33,21 @@ class AuthService{
 
 
   //metodo para login con email y password
+  Future signInEmailandPassword(String email, String password) async {
+    try{
+      AuthResult result = await _auth.signInWithEmailAndPassword(email: email, password: password);
+      FirebaseUser user  = result.user;
+      return user;
+
+      
+
+
+    } catch(error){
+      print(error.toString());
+      return null;
+
+    }
+  }
 
 
   //metodo para registrarse
@@ -40,6 +56,8 @@ class AuthService{
     try{
       AuthResult result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       FirebaseUser user  = result.user;
+     // creamos un nuevo documento para el usuario con el uid
+      await DatabaseService(uid: user.uid).updateUserData('birthday', 'country', 'creation', 'gender', "name", "phone", "state", "type");
       return _userFromFirebaseUser(user);
 
 
