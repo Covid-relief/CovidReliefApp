@@ -49,7 +49,6 @@ class AuthService{
     }
   }
 
-
   //metodo para registrarse
 
   Future registerEmailandPassword(String email, String password) async {
