@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:CovidRelief/services/auth.dart';
 import 'package:CovidRelief/shared/constants.dart';
-
+import 'package:CovidRelief/screens/home/settings_form.dart';
 
 class Register extends StatefulWidget {
 
@@ -61,6 +61,9 @@ class _RegisterState extends State<Register> {
                   setState(() => password = val);
                 },
               ),
+              // personal data from settings_form.dart
+              SettingsForm(),
+              
               SizedBox(height: 20.0),
               RaisedButton(
                 color: Colors.pink[400],
@@ -77,7 +80,7 @@ class _RegisterState extends State<Register> {
                       });
                     }
                   }
-                }
+                },
               ),
               SizedBox(height: 12.0),
               Text(

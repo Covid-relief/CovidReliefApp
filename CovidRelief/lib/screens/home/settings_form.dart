@@ -13,47 +13,49 @@ class _SettingsFormState extends State<SettingsForm> {
   
 
   final _formKey = GlobalKey<FormState>();
-  final List<String> type = [ 'Busca ayuda' , 'Desea ayudar' ,'Ambos'];//esta es la lista de que va a poder elegir el usuario en forma de dropdown
+  final List<String> type = [ 'Busca ayuda' , 'Desea ayudar' ,'Ambos'];// esta es la lista de que va a poder elegir el usuario en forma de dropdown
   final List<String> genero = [ 'Masculino' , 'Femenino'];
 
-  //valores
+  // valores
   String _currentName; //ya
-  DateTime _currentBirthday;//ya
-  String _currentCountry;//dropbox
-  String _currentCreation;
-  String _currentgender; //dropbox
+  DateTime _currentBirthday; //ya
+  String _currentCountry; // dropbox
+  String _currentCreation; // not displaying in the app
+  String _currentgender; // dropbox
   String _currentPhone;
-  String _currentState;
+  String _currentState; // dropbox ya
   String _currenType; ///ya
   
-
   @override
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
       child: Column(
         children: <Widget>[
+          /*
           Text(
             'Ingresa tus datos',
             style : TextStyle(fontSize: 18.0),
           ),
+          */
 
           // this sizebox helps us to keep distance between elements
           SizedBox(height: 20.0),
 
           // input text for name
           TextFormField(
-            decoration: textInputDecoration.copyWith(hintText: 'Name'),
-            validator: (valname) => valname.isEmpty ? 'Please enter a name' : null,
+            decoration: textInputDecoration.copyWith(hintText: 'Nombres y apellidos'),
+            validator: (valname) => valname.isEmpty ? 'Por favor ingrese su nombre' : null,
             onChanged: (valname) => setState(() => _currentName = valname),
           ),
 
           SizedBox(height: 20.0),
           // Date picker for birthday
+          // Lacks validation when it's null and the display of the date in the button
           FlatButton(
             color: Colors.white,
             // padding is the spacing inside the element
-            padding: EdgeInsets.fromLTRB(15, 15, 125, 15),
+            padding: EdgeInsets.fromLTRB(15, 15, 145, 15),
             child: Text(
               'Fecha de nacimiento',
               style: TextStyle(color: Colors.black45),
@@ -69,7 +71,6 @@ class _SettingsFormState extends State<SettingsForm> {
                 // change variable value (current date in DB) to selected
                 setState((){
                   _currentBirthday = date;
-                  print(_currentBirthday);
                 });
               });
             },
@@ -86,10 +87,11 @@ class _SettingsFormState extends State<SettingsForm> {
 
           SizedBox(height: 20.0),
           
-          //dropdown
-         /* DropdownButtonFormField(
+          // dropdown for type of profile
+          // Lacks validation and display title
+          DropdownButtonFormField(
             decoration: textInputDecoration,
-            value: _currenType ??  '0',
+            // value: _currenType ??  '0',
             items: type.map((types){
               return DropdownMenuItem(
                 value: types,
@@ -97,9 +99,10 @@ class _SettingsFormState extends State<SettingsForm> {
               );
             }).toList(),
             onChanged: (valtypes) => setState(() => _currenType = valtypes),
+          ),
 
-          ),*/
-
+          // Move this button to other file
+          /*
           // Update the DB
           RaisedButton(
             color: Colors.blue[200],
@@ -114,7 +117,7 @@ class _SettingsFormState extends State<SettingsForm> {
               //print(_currenType);
             }
           )
-
+          */
         ],
       )
     );
