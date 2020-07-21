@@ -5,6 +5,7 @@ import 'package:CovidRelief/services/auth.dart';
 import 'package:CovidRelief/services/database.dart';
 import 'package:provider/provider.dart';
 import 'package:CovidRelief/screens/home/user_list.dart';
+import 'package:CovidRelief/screens/home/user_profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
@@ -53,7 +54,8 @@ class Home extends StatelessWidget {
             )
             ],
           ),
-          body: UserList(),
+          // redirect to user profile
+          body: UserList(), // UserProfile(),
         ),
       
     );
