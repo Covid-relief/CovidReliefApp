@@ -1,6 +1,8 @@
 import 'package:CovidRelief/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:CovidRelief/shared/constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 
 class SignIn extends StatefulWidget {
@@ -78,6 +80,16 @@ class _SignInState extends State<SignIn> {
                     }
                   }
                 }
+              ),
+              RaisedButton(
+                  color: Colors.blue[400],
+                  child: Text(
+                    'Sign With Google',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onPressed: () {
+
+                  }
               ),
               SizedBox(height: 12.0),
               Text(
