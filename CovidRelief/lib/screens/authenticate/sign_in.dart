@@ -101,13 +101,12 @@ class _SignInState extends State<SignIn> {
                   await _auth.sendPasswordResetEmail(email: email).then((onVal) {
                     Navigator.pop(context, true);
                   }).catchError((onError) {
-                    if (onError.toString().contains("ERROR_USER_NOT_FOUND")) {
+                    if (onError.toString().contains("Error: usuario no encontradi")) {
 
                     } else if (onError
                         .toString()
-                        .contains("An internal error has occurred")) {
-                    }
-                    };
+                        .contains("Un error interno ha ocurrido")) {
+                    }}
                   );
                 }),
               SizedBox(height: 12.0),
