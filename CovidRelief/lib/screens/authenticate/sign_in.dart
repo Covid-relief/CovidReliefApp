@@ -1,6 +1,8 @@
 import 'package:CovidRelief/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:CovidRelief/shared/constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 
 class SignIn extends StatefulWidget {
@@ -29,11 +31,11 @@ class _SignInState extends State<SignIn> {
       appBar: AppBar(
         backgroundColor: Colors.red[400],
         elevation: 0.0,
-        title: Text('Sign in to Covid Relief App'),
+        title: Text('Iniciar Sesión en Covid Relief'),
         actions: <Widget>[
           FlatButton.icon(
             icon: Icon(Icons.person),
-            label: Text('Register'),
+            label: Text('Registrarse'),
             onPressed: () => widget.toggleView(),
           ),
         ],
@@ -46,8 +48,8 @@ class _SignInState extends State<SignIn> {
             children: <Widget>[
               SizedBox(height: 20.0),
               TextFormField(
-                decoration: textInputDecoration.copyWith(hintText: 'email'),
-                validator: (val) => val.isEmpty ? 'Ingrese un email' : null,
+                decoration: textInputDecoration.copyWith(hintText: 'Correo electrónico'),
+                validator: (val) => val.isEmpty ? 'Ingrese un correo electrónico válido' : null,
                 onChanged: (val) {
                   setState(() => email = val);
                 },
@@ -55,8 +57,8 @@ class _SignInState extends State<SignIn> {
               SizedBox(height: 20.0),
               TextFormField(
                 obscureText: true,
-                decoration: textInputDecoration.copyWith(hintText: 'password'),
-                validator: (val) => val.length < 6 ? 'ingrese una contrasena de más de 6 caracteres' : null,
+                decoration: textInputDecoration.copyWith(hintText: 'Contraseña'),
+                validator: (val) => val.length < 6 ? 'Ingrese una contrasena con más de 6 caracteres' : null,
                 onChanged: (val) {
                   setState(() => password = val);
                 },
@@ -73,12 +75,41 @@ class _SignInState extends State<SignIn> {
                     dynamic result = await _auth.signInEmailandPassword(email, password);
                     if(result == null) {
                       setState(() {
-                        error = 'Could not sign in with those credentials';
+                        error = 'No es posible Iniciar Sesión con ese correo/constraseña';
                       });
                     }
                   }
                 }
               ),
+              // Google Sign In button
+              RaisedButton(
+                  color: Colors.blue[400],
+                  child: Text(
+                    'Sign With Google',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onPressed: () {
+
+                  }
+              ),
+              SizedBox(height: 20.0),
+              RaisedButton(
+                child: Text("¿Olvidaste tu contraseña?",
+                  style: TextStyle(color: Colors.white),
+                ),
+                onPressed: () async {
+                  await _auth.sendPasswordResetEmail(email: email).then((onVal) {
+                    Navigator.pop(context, true);
+                  }).catchError((onError) {
+                    if (onError.toString().contains("ERROR_USER_NOT_FOUND")) {
+
+                    } else if (onError
+                        .toString()
+                        .contains("An internal error has occurred")) {
+                    }
+                    };
+                  );
+                }),
               SizedBox(height: 12.0),
               Text(
                 error,
