@@ -81,6 +81,7 @@ class _SignInState extends State<SignIn> {
                   }
                 }
               ),
+              // Google Sign In button
               RaisedButton(
                   color: Colors.blue[400],
                   child: Text(
