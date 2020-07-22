@@ -47,15 +47,13 @@ class Home extends StatelessWidget {
                 icon : Icon(Icons.settings),
                 label: Text("Settings"),
                 onPressed:() => _showSettingsPanel(),
-
-
-
-
             )
             ],
           ),
-          // redirect to user profile
-          body: UserList(), // UserProfile(),
+          // personal data from settings_form.dart
+          body: SettingsForm(),
+            // redirect to user profile
+            //UserProfile(), //UserList(), 
         ),
       
     );
