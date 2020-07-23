@@ -14,7 +14,7 @@ class _UserListState extends State<UserList> {
   @override
   Widget build(BuildContext context) {
 
-    final users = Provider.of<List<Perfiles>>(context);
+    final users = Provider.of<List<Perfiles>>(context) ?? [];
 
     
      return ListView.builder(

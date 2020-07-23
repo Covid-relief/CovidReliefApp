@@ -23,8 +23,6 @@ class DatabaseService{
       'state' : state,
       'type' : type,
     
-
-
     });
 
   }
@@ -41,10 +39,24 @@ class DatabaseService{
         phone: doc.data['phone'] ?? '',
         state: doc.data['state'] ?? '',
         type: doc.data['type'] ?? '',
-        //creation: doc.data[' creation'] ?? '',
+        // creation: doc.data[' creation'] ?? '',
 
       );
     }).toList();
+  }
+
+  // Para hacer update de la info del perfil en la BD
+  UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
+    return UserData(
+      uid: uid,
+      name: snapshot.data['name'],
+      birthday: snapshot.data['birthday'],
+      country: snapshot.data['country'],
+      gender: snapshot.data['gender'],
+      phone: snapshot.data['phone'],
+      state: snapshot.data['state'],
+      type: snapshot.data['type'],
+    );
   }
 
   //stream
@@ -53,4 +65,11 @@ class DatabaseService{
     return  userscollection.snapshots()
     .map(_profileListFromSnapshot);
   }
+
+  // get user doc stream
+  Stream<UserData> get userData {
+    return userscollection.document(uid).snapshots()
+      .map(_userDataFromSnapshot);
+  }
+
 }

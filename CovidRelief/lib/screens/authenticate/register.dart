@@ -61,8 +61,6 @@ class _RegisterState extends State<Register> {
                   setState(() => password = val);
                 },
               ),
-              // personal data from settings_form.dart
-              SettingsForm(),
               
               SizedBox(height: 20.0),
               RaisedButton(
@@ -73,6 +71,7 @@ class _RegisterState extends State<Register> {
                 ),
                 onPressed: () async {
                   if(_formKey.currentState.validate()){
+                    print('Register complete');
                     dynamic result = await _auth.registerEmailandPassword(email, password);
                     if(result == null) {
                       setState(() {
