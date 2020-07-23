@@ -1,8 +1,10 @@
+import 'package:CovidRelief/screens/home/user_profile.dart';
 import 'package:CovidRelief/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:CovidRelief/shared/constants.dart';
 import 'package:CovidRelief/models/user.dart';
 import 'package:provider/provider.dart';
+import 'package:CovidRelief/models/routes.dart';
 
 class SettingsForm extends StatefulWidget {
 
@@ -37,6 +39,7 @@ class _SettingsFormState extends State<SettingsForm> {
     return StreamBuilder<UserData>(
       stream: DatabaseService(uid: user.uid).userData,
       builder: (context, snapshot) {
+        UserData userData = snapshot.data;
         // if we want to load existing data we need an 'if sentence' in here        
         return Form(
           key: _formKey,
@@ -157,16 +160,18 @@ class _SettingsFormState extends State<SettingsForm> {
                   if(_formKey.currentState.validate()){
                     await DatabaseService(uid: user.uid).updateUserData(
                       // if there's no new data, remain with the same as before
-                      _currentBirthday.toString() ?? snapshot.data.birthday, 
-                      _currentName ?? snapshot.data.name, 
-                      _currentCountry ?? snapshot.data.country,
-                      _currenType ?? snapshot.data.type,
-                      _currentPhone ?? snapshot.data.phone,
+                      _currentBirthday.toString() ?? userData.birthday, 
+                      _currentName ?? userData.name, 
+                      _currentCountry ?? userData.country,
+                      _currenType ?? userData.type,
+                      _currentPhone ?? userData.phone,
                       _currentState ?? 'activo',
-                      _currentgender ?? snapshot.data.gender,
+                      _currentgender ?? userData.gender,
                       _currentCreation ?? 'hoy'
                     );
-                    Navigator.pop(context);
+                    // redirect to profile page
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfile()),);
+                    // Navigator.pushNamed(context, '/userProfile');
                   }
                 } // onPressed
               )

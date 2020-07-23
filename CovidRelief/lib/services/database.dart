@@ -50,12 +50,12 @@ class DatabaseService{
     return UserData(
       uid: uid,
       name: snapshot.data['name'],
-      birthday: snapshot.data['birthday'] ?? '',
-      country: snapshot.data['country'] ?? '',
-      gender: snapshot.data['gender'] ?? '',
-      phone: snapshot.data['phone'] ?? '',
-      state: snapshot.data['state'] ?? '',
-      type: snapshot.data['type'] ?? '',
+      birthday: snapshot.data['birthday'],
+      country: snapshot.data['country'],
+      gender: snapshot.data['gender'],
+      phone: snapshot.data['phone'],
+      state: snapshot.data['state'],
+      type: snapshot.data['type'],
     );
   }
 
