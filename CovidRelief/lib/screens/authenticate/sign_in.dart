@@ -24,19 +24,38 @@ class _SignInState extends State<SignIn> {
   String email = '';
   String password = '';
 
+  void _showPasswordEmailSentDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("¿Olvidaste tu contraseña?"),
+          content: new Text("Se ha enviado exitosamente un correo electrónico para cambiar tu contraseña"),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.red[100],
       appBar: AppBar(
         backgroundColor: Colors.red[400],
-        elevation: 0.0,
-        title: Text('Iniciar Sesión en Covid Relief'),
+        elevation: 1.0,
+        title: Text('Iniciar Sesión'),
         actions: <Widget>[
           FlatButton.icon(
             icon: Icon(Icons.person),
             label: Text('Registrarse'),
+            color: Color(0xFF1976D2),
             onPressed: () => widget.toggleView(),
+            shape: RoundedRectangleBorder(side: BorderSide(
+                color: Color(0xFF1976D2),
+                width: 1,
+                style: BorderStyle.solid
+            ), borderRadius: BorderRadius.circular(30)),
           ),
         ],
       ),
@@ -63,7 +82,14 @@ class _SignInState extends State<SignIn> {
                   setState(() => password = val);
                 },
               ),
-              SizedBox(height: 20.0),
+              FlatButton(
+                  child: Text("¿Olvidaste tu contraseña?",
+                    style: TextStyle(color: Color(0xFF1976D2)),
+                  ),
+                  onPressed: () async {
+                    _auth.sendPasswordReset(email);
+                    _showPasswordEmailSentDialog();
+                  }),
               RaisedButton(
                 color: Colors.pink[400],
                 child: Text(
@@ -92,23 +118,6 @@ class _SignInState extends State<SignIn> {
 
                   }
               ),
-              SizedBox(height: 20.0),
-              RaisedButton(
-                child: Text("¿Olvidaste tu contraseña?",
-                  style: TextStyle(color: Colors.white),
-                ),
-                onPressed: () async {
-                  await _auth.sendPasswordResetEmail(email: email).then((onVal) {
-                    Navigator.pop(context, true);
-                  }).catchError((onError) {
-                    if (onError.toString().contains("Error: usuario no encontradi")) {
-
-                    } else if (onError
-                        .toString()
-                        .contains("Un error interno ha ocurrido")) {
-                    }}
-                  );
-                }),
               SizedBox(height: 12.0),
               Text(
                 error,

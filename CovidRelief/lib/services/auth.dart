@@ -76,6 +76,8 @@ class AuthService{
     }
   }
 
-
+  Future<void> sendPasswordReset(String email) async {
+    _auth.sendPasswordResetEmail(email: email);
+  }
   //cerrar sesion
 }
