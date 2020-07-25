@@ -2,6 +2,8 @@ import 'package:CovidRelief/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:CovidRelief/shared/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
 
 
 
@@ -17,6 +19,7 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
 
   final AuthService _auth = AuthService();
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
   final _formKey = GlobalKey<FormState>();
   String error = '';
 
@@ -36,6 +39,8 @@ class _SignInState extends State<SignIn> {
       },
     );
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -108,15 +113,25 @@ class _SignInState extends State<SignIn> {
                 }
               ),
               // Google Sign In button
+
               RaisedButton(
                   color: Colors.blue[400],
                   child: Text(
                     'Sign With Google',
                     style: TextStyle(color: Colors.white),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
+                    if(_formKey.currentState.validate()){
+                      dynamic result = await  _auth.signInWithGoogle();
+                      if(result == null) {
+                        setState(() {
+                          error = 'No es posible Iniciar Sesión';
+                        });
+                      }
+                    }
 
-                  }
+
+                  },
               ),
               SizedBox(height: 12.0),
               Text(
