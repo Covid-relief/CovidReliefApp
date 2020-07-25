@@ -6,6 +6,9 @@ import 'package:CovidRelief/models/user.dart';
 import 'package:provider/provider.dart';
 import 'package:CovidRelief/models/routes.dart';
 
+import 'package:google_sign_in/google_sign_in.dart';
+
+
 class SettingsForm extends StatefulWidget {
 
   @override
