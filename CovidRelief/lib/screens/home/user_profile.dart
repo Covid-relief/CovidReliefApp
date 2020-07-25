@@ -1,10 +1,9 @@
 import 'package:CovidRelief/models/profile.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:CovidRelief/models/user.dart';
 import 'package:provider/provider.dart';
-import 'package:CovidRelief/screens/home/user_tile.dart';
 import 'package:CovidRelief/services/database.dart';
-
 
 class UserProfile extends StatelessWidget {
 
@@ -14,12 +13,17 @@ class UserProfile extends StatelessWidget {
     // this variable allows us to get the uid that contains the info of the user
     final user = Provider.of<User>(context);
 
-    return StreamBuilder<UserData>(
-      stream: DatabaseService(uid: user.uid).userData,
+    return new StreamBuilder(
+      // here we get the info from the document of the collection of the user
+      stream: Firestore.instance.collection('perfiles').document(user.uid).snapshots(),
       builder: (context, snapshot) {
 
+        // if there is no data in the collection display "No data". This should never occur
+        if (!snapshot.hasData) {
+          print('No data');
+        }
         // we use this variable to display info from the user
-        UserData userData = snapshot.data;
+        var userData = snapshot.data;
 
         return Scaffold(
           appBar: AppBar(
@@ -39,11 +43,11 @@ class UserProfile extends StatelessWidget {
                   ),
                   // Diplay name and country
                   ListTile(
-                    title: Text(user.uid), //Text(user.name),
-                    subtitle: Text('País') //Text(userData.country))
+                    title: Text(userData['name']),
+                    subtitle: Text(userData['country'])
                     ),
                   // Display more info about
-                  Text('More info')
+                  Text(userData['gender'])
                 ],
               )
             ),
