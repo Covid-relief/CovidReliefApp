@@ -33,21 +33,115 @@ class UserProfile extends StatelessWidget {
           body: Center(
             child: Card(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  SizedBox(height: 20.0),
+                  SizedBox(height: 30.0),
                   // Circle for profile picture
-                  ListTile(
-                    leading: CircleAvatar(
-                    radius: 50.0,
-                    backgroundColor: Colors.red[900]),
-                  ),
-                  // Diplay name and country
-                  ListTile(
-                    title: Text(userData['name']),
-                    subtitle: Text(userData['country'])
+                    CircleAvatar(
+                      radius: 50.0,
+                      backgroundColor: Colors.red[900]
                     ),
-                  // Display more info about
-                  Text(userData['gender'])
+                    SizedBox(height: 20.0),
+                    // Diplay name
+                    Text(
+                      userData['name'],
+                      style: TextStyle(
+                        fontSize: 22.0,
+                      ),
+                    ),
+                    // Diplay country
+                    Text(
+                      userData['country'],
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        color: Colors.grey
+                      ),
+                    ),
+                    SizedBox(height: 50.0),
+                  // Display more data
+                  ListTile(
+                    title: Text('Datos personales'),
+                  ),
+                  // here we make a table with four rows and two columns to organize the data
+                  Row(
+                    children: <Widget>[
+                      Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(20, 10, 70, 0),
+                            child: Text(userData['phone']),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(20, 10, 70, 0),
+                            child: Text(
+                              'Telefono',
+                              style: TextStyle(
+                                color: Colors.grey
+                              )
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(70, 10, 20, 0),
+                            child:Text(
+                              userData['birthday'].substring(8, 10) + ' / ' + userData['birthday'].substring(5, 7) + ' / ' + userData['birthday'].substring(0, 4)),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(70, 10, 20, 0),
+                            child: Text(
+                              'Fecha de nacimiento',
+                              style: TextStyle(
+                                color: Colors.grey
+                              )
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  
+                  // second pair of data
+                  Row(
+                    children: <Widget>[
+                      Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(20, 20, 70, 0),
+                            child: Text(userData['type']),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(20, 10, 70, 0),
+                            child: Text(
+                              'Tipo de perfil',
+                              style: TextStyle(
+                                color: Colors.grey
+                              )
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(70, 20, 20, 0),
+                            child: Text(userData['gender']),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(70, 10, 20, 0),
+                            child: Text(
+                              'Genero',
+                              style: TextStyle(
+                                color: Colors.grey
+                              )
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ],
               )
             ),
