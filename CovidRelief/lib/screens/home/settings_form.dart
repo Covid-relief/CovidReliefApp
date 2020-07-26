@@ -20,7 +20,7 @@ class _SettingsFormState extends State<SettingsForm> {
   
 
   final _formKey = GlobalKey<FormState>();
-  final List<String> type = [ 'Busca ayuda' , 'Desea ayudar' ,'Ambos'];// esta es la lista de que va a poder elegir el usuario en forma de dropdown
+  final List<String> type = [ 'Busca ayuda' , 'Desea ayudar' ,'Busca y desea ayuda'];// esta es la lista de que va a poder elegir el usuario en forma de dropdown
   final List<String> gender = [ 'Masculino' , 'Femenino'];
 
   // valores
@@ -48,30 +48,29 @@ class _SettingsFormState extends State<SettingsForm> {
           key: _formKey,
           child: Column(
             children: <Widget>[
-              /*
-              Text(
-                'Ingresa tus datos',
-                style : TextStyle(fontSize: 18.0),
-              ),
-              */
 
               // this sizebox helps us to keep distance between elements
-              SizedBox(height: 20.0),
+              SizedBox(height: 30.0),
 
               // input text for name
-              TextFormField(
-                decoration: textInputDecoration.copyWith(hintText: 'Nombres y apellidos'),
-                validator: (valname) => valname.isEmpty ? 'Por favor ingrese su nombre' : null,
-                onChanged: (valname) => setState(() => _currentName = valname),
+              Container(
+                width: 350.0,
+                padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
+                child: TextFormField(
+                  decoration: textInputDecoration.copyWith(hintText: 'Nombres y apellidos'),
+                  validator: (valname) => valname.isEmpty ? 'Por favor ingrese su nombre' : null,
+                  onChanged: (valname) => setState(() => _currentName = valname),
+                ),
               ),
 
               SizedBox(height: 20.0),
+
               // Date picker for birthday
               // Lacks validation when it's null and the display of the date in the button
               FlatButton(
                 color: Colors.white,
                 // padding is the spacing inside the element
-                padding: EdgeInsets.fromLTRB(15, 15, 145, 15),
+                padding: EdgeInsets.fromLTRB(10, 15, 150, 15),
                 child: Text(
                   'Fecha de nacimiento',
                   style: TextStyle(color: Colors.black45),
@@ -95,86 +94,94 @@ class _SettingsFormState extends State<SettingsForm> {
               SizedBox(height: 20.0),
 
               // dropdown for country
-              TextFormField(
-                decoration: textInputDecoration.copyWith(hintText: 'País'),
-                validator: (valcountry) => valcountry.isEmpty ? 'Por favor ingresa tu país' : null,
-                onChanged: (valcountry) => setState(() => _currentCountry = valcountry),
+              Container(
+                padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
+                width: 350.0,
+                child: TextFormField(
+                  decoration: textInputDecoration.copyWith(hintText: 'País'),
+                  validator: (valcountry) => valcountry.isEmpty ? 'Por favor ingresa tu país' : null,
+                  onChanged: (valcountry) => setState(() => _currentCountry = valcountry),
+                ),
               ),
 
               SizedBox(height: 20.0),
 
               // text for phone number
-              TextFormField(
-                decoration: textInputDecoration.copyWith(hintText: 'numero de teléfono'),
-                validator: (valphone) => valphone.isEmpty ? 'Por favor ingresa tu número de teléfono' : null,
-                onChanged: (valphone) => setState(() => _currentPhone = valphone),
+              Container(
+                padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
+                width: 350.0,
+                child: TextFormField(
+                  decoration: textInputDecoration.copyWith(hintText: 'Numero de teléfono'),
+                  validator: (valphone) => valphone.isEmpty ? 'Por favor ingresa tu número de teléfono' : null,
+                  onChanged: (valphone) => setState(() => _currentPhone = valphone),
+                ),
               ),
-
+              
               SizedBox(height: 20.0),
 
               // dropdown for gender
-              // Lacks validation and display title
-              DropdownButtonFormField(
-                decoration: textInputDecoration,
-                // value: _currenType ??  '0',
-                items: gender.map((genders){
-                  return DropdownMenuItem(
-                    value: genders,
-                    child: Text('$genders '),
-                  );
-                }).toList(),
-                onChanged: (valgenders) => setState(() => _currentgender = valgenders),
+              // Lacks validation
+              Container(
+                padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
+                width: 350.0,
+                child: DropdownButtonFormField(
+                  hint: Text('Género'),
+                  decoration: textInputDecoration,
+                  items: gender.map((genders){
+                    return DropdownMenuItem(
+                      value: genders,
+                      child: Text('$genders '),
+                    );
+                  }).toList(),
+                  onChanged: (valgenders) => setState(() => _currentgender = valgenders),
+                ),
               ),
-
+              
               SizedBox(height: 20.0),
 
               // dropdown for type of profile
-              // Lacks validation and display title
-              DropdownButtonFormField(
-                decoration: textInputDecoration,
-                // value: _currenType ??  '0',
-                items: type.map((types){
-                  return DropdownMenuItem(
-                    value: types,
-                    child: Text('$types '),
-                  );
-                }).toList(),
-                onChanged: (valtypes) => setState(() => _currenType = valtypes),
+              // Lacks validation
+              Container(
+                padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
+                width: 350.0,
+                child: DropdownButtonFormField(
+                  hint: Text('Tipo de perfil'),
+                  decoration: textInputDecoration,
+                  items: type.map((types){
+                    return DropdownMenuItem(
+                      value: types,
+                      child: Text('$types '),
+                    );
+                  }).toList(),
+                  onChanged: (valtypes) => setState(() => _currenType = valtypes),
+                ),
               ),
-
+              
               SizedBox(height: 20.0),
-
-              // Move this button to other file
               
               // Update the DB
               RaisedButton(
                 color: Colors.blue[200],
                 child: Text( 
-                  'Update',
+                  'Enviar',
                   style: TextStyle(color: Colors.white),
                 ),
                 onPressed: () async{
-                  print(_currentName);
-                  print(_currentBirthday);
-                  print(_currentCountry);
-                  print(_currenType);
-
                   // update the data in the DB
                   if(_formKey.currentState.validate()){
                     await DatabaseService(uid: user.uid).updateUserData(
                       // if there's no new data, remain with the same as before
                       _currentBirthday.toString() ?? userData.birthday, 
-                      _currentName ?? userData.name, 
                       _currentCountry ?? userData.country,
-                      _currenType ?? userData.type,
+                      _currentCreation ?? 'hoy',
+                      _currentgender ?? userData.gender,
+                      _currentName ?? userData.name, 
                       _currentPhone ?? userData.phone,
                       _currentState ?? 'activo',
-                      _currentgender ?? userData.gender,
-                      _currentCreation ?? 'hoy'
+                      _currenType ?? userData.type,
                     );
                     // redirect to profile page
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfile()),);
-                    // Navigator.pushNamed(context, '/userProfile');
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserProfile()),);
                   }
                 } // onPressed
               )

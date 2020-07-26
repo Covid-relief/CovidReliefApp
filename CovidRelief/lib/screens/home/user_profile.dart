@@ -1,6 +1,8 @@
 import 'package:CovidRelief/models/profile.dart';
+import 'package:CovidRelief/screens/authenticate/authenticate.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:CovidRelief/services/auth.dart';
 import 'package:CovidRelief/models/user.dart';
 import 'package:provider/provider.dart';
 import 'package:CovidRelief/services/database.dart';
@@ -10,6 +12,8 @@ class UserProfile extends StatelessWidget {
 @override
   Widget build(BuildContext context) {
  
+    final AuthService _auth = AuthService();
+
     // this variable allows us to get the uid that contains the info of the user
     final user = Provider.of<User>(context);
 
@@ -29,6 +33,15 @@ class UserProfile extends StatelessWidget {
           appBar: AppBar(
             title: Text('Perfil'),
             backgroundColor: Colors.red[400],
+            actions: <Widget>[
+                FlatButton.icon(
+                  icon: Icon(Icons.person),
+                  label: Text('logout'),
+                  onPressed: () async {
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Authenticate()),);
+                },
+              ),
+            ],
           ),
           body: Center(
             child: Card(

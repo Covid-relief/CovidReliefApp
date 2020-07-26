@@ -2,6 +2,7 @@ import 'package:CovidRelief/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:CovidRelief/shared/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:CovidRelief/screens/home/user_profile.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 
@@ -104,6 +105,7 @@ class _SignInState extends State<SignIn> {
                 onPressed: () async {
                   if(_formKey.currentState.validate()){
                     dynamic result = await _auth.signInEmailandPassword(email, password);
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserProfile()),);
                     if(result == null) {
                       setState(() {
                         error = 'No es posible Iniciar Sesión con ese correo/constraseña';
