@@ -4,8 +4,8 @@ import 'package:CovidRelief/shared/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:CovidRelief/screens/home/user_profile.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 
 
 class SignIn extends StatefulWidget {
@@ -149,12 +149,7 @@ class _SignInState extends State<SignIn> {
               ),
               // Google Sign In button
 
-              RaisedButton(
-                  color: Colors.blue[400],
-                  child: Text(
-                    'Iniciar Sesión con Google',
-                    style: TextStyle(color: Colors.white),
-                  ),
+              GoogleSignInButton(
                   onPressed: () async {
                     if(_formKey.currentState.validate()){
                       dynamic result = await  _auth.signInWithGoogle();
@@ -166,6 +161,9 @@ class _SignInState extends State<SignIn> {
                     }
                   },
               ),
+            FacebookSignInButton(onPressed: () async {
+              // call authentication logic
+            }),
               SizedBox(height: 12.0),
               Text(
                 error,
