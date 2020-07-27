@@ -31,12 +31,18 @@ class _RegisterState extends State<Register> {
       appBar: AppBar(
         backgroundColor: Colors.red[400],
         elevation: 0.0,
-        title: Text('Sign up to Covid Relief app'),
+        title: Text('Registrarse'),
         actions: <Widget>[
           FlatButton.icon(
             icon: Icon(Icons.person),
-            label: Text('Sign In'),
+            label: Text('Iniciar Sesión'),
+            color: Color(0xFF1976D2),
             onPressed: () => widget.toggleView(),
+            shape: RoundedRectangleBorder(side: BorderSide(
+                color: Color(0xFF1976D2),
+                width: 1,
+                style: BorderStyle.solid
+            ), borderRadius: BorderRadius.circular(40)),
           ),
         ],
       ),
@@ -48,15 +54,15 @@ class _RegisterState extends State<Register> {
             children: <Widget>[
               SizedBox(height: 20.0),
               TextFormField(
-                decoration: textInputDecoration.copyWith(hintText: 'email'),
-                validator: (val) => val.isEmpty ? 'Ingrese un correo' : null,
+                decoration: textInputDecoration.copyWith(hintText: 'Correo electrónico'),
+                validator: (val) => val.isEmpty ? 'Ingrese un correo electrónico válido' : null,
                 onChanged: (val) {
                   setState(() => email = val);
                 },
               ),
               SizedBox(height: 20.0),
               TextFormField(
-                decoration: textInputDecoration.copyWith(hintText: 'password'),
+                decoration: textInputDecoration.copyWith(hintText: 'Contraseña'),
                 obscureText: true,
                 validator: (val) => val.length < 6 ? 'Ingrese una contrasena de más de 6 caracteress' : null,
                 onChanged: (val) {
@@ -69,13 +75,13 @@ class _RegisterState extends State<Register> {
               RaisedButton(
                 color: Colors.pink[400],
                 child: Text(
-                  'Register',
+                  'Registrarse',
                   style: TextStyle(color: Colors.white),
                 ),
                 onPressed: () async {
                   String value = await storage.read(key: "mykey");
                   if(_formKey.currentState.validate()){
-                    print('Register complete');
+                    print('Se ha registrado exitosamente');
                     dynamic result = await _auth.registerEmailandPassword(email, value);
                     if(result == null) {
                       setState(() {
