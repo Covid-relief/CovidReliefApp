@@ -5,11 +5,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:CovidRelief/screens/home/user_profile.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 
 class SignIn extends StatefulWidget {
-
   final Function toggleView;
   SignIn({ this.toggleView });
 
@@ -18,6 +17,9 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
+
+  bool rememberMe = false;
+  final storage = new FlutterSecureStorage(); // function to store password in KeyStore
 
   final AuthService _auth = AuthService();
   final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -42,6 +44,15 @@ class _SignInState extends State<SignIn> {
   }
 
 
+
+  void _onRememberMeChanged(bool newValue) => setState(() {
+    rememberMe = newValue;
+    if (rememberMe) {
+      // function
+    } else {
+      // function
+    }
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -86,25 +97,47 @@ class _SignInState extends State<SignIn> {
                 validator: (val) => val.length < 6 ? 'Ingrese una contrasena con más de 6 caracteres' : null,
                 onChanged: (val) {
                   setState(() => password = val);
+                  storage.write(key: "mykey", value: password);
                 },
               ),
-              FlatButton(
-                  child: Text("¿Olvidaste tu contraseña?",
-                    style: TextStyle(color: Color(0xFF1976D2)),
-                  ),
-                  onPressed: () async {
-                    _auth.sendPasswordReset(email);
-                    _showPasswordEmailSentDialog();
-                  }),
+              new Container(
+                child: new Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Expanded(
+                      child:
+                      CheckboxListTile(
+                        dense: true,
+                        controlAffinity: ListTileControlAffinity.leading,
+                          title: Text('Recordarme', style: TextStyle(fontSize: 10)),
+                        value: rememberMe,
+                          onChanged: _onRememberMeChanged
+                      )
+                    ),
+                    Expanded(
+                      child:
+                      FlatButton(
+                          child: Text("¿Olvidaste tu contraseña?",
+                            style: TextStyle(fontSize: 9, color: Color(0xFF1976D2)),
+                          ),
+                          onPressed: () async {
+                            _auth.sendPasswordReset(email);
+                            _showPasswordEmailSentDialog();
+                          })
+                    )
+                  ],
+                )
+              ),
               RaisedButton(
                 color: Colors.pink[400],
                 child: Text(
-                  'Sign In',
+                  'Iniciar Sesión',
                   style: TextStyle(color: Colors.white),
                 ),
                 onPressed: () async {
+                  String value = await storage.read(key: "mykey");
                   if(_formKey.currentState.validate()){
-                    dynamic result = await _auth.signInEmailandPassword(email, password);
+                    dynamic result = await _auth.signInEmailandPassword(email, value);
                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserProfile()),);
                     if(result == null) {
                       setState(() {
@@ -119,7 +152,7 @@ class _SignInState extends State<SignIn> {
               RaisedButton(
                   color: Colors.blue[400],
                   child: Text(
-                    'Sign With Google',
+                    'Iniciar Sesión con Google',
                     style: TextStyle(color: Colors.white),
                   ),
                   onPressed: () async {
@@ -131,8 +164,6 @@ class _SignInState extends State<SignIn> {
                         });
                       }
                     }
-
-
                   },
               ),
               SizedBox(height: 12.0),

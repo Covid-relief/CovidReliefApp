@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:CovidRelief/services/auth.dart';
 import 'package:CovidRelief/shared/constants.dart';
 import 'package:CovidRelief/screens/home/settings_form.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class Register extends StatefulWidget {
 
@@ -14,6 +15,7 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
 
+  final storage = new FlutterSecureStorage();
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
   String error = '';
@@ -59,6 +61,7 @@ class _RegisterState extends State<Register> {
                 validator: (val) => val.length < 6 ? 'Ingrese una contrasena de más de 6 caracteress' : null,
                 onChanged: (val) {
                   setState(() => password = val);
+                  storage.write(key: "mykey", value: password);
                 },
               ),
               
@@ -70,9 +73,10 @@ class _RegisterState extends State<Register> {
                   style: TextStyle(color: Colors.white),
                 ),
                 onPressed: () async {
+                  String value = await storage.read(key: "mykey");
                   if(_formKey.currentState.validate()){
                     print('Register complete');
-                    dynamic result = await _auth.registerEmailandPassword(email, password);
+                    dynamic result = await _auth.registerEmailandPassword(email, value);
                     if(result == null) {
                       setState(() {
                         error = 'Por favor ingrese un correo valido';
