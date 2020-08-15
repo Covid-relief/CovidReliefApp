@@ -6,6 +6,7 @@ import 'package:CovidRelief/screens/home/user_profile.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 
 
 class SignIn extends StatefulWidget {
@@ -17,6 +18,23 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
+  //FirebaseAuth _authF = FirebaseAuth.instance;
+
+  // Facebook login logic
+  Future<FirebaseUser> _loginWithFacebook () async{
+    var facebookLogin = new FacebookLogin();
+    var result = await facebookLogin.logIn(['email']);
+
+    debugPrint(result.status.toString());
+
+    if(result.status == FacebookLoginStatus.loggedIn){
+      FacebookAccessToken myToken = result.accessToken;
+      AuthCredential credential= FacebookAuthProvider.getCredential(accessToken: myToken.token);
+      FirebaseUser user = (await FirebaseAuth.instance.signInWithCredential(credential)).user;
+      return user;
+    }
+    return null;
+  }
 
   bool rememberMe = false;
   final storage = new FlutterSecureStorage(); // function to store password in KeyStore
@@ -161,9 +179,11 @@ class _SignInState extends State<SignIn> {
                     }
                   },
               ),
-            FacebookSignInButton(onPressed: () async {
-              // call authentication logic
-            }),
+            // Facebook login button
+            FacebookSignInButton(
+              // calls function
+              onPressed: _loginWithFacebook,
+            ),
               SizedBox(height: 12.0),
               Text(
                 error,
