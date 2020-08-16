@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:CovidRelief/services/auth.dart';
 import 'package:CovidRelief/shared/constants.dart';
 import 'package:CovidRelief/screens/home/settings_form.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class Register extends StatefulWidget {
@@ -17,6 +18,7 @@ class _RegisterState extends State<Register> {
 
   final storage = new FlutterSecureStorage();
   final AuthService _auth = AuthService();
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
   final _formKey = GlobalKey<FormState>();
   String error = '';
 
@@ -89,6 +91,17 @@ class _RegisterState extends State<Register> {
                       });
                     }
                   }
+                },
+              ),
+              RaisedButton(
+                color: Colors.blue[400],
+                child: Text(
+                  'Sign With Google',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onPressed: () async {
+                  _auth.signInWithGoogle();
+
                 },
               ),
               SizedBox(height: 12.0),
