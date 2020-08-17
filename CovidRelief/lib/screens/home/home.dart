@@ -38,20 +38,20 @@ class Home extends StatelessWidget {
               actions: <Widget>[
                 FlatButton.icon(
                   icon: Icon(Icons.person),
-                  label: Text('logout'),
+                  label: Text('Cerrar Sesión'),
                   onPressed: () async {
                     await _auth.signOut();
                 },
               ),
               FlatButton.icon(
                 icon : Icon(Icons.settings),
-                label: Text("Settings"),
+                label: Text("Configuración"),
                 onPressed:() => _showSettingsPanel(),
             )
             ],
           ),
           // personal data from settings_form.dart
-          body: SettingsForm(),
+          body: UserProfile(), //HAY QUE DESARROLLAR EL HOME
             // redirect to user profile
             //UserProfile(), //UserList(), 
         ),

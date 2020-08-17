@@ -124,19 +124,9 @@ class _SignInState extends State<SignIn> {
                   children: <Widget>[
                     Expanded(
                       child:
-                      CheckboxListTile(
-                        dense: true,
-                        controlAffinity: ListTileControlAffinity.leading,
-                          title: Text('Recordarme', style: TextStyle(fontSize: 10)),
-                        value: rememberMe,
-                          onChanged: _onRememberMeChanged
-                      )
-                    ),
-                    Expanded(
-                      child:
                       FlatButton(
                           child: Text("¿Olvidaste tu contraseña?",
-                            style: TextStyle(fontSize: 9, color: Color(0xFF1976D2)),
+                            style: TextStyle(fontSize: 15, color: Color(0xFF1976D2)),
                           ),
                           onPressed: () async {
                             _auth.sendPasswordReset(email);

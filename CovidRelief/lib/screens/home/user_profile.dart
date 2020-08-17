@@ -36,7 +36,7 @@ class UserProfile extends StatelessWidget {
             actions: <Widget>[
                 FlatButton.icon(
                   icon: Icon(Icons.person),
-                  label: Text('logout'),
+                  label: Text('Cerrar Sesión'),
                   onPressed: () async {
                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Authenticate()),);
                 },
@@ -87,7 +87,7 @@ class UserProfile extends StatelessWidget {
                           Padding(
                             padding: EdgeInsets.fromLTRB(20, 10, 70, 0),
                             child: Text(
-                              'Telefono',
+                              'Teléfono',
                               style: TextStyle(
                                 color: Colors.grey
                               )
@@ -145,7 +145,7 @@ class UserProfile extends StatelessWidget {
                           Padding(
                             padding: EdgeInsets.fromLTRB(70, 10, 20, 0),
                             child: Text(
-                              'Genero',
+                              'Género',
                               style: TextStyle(
                                 color: Colors.grey
                               )
