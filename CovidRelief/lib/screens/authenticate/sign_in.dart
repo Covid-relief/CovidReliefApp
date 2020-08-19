@@ -8,10 +8,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 
-
 class SignIn extends StatefulWidget {
   final Function toggleView;
-  SignIn({ this.toggleView });
+  SignIn({this.toggleView});
 
   @override
   _SignInState createState() => _SignInState();
@@ -21,23 +20,26 @@ class _SignInState extends State<SignIn> {
   //FirebaseAuth _authF = FirebaseAuth.instance;
 
   // Facebook login logic
-  Future<FirebaseUser> _loginWithFacebook () async{
+  Future<FirebaseUser> _loginWithFacebook() async {
     var facebookLogin = new FacebookLogin();
     var result = await facebookLogin.logIn(['email']);
 
     debugPrint(result.status.toString());
 
-    if(result.status == FacebookLoginStatus.loggedIn){
+    if (result.status == FacebookLoginStatus.loggedIn) {
       FacebookAccessToken myToken = result.accessToken;
-      AuthCredential credential= FacebookAuthProvider.getCredential(accessToken: myToken.token);
-      FirebaseUser user = (await FirebaseAuth.instance.signInWithCredential(credential)).user;
+      AuthCredential credential =
+          FacebookAuthProvider.getCredential(accessToken: myToken.token);
+      FirebaseUser user =
+          (await FirebaseAuth.instance.signInWithCredential(credential)).user;
       return user;
     }
     return null;
   }
 
   bool rememberMe = false;
-  final storage = new FlutterSecureStorage(); // function to store password in KeyStore
+  final storage =
+      new FlutterSecureStorage(); // function to store password in KeyStore
 
   final AuthService _auth = AuthService();
   final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -55,22 +57,21 @@ class _SignInState extends State<SignIn> {
         // return object of type Dialog
         return AlertDialog(
           title: new Text("¿Olvidaste tu contraseña?"),
-          content: new Text("Se ha enviado exitosamente un correo electrónico para cambiar tu contraseña"),
+          content: new Text(
+              "Se ha enviado exitosamente un correo electrónico para cambiar tu contraseña"),
         );
       },
     );
   }
 
-
-
   void _onRememberMeChanged(bool newValue) => setState(() {
-    rememberMe = newValue;
-    if (rememberMe) {
-      // function
-    } else {
-      // function
-    }
-  });
+        rememberMe = newValue;
+        if (rememberMe) {
+          // function
+        } else {
+          // function
+        }
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -86,11 +87,12 @@ class _SignInState extends State<SignIn> {
             label: Text('Registrarse'),
             color: Color(0xFF1976D2),
             onPressed: () => widget.toggleView(),
-            shape: RoundedRectangleBorder(side: BorderSide(
-                color: Color(0xFF1976D2),
-                width: 1,
-                style: BorderStyle.solid
-            ), borderRadius: BorderRadius.circular(30)),
+            shape: RoundedRectangleBorder(
+                side: BorderSide(
+                    color: Color(0xFF1976D2),
+                    width: 1,
+                    style: BorderStyle.solid),
+                borderRadius: BorderRadius.circular(30)),
           ),
         ],
       ),
@@ -102,8 +104,10 @@ class _SignInState extends State<SignIn> {
             children: <Widget>[
               SizedBox(height: 20.0),
               TextFormField(
-                decoration: textInputDecoration.copyWith(hintText: 'Correo electrónico'),
-                validator: (val) => val.isEmpty ? 'Ingrese un correo electrónico válido' : null,
+                decoration: textInputDecoration.copyWith(
+                    hintText: 'Correo electrónico'),
+                validator: (val) =>
+                    val.isEmpty ? 'Ingrese un correo electrónico válido' : null,
                 onChanged: (val) {
                   setState(() => email = val);
                 },
@@ -111,71 +115,76 @@ class _SignInState extends State<SignIn> {
               SizedBox(height: 20.0),
               TextFormField(
                 obscureText: true,
-                decoration: textInputDecoration.copyWith(hintText: 'Contraseña'),
-                validator: (val) => val.length < 6 ? 'Ingrese una contrasena con más de 6 caracteres' : null,
+                decoration:
+                    textInputDecoration.copyWith(hintText: 'Contraseña'),
+                validator: (val) => val.length < 6
+                    ? 'Ingrese una contrasena con más de 6 caracteres'
+                    : null,
                 onChanged: (val) {
                   setState(() => password = val);
                   storage.write(key: "mykey", value: password);
                 },
               ),
               new Container(
-                child: new Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Expanded(
-                      child:
-                      FlatButton(
-                          child: Text("¿Olvidaste tu contraseña?",
-                            style: TextStyle(fontSize: 15, color: Color(0xFF1976D2)),
+                  child: new Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Expanded(
+                      child: FlatButton(
+                          child: Text(
+                            "¿Olvidaste tu contraseña?",
+                            style: TextStyle(
+                                fontSize: 15, color: Color(0xFF1976D2)),
                           ),
                           onPressed: () async {
                             _auth.sendPasswordReset(email);
                             _showPasswordEmailSentDialog();
-                          })
-                    )
-                  ],
-                )
-              ),
+                          }))
+                ],
+              )),
               RaisedButton(
-                color: Colors.pink[400],
-                child: Text(
-                  'Iniciar Sesión',
-                  style: TextStyle(color: Colors.white),
-                ),
-                onPressed: () async {
-                  String value = await storage.read(key: "mykey");
-                  if(_formKey.currentState.validate()){
-                    dynamic result = await _auth.signInEmailandPassword(email, value);
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserProfile()),);
-                    if(result == null) {
-                      setState(() {
-                        error = 'No es posible Iniciar Sesión con ese correo/constraseña';
-                      });
+                  color: Colors.pink[400],
+                  child: Text(
+                    'Iniciar Sesión',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onPressed: () async {
+                    String value = await storage.read(key: "mykey");
+                    if (_formKey.currentState.validate()) {
+                      dynamic result =
+                          await _auth.signInEmailandPassword(email, value);
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => UserProfile()),
+                      );
+                      if (result == null) {
+                        setState(() {
+                          error =
+                              'No es posible Iniciar Sesión con ese correo/constraseña';
+                        });
+                      }
                     }
-                  }
-                }
-              ),
+                  }),
               // Google Sign In button
 
               GoogleSignInButton(
-                  onPressed: () async {
-                    if(_formKey.currentState.validate()){
+                onPressed: () async {
+                  /*if(_formKey.currentState.validate()){
                       dynamic result = await  _auth.signInWithGoogle();
                       if(result == null) {
                         setState(() {
                           error = 'No es posible Iniciar Sesión';
                         });
                       }
-                    }
-                    _auth.signInWithGoogle();
-
-                  },
+                    }*/
+                  _auth.signInWithGoogle();
+                },
               ),
-            // Facebook login button
-            FacebookSignInButton(
-              // calls function
-              onPressed: _loginWithFacebook,
-            ),
+              // Facebook login button
+              FacebookSignInButton(
+                // calls function
+                onPressed: _loginWithFacebook,
+              ),
               SizedBox(height: 12.0),
               Text(
                 error,

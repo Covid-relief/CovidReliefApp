@@ -3,68 +3,67 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:CovidRelief/models/user.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class AuthService{
-
+class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
-  User _userFromFirebaseUser(FirebaseUser user){
-    return user != null ? User(uid : user.uid) : null;
+  User _userFromFirebaseUser(FirebaseUser user) {
+    return user != null ? User(uid: user.uid) : null;
   }
 
   Stream<User> get user {
-    return _auth.onAuthStateChanged
-    .map(_userFromFirebaseUser);
+    return _auth.onAuthStateChanged.map(_userFromFirebaseUser);
   }
-
 
   //sign anon
   Future signInAnon() async {
-    try{
-      AuthResult result =  await _auth.signInAnonymously();
+    try {
+      AuthResult result = await _auth.signInAnonymously();
       FirebaseUser user = result.user;
       return user;
-
-    } catch(e){
+    } catch (e) {
       print(e.toString());
       return null;
-
     }
   }
-
 
   //metodo para login con email y password
   Future signInEmailandPassword(String email, String password) async {
     String retVal = "error";
-    try{
-      AuthResult result = await _auth.signInWithEmailAndPassword(email: email, password: password);
-      FirebaseUser user  = result.user;
+    try {
+      AuthResult result = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+      FirebaseUser user = result.user;
       retVal = "success";
       return user;
-
-    } catch(error){
+    } catch (error) {
       print(error.toString());
       retVal = error.message;
       return null;
-
     }
   }
 
   //metodo para registrarse
 
   Future registerEmailandPassword(String email, String password) async {
-    try{
-      AuthResult result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-      FirebaseUser user  = result.user;
-     // creamos un nuevo documento para el usuario con el uid
-      await DatabaseService(uid: user.uid).updateUserData('4/01/2000', 'Guatemala', '08/07/2020', 'Masculino', "Boris Rendon", "132", "Active", "Busca ayuda");
+    try {
+      AuthResult result = await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+      FirebaseUser user = result.user;
+      // creamos un nuevo documento para el usuario con el uid
+      await DatabaseService(uid: user.uid).updateUserData(
+          '4/01/2000',
+          'Guatemala',
+          '08/07/2020',
+          'Masculino',
+          "Boris Rendon",
+          "132",
+          "Active",
+          "Busca ayuda");
       return _userFromFirebaseUser(user);
-
-
-    } catch(error){
+    } catch (error) {
       print(error.toString());
       return null;
-
     }
   }
 
@@ -82,10 +81,11 @@ class AuthService{
   }
   //cerrar sesion
 
-  Future<String> signInWithGoogle() async {
-    final GoogleSignInAccount googleSignInAccount = await _googleSignIn.signIn();
+  Future<FirebaseUser> signInWithGoogle() async {
+    final GoogleSignInAccount googleSignInAccount =
+        await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleSignInAuthentication =
-    await googleSignInAccount.authentication;
+        await googleSignInAccount.authentication;
 
     final AuthCredential credential = GoogleAuthProvider.getCredential(
       accessToken: googleSignInAuthentication.accessToken,
@@ -101,7 +101,6 @@ class AuthService{
     final FirebaseUser currentUser = await _auth.currentUser();
     assert(user.uid == currentUser.uid);
 
-    return 'signInWithGoogle succeeded: $user';
+    return user;
   }
-
 }
