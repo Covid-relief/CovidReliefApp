@@ -169,14 +169,14 @@ class _SignInState extends State<SignIn> {
 
               GoogleSignInButton(
                 onPressed: () async {
-                  if (_formKey.currentState.validate()) {
+                  /*if (_formKey.currentState.validate()) {
                     dynamic result = await _auth.signInWithGoogle();
                     if (result == null) {
                       setState(() {
                         error = 'No es posible Iniciar Sesión';
                       });
                     }
-                  }
+                  }*/
 
                   _auth.signInWithGoogle();
                 },
