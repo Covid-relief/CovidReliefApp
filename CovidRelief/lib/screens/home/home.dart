@@ -51,7 +51,7 @@ class Home extends StatelessWidget {
             ],
           ),
           // personal data from settings_form.dart
-          body: UserProfile(), //HAY QUE DESARROLLAR EL HOME
+          body: SettingsForm(),//UserProfile(), //HAY QUE DESARROLLAR EL HOME
             // redirect to user profile
             //UserProfile(), //UserList(), 
         ),
