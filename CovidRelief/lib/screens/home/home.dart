@@ -48,11 +48,11 @@ class Home extends StatelessWidget {
                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserProfile()),);
                   },
                 ),
-                FlatButton.icon(
-                  icon : Icon(Icons.settings),
-                  label: Text("Configuración"),
-                  onPressed:() => _showSettingsPanel(),
-                ),
+                //FlatButton.icon(
+                //  icon : Icon(Icons.settings),
+                 // label: Text("Configuración"),
+                 // onPressed:() => _showSettingsPanel(),
+               // ),
                 FlatButton.icon(
                   icon: Icon(Icons.person),
                   label: Text('Cerrar Sesión'),
@@ -64,6 +64,102 @@ class Home extends StatelessWidget {
               ],
             ),
           ),
+            body:
+                ListView(
+                  padding: const EdgeInsets.all(15),
+                  children: <Widget>[
+                    Container(
+                      height: 90,
+                      child: const Center(child: Text('Bienvenido a COVID-19 Relief', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))),
+                    ),
+                    Container(
+                      height: 120,
+                      padding: EdgeInsets.fromLTRB(10,0,10,0),
+                      decoration: BoxDecoration(
+                        color: Colors.cyan[400],
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: const Center(child: Text('Te recordamos que esta es una plataforma facilitada por la Universidad '
+                          'Francisco Marroquín pero de ninguna manera es responsable de los consejos e ideas aquí presentadas '
+                          'y el éxito o fracaso de los mismos.',
+                           textAlign: TextAlign.center,
+                      )),
+                    ),
+                    Container(
+                      height: 40,
+                    ),
+                    Container(
+                      height: 50,
+                      padding: EdgeInsets.fromLTRB(50,0,50,0),
+                      child:
+                      RaisedButton(
+                          padding: const EdgeInsets.all(2.0),
+                          textColor: Colors.white,
+                          color: Colors.orangeAccent[700],
+                          onPressed:() {},
+                          child: new Text("Quiero ayudar"),
+                      ),
+                    ),
+                    Container(
+                      height: 15,
+                    ),
+                    Container(
+                      height: 50,
+                      padding: EdgeInsets.fromLTRB(50,0,50,0),
+                      child:
+                      RaisedButton(
+                        padding: const EdgeInsets.all(2.0),
+                        textColor: Colors.white,
+                        color: Colors.orangeAccent[700],
+                        onPressed:() {},
+                        child: new Text("Necesito ayuda"),
+                      ),
+                    ),
+                    Container(
+                      height: 60,
+                    ),
+                    Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          RaisedButton(
+                              onPressed: null,
+                              shape: StadiumBorder(),
+                              child: new Text("Conferencias", style: TextStyle(color: Colors.black))
+                          ),
+                          RaisedButton(
+                              onPressed: null,
+                              shape: StadiumBorder(),
+                              child: new Text("Noticias", style: TextStyle(color: Colors.black))
+                          )
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: 40,
+                    ),
+                    Container(
+                        padding: EdgeInsets.fromLTRB(50,0,50,0),
+                        child:
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text('Para comunicarte con la facultad de medicina UFM, '
+                                'llama al siguiente número', textAlign: TextAlign.center,),
+                            RichText(text: TextSpan(
+                            children: [
+                              WidgetSpan(child: Icon(Icons.phone)),
+                              TextSpan(
+                                text: '  2413 3235',
+                                style: TextStyle(color: Colors.black),
+                              )
+                            ]
+                          ))
+                          ],
+                        )
+                    )
+                  ],
+                )
           // personal data from settings_form.dart
              //HAY QUE DESARROLLAR EL HOME
             // redirect to user profile

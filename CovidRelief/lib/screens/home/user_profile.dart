@@ -35,6 +35,13 @@ class UserProfile extends StatelessWidget {
           appBar: AppBar(
             title: Text('Perfil'),
             backgroundColor: Colors.red[400],
+              actions: <Widget> [
+                FlatButton.icon(
+                  icon : Icon(Icons.settings),
+                  label: Text("Configuración"),
+                  onPressed:() {},
+                ),
+              ],
           ),
           drawer: Drawer(
             child: ListView(
@@ -50,11 +57,6 @@ class UserProfile extends StatelessWidget {
                   onTap: () async {
                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
                   },
-                ),
-                FlatButton.icon(
-                  icon : Icon(Icons.settings),
-                  label: Text("Configuración"),
-                  onPressed:() {} ,
                 ),
                 FlatButton.icon(
                   icon: Icon(Icons.person),
