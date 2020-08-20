@@ -1,5 +1,7 @@
 import 'package:CovidRelief/models/profile.dart';
 import 'package:CovidRelief/screens/authenticate/authenticate.dart';
+import 'package:CovidRelief/screens/home/home.dart';
+import 'package:CovidRelief/screens/home/settings_form.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:CovidRelief/services/auth.dart';
@@ -33,15 +35,37 @@ class UserProfile extends StatelessWidget {
           appBar: AppBar(
             title: Text('Perfil'),
             backgroundColor: Colors.red[400],
-            actions: <Widget>[
+          ),
+          drawer: Drawer(
+            child: ListView(
+              children: [
+                DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Colors.redAccent,
+                  ),
+                ),
+                ListTile(
+                  leading: Icon(Icons.account_circle),
+                  title: Text('Inicio',),
+                  onTap: () async {
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
+                  },
+                ),
+                FlatButton.icon(
+                  icon : Icon(Icons.settings),
+                  label: Text("Configuración"),
+                  onPressed:() {} ,
+                ),
                 FlatButton.icon(
                   icon: Icon(Icons.person),
                   label: Text('Cerrar Sesión'),
                   onPressed: () async {
+                    await _auth.signOut();
                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Authenticate()),);
-                },
-              ),
-            ],
+                  },
+                ),
+              ],
+            ),
           ),
           body: Center(
             child: Card(

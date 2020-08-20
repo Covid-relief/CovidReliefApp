@@ -1,3 +1,4 @@
+import 'package:CovidRelief/screens/home/home.dart';
 import 'package:CovidRelief/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:CovidRelief/shared/constants.dart';
@@ -146,7 +147,7 @@ class _SignInState extends State<SignIn> {
                   String value = await storage.read(key: "mykey");
                   if(_formKey.currentState.validate()){
                     dynamic result = await _auth.signInEmailandPassword(email, value);
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserProfile()),);
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
                     if(result == null) {
                       setState(() {
                         error = 'No es posible Iniciar Sesión con ese correo/constraseña';
