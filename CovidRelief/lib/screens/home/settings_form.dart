@@ -22,6 +22,7 @@ class _SettingsFormState extends State<SettingsForm> {
   final _formKey = GlobalKey<FormState>();
   final List<String> type = [ 'Busca ayuda' , 'Desea ayudar' ,'Busca y desea ayuda'];// esta es la lista de que va a poder elegir el usuario en forma de dropdown
   final List<String> gender = [ 'Masculino' , 'Femenino'];
+  final List<String> country = ['Afganistán','Albania','Alemania','Andorra','Angola','Antigua y Barbuda','Arabia Saudita','Argelia','Argentina','Armenia','Australia','Austria','Azerbaiyán','Bahamas','Bangladés','Barbados','Baréin','Bélgica','Belice','Benín','Bielorrusia','Birmania','Bolivia','Bosnia y Herzegovina','Botsuana','Brasil','Brunéi','Bulgaria','Burkina Faso','Burundi','Bután','Cabo Verde','Camboya','Camerún','Canadá','Catar','Chad','Chile','China','Chipre','Ciudad del Vaticano','Colombia','Comoras','Corea del Norte','Corea del Sur','Costa de Marfil','Costa Rica','Croacia','Cuba','Dinamarca','Dominica','Ecuador','Egipto','El Salvador','Emiratos Árabes Unidos','Eritrea','Eslovaquia','Eslovenia','España','Estados Unidos','Estonia','Etiopía','Filipinas','Finlandia','Fiyi','Francia','Gabón','Gambia','Georgia','Ghana','Granada','Grecia','Guatemala','Guyana','Guinea','Guinea ecuatorial','Guinea-Bisáu','Haití','Honduras','Hungría','India','Indonesia','Irak','Irán','Irlanda','Islandia','Islas Marshall','Islas Salomón','Israel','Italia','Jamaica','Japón','Jordania','Kazajistán','Kenia','Kirguistán','Kiribati','Kuwait','Laos','Lesoto','Letonia','Líbano','Liberia','Libia','Liechtenstein','Lituania','Luxemburgo','Macedonia del Norte','Madagascar','Malasia','Malaui','Maldivas','Malí','Malta','Marruecos','Mauricio','Mauritania','México','Micronesia','Moldavia','Mónaco','Mongolia','Montenegro','Mozambique','Namibia','Nauru','Nepal','Nicaragua','Níger','Nigeria','Noruega','Nueva Zelanda','Omán','Países Bajos','Pakistán','Palaos','Panamá','Papúa Nueva Guinea','Paraguay','Perú','Polonia','Portugal','Reino Unido','República Centroafricana','República Checa','República del Congo','República Democrática del Congo','República Dominicana','Ruanda','Rumanía','Rusia','Samoa','San Cristóbal y Nieves','San Marino','San Vicente y las Granadinas','Santa Lucía','Santo Tomé y Príncipe','Senegal','Serbia','Seychelles','Sierra Leona','Singapur','Siria','Somalia','Sri Lanka','Suazilandia','Sudáfrica','Sudán','Sudán del Sur','Suecia','Suiza','Surinam','Tailandia','Tanzania','Tayikistán','Timor Oriental','Togo','Tonga','Trinidad y Tobago','Túnez','Turkmenistán','Turquía','Tuvalu','Ucrania','Uganda','Uruguay','Uzbekistán','Vanuatu','Venezuela','Vietnam','Yemen','Yibuti','Zambia','Zimbabu'];
 
   // valores
   String _currentName; // text done
@@ -46,147 +47,156 @@ class _SettingsFormState extends State<SettingsForm> {
         // if we want to load existing data we need an 'if sentence' in here        
         return Form(
           key: _formKey,
-          child: Column(
-            children: <Widget>[
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
 
-              // this sizebox helps us to keep distance between elements
-              SizedBox(height: 30.0),
+                // this sizebox helps us to keep distance between elements
+                SizedBox(height: 30.0),
 
-              // input text for name
-              Container(
-                width: 350.0,
-                padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
-                child: TextFormField(
-                  decoration: textInputDecoration.copyWith(hintText: 'Nombres y apellidos'),
-                  validator: (valname) => valname.isEmpty ? 'Por favor ingrese su nombre' : null,
-                  onChanged: (valname) => setState(() => _currentName = valname),
+                // input text for name
+                Container(
+                  width: 350.0,
+                  padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
+                  child: TextFormField(
+                    decoration: textInputDecoration.copyWith(hintText: 'Nombres y apellidos'),
+                    validator: (valname) => valname.isEmpty ? 'Por favor ingrese su nombre' : null,
+                    onChanged: (valname) => setState(() => _currentName = valname),
+                  ),
                 ),
-              ),
 
-              SizedBox(height: 20.0),
+                SizedBox(height: 20.0),
 
-              // Date picker for birthday
-              // Lacks validation when it's null and the display of the date in the button
-              FlatButton(
-                color: Colors.white,
-                // padding is the spacing inside the element
-                padding: EdgeInsets.fromLTRB(10, 15, 150, 15),
-                child: Text(
-                  'Fecha de nacimiento',
-                  style: TextStyle(color: Colors.black45),
-                ),
-                onPressed: () {
-                  // shows calendar to pick a date
-                  showDatePicker(
-                    context: context,
-                    initialDate: DateTime.now(),
-                    firstDate: DateTime(1920, 1, 1),
-                    lastDate: DateTime.now()
-                  ).then((date){
-                    // change variable value (current date in DB) to selected
-                    setState((){
-                      _currentBirthday = date;
+                // Date picker for birthday
+                // Lacks display of the date in the button
+                FlatButton(
+                  color: Colors.white,
+                  // padding is the spacing inside the element
+                  padding: EdgeInsets.fromLTRB(10, 15, 150, 15),
+                  child: Text(
+                    'Fecha de nacimiento',
+                    style: TextStyle(color: Colors.black45),
+                  ),
+                  onPressed: () {
+                    // shows calendar to pick a date
+                    showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(1920, 1, 1),
+                      lastDate: DateTime.now()
+                    ).then((date){
+                      // change variable value (current date in DB) to selected
+                      setState((){
+                        _currentBirthday = date;
+                      });
                     });
-                  });
-                },
-              ),
-
-              SizedBox(height: 20.0),
-
-              // dropdown for country
-              Container(
-                padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
-                width: 350.0,
-                child: TextFormField(
-                  decoration: textInputDecoration.copyWith(hintText: 'País'),
-                  validator: (valcountry) => valcountry.isEmpty ? 'Por favor ingresa tu país' : null,
-                  onChanged: (valcountry) => setState(() => _currentCountry = valcountry),
+                  },
                 ),
-              ),
 
-              SizedBox(height: 20.0),
+                SizedBox(height: 20.0),
 
-              // text for phone number
-              Container(
-                padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
-                width: 350.0,
-                child: TextFormField(
-                  decoration: textInputDecoration.copyWith(hintText: 'Numero de teléfono'),
-                  validator: (valphone) => valphone.isEmpty ? 'Por favor ingresa tu número de teléfono' : null,
-                  onChanged: (valphone) => setState(() => _currentPhone = valphone),
+                // dropdown for country
+                Container(
+                  padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
+                  width: 350.0,
+                  child: DropdownButtonFormField(
+                    hint: Text('País'),
+                    decoration: textInputDecoration,
+                    validator: (valcountry) => valcountry.isEmpty ? 'Por favor ingresa tu país' : null,
+                    items: country.map((countries){
+                      return DropdownMenuItem(
+                        value: countries,
+                        child: Text('$countries '),
+                      );
+                    }).toList(),
+                    onChanged: (valcountry) => setState(() => _currentCountry = valcountry),
+                  ),
                 ),
-              ),
-              
-              SizedBox(height: 20.0),
 
-              // dropdown for gender
-              // Lacks validation
-              Container(
-                padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
-                width: 350.0,
-                child: DropdownButtonFormField(
-                  hint: Text('Género'),
-                  decoration: textInputDecoration,
-                  items: gender.map((genders){
-                    return DropdownMenuItem(
-                      value: genders,
-                      child: Text('$genders '),
-                    );
-                  }).toList(),
-                  onChanged: (valgenders) => setState(() => _currentgender = valgenders),
-                ),
-              ),
-              
-              SizedBox(height: 20.0),
+                SizedBox(height: 20.0),
 
-              // dropdown for type of profile
-              // Lacks validation
-              Container(
-                padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
-                width: 350.0,
-                child: DropdownButtonFormField(
-                  hint: Text('Tipo de perfil'),
-                  decoration: textInputDecoration,
-                  items: type.map((types){
-                    return DropdownMenuItem(
-                      value: types,
-                      child: Text('$types '),
-                    );
-                  }).toList(),
-                  onChanged: (valtypes) => setState(() => _currenType = valtypes),
+                // text for phone number
+                Container(
+                  padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
+                  width: 350.0,
+                  child: TextFormField(
+                    decoration: textInputDecoration.copyWith(hintText: 'Numero de teléfono'),
+                    validator: (valphone) => valphone.isEmpty ? 'Por favor ingresa tu número de teléfono' : null,
+                    onChanged: (valphone) => setState(() => _currentPhone = valphone),
+                  ),
                 ),
-              ),
-              
-              SizedBox(height: 20.0),
-              
-              // Update the DB
-              RaisedButton(
-                color: Colors.blue[200],
-                child: Text( 
-                  'Enviar',
-                  style: TextStyle(color: Colors.white),
+                
+                SizedBox(height: 20.0),
+
+                // dropdown for gender
+                Container(
+                  padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
+                  width: 350.0,
+                  child: DropdownButtonFormField(
+                    hint: Text('Género'),
+                    decoration: textInputDecoration,
+                    validator: (valgenders) => valgenders.isEmpty ? 'Por favor ingresa tu género' : null,
+                    items: gender.map((genders){
+                      return DropdownMenuItem(
+                        value: genders,
+                        child: Text('$genders '),
+                      );
+                    }).toList(),
+                    onChanged: (valgenders) => setState(() => _currentgender = valgenders),
+                  ),
                 ),
-                onPressed: () async{
-                  // update the data in the DB
-                  if(_formKey.currentState.validate()){
-                    await DatabaseService(uid: user.uid).updateUserData(
-                      // if there's no new data, remain with the same as before
-                      _currentBirthday.toString() ?? userData.birthday, 
-                      _currentCountry ?? userData.country,
-                      _currentCreation ?? 'hoy',
-                      _currentgender ?? userData.gender,
-                      _currentName ?? userData.name, 
-                      _currentPhone ?? userData.phone,
-                      _currentState ?? 'activo',
-                      _currenType ?? userData.type,
-                    );
-                    // redirect to profile page
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserProfile()),);
-                  }
-                } // onPressed
-              )
-            ],
-          )
+                
+                SizedBox(height: 20.0),
+
+                // dropdown for type of profile
+                Container(
+                  padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
+                  width: 350.0,
+                  child: DropdownButtonFormField(
+                    hint: Text('Tipo de perfil'),
+                    decoration: textInputDecoration,
+                    validator: (valtypes) => valtypes.isEmpty ? 'Por favor ingresa el tipo de perfil' : null,
+                    items: type.map((types){
+                      return DropdownMenuItem(
+                        value: types,
+                        child: Text('$types '),
+                      );
+                    }).toList(),
+                    onChanged: (valtypes) => setState(() => _currenType = valtypes),
+                  ),
+                ),
+                
+                SizedBox(height: 20.0),
+                
+                // Update the DB
+                RaisedButton(
+                  color: Colors.blue[200],
+                  child: Text( 
+                    'Enviar',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onPressed: () async{
+                    // update the data in the DB
+                    if(_formKey.currentState.validate()){
+                      await DatabaseService(uid: user.uid).updateUserData(
+                        // if there's no new data, remain with the same as before
+                        _currentBirthday.toString() ?? userData.birthday, 
+                        _currentCountry ?? userData.country,
+                        _currentCreation ?? 'hoy',
+                        _currentgender ?? userData.gender,
+                        _currentName ?? userData.name, 
+                        _currentPhone ?? userData.phone,
+                        _currentState ?? 'activo',
+                        _currenType ?? userData.type,
+                      );
+                      // redirect to profile page
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserProfile()),);
+                    }
+                  } // onPressed
+                )
+              ],
+            ),
+          ),
         );
       }
     );
