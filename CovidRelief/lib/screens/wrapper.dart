@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:CovidRelief/screens/home/home.dart';
 import 'package:CovidRelief/models/user.dart';
 import 'package:provider/provider.dart';
-
+import 'package:CovidRelief/screens/home/settings_form.dart';
 
 
 
@@ -18,7 +18,7 @@ class Wrapper extends StatelessWidget {
     if (user == null){
       return Authenticate();
     } else {
-      return Home();
+      return UserDataForm();
     }
     
   }
