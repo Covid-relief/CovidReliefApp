@@ -54,6 +54,16 @@ class _UserDataFormState extends State<UserDataForm> {
     }
     return color;
   }
+  // padding changes when date selected
+  EdgeInsets paddingdate(){
+    EdgeInsets pad;
+    if (selectedDate() == 'Fecha de nacimiento') {
+      pad=EdgeInsets.fromLTRB(13, 15, 155, 15);
+    }else{
+      pad=EdgeInsets.fromLTRB(15, 15, 215, 15);
+    }
+    return pad;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,10 +104,12 @@ class _UserDataFormState extends State<UserDataForm> {
                   SizedBox(height: 20.0),
 
                   // Date picker for birthday
-                  FlatButton(
+                  Container(
+                  margin: EdgeInsets.fromLTRB(40, 0, 0, 0),
+                  child: FlatButton(
                     color: Colors.white,
                     // padding is the spacing inside the element
-                    padding: EdgeInsets.fromLTRB(10, 15, 150, 15),
+                    padding: paddingdate(),
                     child: Text(
                     '${selectedDate()}',
                       style: TextStyle(
@@ -112,7 +124,7 @@ class _UserDataFormState extends State<UserDataForm> {
                         context: context,
                         initialDate: DateTime.now().subtract(Duration(days: 6570)),
                         firstDate: DateTime(1920, 1, 1),
-                        lastDate: DateTime.now().subtract(Duration(days: 6570))
+                        lastDate: DateTime.now().subtract(Duration(days: 6570)),
                       ).then((date){
                         // change variable value (current date in DB) to selected
                         setState((){
@@ -120,7 +132,7 @@ class _UserDataFormState extends State<UserDataForm> {
                         });
                       });
                     },
-                  ),
+                  ),),
 
                   SizedBox(height: 20.0),
 

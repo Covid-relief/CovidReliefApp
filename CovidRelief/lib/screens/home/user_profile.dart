@@ -35,6 +35,7 @@ class UserProfile extends StatelessWidget {
           appBar: AppBar(
             title: Text('Perfil'),
             backgroundColor: Colors.red[400],
+              /*
               actions: <Widget> [
                 FlatButton.icon(
                   icon : Icon(Icons.settings),
@@ -42,6 +43,7 @@ class UserProfile extends StatelessWidget {
                   onPressed:() {},
                 ),
               ],
+              */
           ),
           drawer: Drawer(
             child: ListView(
