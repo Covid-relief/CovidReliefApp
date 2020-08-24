@@ -6,6 +6,7 @@ import 'package:CovidRelief/services/auth.dart';
 import 'package:CovidRelief/services/database.dart';
 import 'package:provider/provider.dart';
 import 'package:CovidRelief/screens/home/user_profile.dart';
+import 'package:CovidRelief/screens/HelpCategory/HelpCategories.dart';
 
 
 class Home extends StatelessWidget {
@@ -53,6 +54,7 @@ class Home extends StatelessWidget {
                  // label: Text("Configuración"),
                  // onPressed:() => _showSettingsPanel(),
                // ),
+
                 FlatButton.icon(
                   icon: Icon(Icons.person),
                   label: Text('Cerrar Sesión'),
@@ -96,7 +98,10 @@ class Home extends StatelessWidget {
                           padding: const EdgeInsets.all(2.0),
                           textColor: Colors.white,
                           color: Colors.orangeAccent[700],
-                          onPressed:() {},
+                          onPressed:() {
+                            print("button press");
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Category()),);
+                          },
                           child: new Text("Quiero ayudar"),
                       ),
                     ),
@@ -111,7 +116,9 @@ class Home extends StatelessWidget {
                         padding: const EdgeInsets.all(2.0),
                         textColor: Colors.white,
                         color: Colors.orangeAccent[700],
-                        onPressed:() {},
+                        onPressed:() {
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Category()),);
+                        },
                         child: new Text("Necesito ayuda"),
                       ),
                     ),

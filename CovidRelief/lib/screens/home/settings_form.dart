@@ -75,7 +75,9 @@ class _UserDataFormState extends State<UserDataForm> {
       appBar: AppBar(
         title: Text('Registrarse'),
         backgroundColor: Colors.red[400],
+
       ),
+
       body: StreamBuilder<UserData>(
         stream: DatabaseService(uid: user.uid).userData,
         builder: (context, snapshot) {
@@ -86,7 +88,14 @@ class _UserDataFormState extends State<UserDataForm> {
             child: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
+                  FlatButton.icon(
+                    icon: Icon(Icons.person),
+                    label: Text('Cerrar Sesión'),
+                    onPressed: ()  {
 
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Authenticate()),);
+                    },
+                  ),
                   // this sizebox helps us to keep distance between elements
                   SizedBox(height: 30.0),
 
