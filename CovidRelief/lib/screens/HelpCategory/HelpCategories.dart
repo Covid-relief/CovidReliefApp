@@ -1,4 +1,5 @@
 import 'package:CovidRelief/models/profile.dart';
+import 'package:CovidRelief/screens/HelpCategory/PersonalizedHelp.dart';
 import 'package:CovidRelief/screens/authenticate/authenticate.dart';
 import 'package:CovidRelief/screens/home/settings_form.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +43,9 @@ class Category extends StatelessWidget {
                     padding: const EdgeInsets.all(2.0),
                     textColor: Colors.white,
                     color: Colors.orangeAccent[700],
-                    onPressed:() {},
+                    onPressed:() async {
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Help()),);
+                    },
                     child: new Text("Business"),
                   ),
                 ),
