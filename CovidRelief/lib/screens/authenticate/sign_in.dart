@@ -163,12 +163,13 @@ class _SignInState extends State<SignIn> {
                     String value = await storage.read(key: "mykey");
                     if(_formKey.currentState.validate()){
                       dynamic result = await _auth.signInEmailandPassword(email, value);
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
                       if(result == null) {
                         setState(() {
                           error = 'No es posible Iniciar Sesión con ese correo/constraseña';
                         });
-                      }
+                      } else {
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
+                      };
                     }
                   }
               ),

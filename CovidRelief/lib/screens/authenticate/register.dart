@@ -1,3 +1,4 @@
+import 'package:CovidRelief/screens/home/settings_form.dart';
 import 'package:flutter/material.dart';
 import 'package:CovidRelief/services/auth.dart';
 import 'package:CovidRelief/shared/constants.dart';
@@ -102,7 +103,9 @@ class _RegisterState extends State<Register> {
                       setState(() {
                         error = 'Por favor ingrese un correo valido';
                       });
-                    }
+                    } else {
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserDataForm()),);
+                    };
                   }
                 },
               ),
