@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:CovidRelief/services/auth.dart';
 import 'package:CovidRelief/shared/constants.dart';
+import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 
 class Register extends StatefulWidget {
 
@@ -25,23 +27,36 @@ class _RegisterState extends State<Register> {
   String email = '';
   String password = '';
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.red[100],
+      backgroundColor: Colors.teal[50],
       appBar: AppBar(
-        backgroundColor: Colors.red[400],
+        backgroundColor: Colors.cyan[700],
         elevation: 0.0,
-        title: Text('Registrarse'),
+        title: Text('Registrarse',
+          style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w900,
+              fontFamily: 'Open Sans',
+              fontSize: 25),
+        ),
         actions: <Widget>[
           FlatButton.icon(
             icon: Icon(Icons.person),
-            label: Text('Iniciar Sesión'),
-            color: Color(0xFF1976D2),
+            label: Text('Iniciar Sesión',
+              style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontFamily: 'Open Sans',
+                  ),
+            ),
+            color: Colors.teal[200],
             onPressed: () => widget.toggleView(),
             shape: RoundedRectangleBorder(side: BorderSide(
-                color: Color(0xFF1976D2),
-                width: 1,
+                color: Colors.teal[200],
+                width: 0.5,
                 style: BorderStyle.solid
             ), borderRadius: BorderRadius.circular(40)),
           ),
@@ -71,10 +86,9 @@ class _RegisterState extends State<Register> {
                   storage.write(key: "mykey", value: password);
                 },
               ),
-              
-              SizedBox(height: 20.0),
+              SizedBox(height: 15.0),
               RaisedButton(
-                color: Colors.pink[400],
+                color: Colors.teal,
                 child: Text(
                   'Registrarse',
                   style: TextStyle(color: Colors.white),
@@ -92,18 +106,13 @@ class _RegisterState extends State<Register> {
                   }
                 },
               ),
-              RaisedButton(
-                color: Colors.blue[400],
-                child: Text(
-                  'Sign With Google',
-                  style: TextStyle(color: Colors.white),
-                ),
+              GoogleSignInButton(
                 onPressed: () async {
                   _auth.signInWithGoogle();
-
                 },
               ),
-              SizedBox(height: 12.0),
+              FacebookSignInButton(
+              ),
               Text(
                 error,
                 style: TextStyle(color: Colors.red, fontSize: 14.0),

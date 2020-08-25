@@ -13,15 +13,21 @@ class Help extends StatelessWidget{
       return Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
-            title: Text('CovidRelief'),
-            backgroundColor: Colors.red[400],
+            title: Text('Covid Relief',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w900,
+                  fontStyle: FontStyle.italic,
+                  fontFamily: 'Open Sans',
+                  fontSize: 25),),
+            backgroundColor: Colors.lightBlue[900],
             elevation: 0.0,),
           drawer: Drawer(
             child: ListView(
               children: [
                 DrawerHeader(
                   decoration: BoxDecoration(
-                    color: Colors.redAccent,
+                    color: Colors.lightBlue[900],
                   ),
                 ),
                 ListTile(
@@ -61,39 +67,39 @@ class Help extends StatelessWidget{
             children: <Widget>[
               Container(
                 height: 90,
-                child: const Center(child: Text('¿Cómo deseas ayudar?', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))),
+                child: const Center(child: Text('¿Cómo deseas ayudar?', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold))),
               ),
               Container(
-                height: 50,
+                height: 20,
               ),
               Container(
-                height: 50,
-                padding: EdgeInsets.fromLTRB(50,0,50,0),
+                height: 120,
+                padding: EdgeInsets.fromLTRB(70,0,70,0),
                 child:
                 RaisedButton(
-                  padding: const EdgeInsets.all(2.0),
+                  padding: const EdgeInsets.all(0.0),
                   textColor: Colors.white,
-                  color: Colors.orangeAccent[700],
+                  color: Colors.teal[200],
                   onPressed:() async {
                     //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ),);
                   },
-                  child: new Text("Tips y consejos generales"),
+                  child: Text("Tips y consejos generales", style: TextStyle(fontSize: 20), textAlign: TextAlign.center),
                 ),
               ),
               Container(
                 height: 20,
               ),
               Container(
-                height: 50,
-                padding: EdgeInsets.fromLTRB(50,0,50,0),
+                height: 120,
+                padding: EdgeInsets.fromLTRB(70,0,70,0),
                 child:
                 RaisedButton(
-                  padding: const EdgeInsets.all(2.0),
+                  padding: const EdgeInsets.all(0.0),
                   textColor: Colors.white,
-                  color: Colors.orangeAccent[700],
+                  color: Colors.teal[200],
                   onPressed:() {
                   },
-                  child: new Text("Apoyo personalizado y contacto personal"),
+                  child: Text("Apoyo personalizado y contacto personal", style: TextStyle(fontSize: 20), textAlign: TextAlign.center)
                 ),
               ),
               Container(

@@ -34,7 +34,7 @@ class UserProfile extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(
             title: Text('Perfil'),
-            backgroundColor: Colors.red[400],
+            backgroundColor: Colors.cyan[700],
               /*
               actions: <Widget> [
                 FlatButton.icon(
@@ -50,7 +50,7 @@ class UserProfile extends StatelessWidget {
               children: [
                 DrawerHeader(
                   decoration: BoxDecoration(
-                    color: Colors.redAccent,
+                    color: Colors.cyan[700],
                   ),
                 ),
                 ListTile(
@@ -80,7 +80,7 @@ class UserProfile extends StatelessWidget {
                   // Circle for profile picture
                     CircleAvatar(
                       radius: 50.0,
-                      backgroundColor: Colors.red[900]
+                      backgroundColor: Colors.lightBlue[900]
                     ),
                     SizedBox(height: 20.0),
                     // Diplay name

@@ -71,13 +71,31 @@ class _UserDataFormState extends State<UserDataForm> {
     // this variable allows us to get the uid that contains the info of the user
     final user = Provider.of<User>(context);
     return Scaffold(
-      backgroundColor: Colors.red[100],
+      backgroundColor: Colors.teal[50],
       appBar: AppBar(
-        title: Text('Registrarse'),
-        backgroundColor: Colors.red[400],
-
+        title: Text('Registrarse',
+          style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w900,
+              fontStyle: FontStyle.italic,
+              fontFamily: 'Open Sans',
+              fontSize: 25),),
+        backgroundColor: Colors.cyan[700],
+        actions: <Widget>[
+          FlatButton.icon(
+            icon: Icon(Icons.person),
+            label: Text('Inicio',
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontFamily: 'Open Sans',
+              ),
+            ),
+            onPressed: ()  {
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
+            },
+          ),
+        ],
       ),
-
       body: StreamBuilder<UserData>(
         stream: DatabaseService(uid: user.uid).userData,
         builder: (context, snapshot) {
@@ -88,17 +106,8 @@ class _UserDataFormState extends State<UserDataForm> {
             child: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  FlatButton.icon(
-                    icon: Icon(Icons.person),
-                    label: Text('Cerrar Sesión'),
-                    onPressed: ()  {
-
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Authenticate()),);
-                    },
-                  ),
                   // this sizebox helps us to keep distance between elements
                   SizedBox(height: 30.0),
-
                   // input text for name
                   Container(
                     width: 350.0,

@@ -29,17 +29,24 @@ class Home extends StatelessWidget {
         value: DatabaseService().perfiles,
           //child: Container(
           child: Scaffold(
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.teal[50],
             appBar: AppBar(
-              title: Text('CovidRelief'),
-              backgroundColor: Colors.red[400],
+              title: Text('Covid Relief',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w900,
+                    fontStyle: FontStyle.italic,
+                    fontFamily: 'Open Sans',
+                    fontSize: 25),
+              ),
+              backgroundColor: Colors.cyan[700],
               elevation: 0.0,),
            drawer: Drawer(
             child: ListView(
               children: [
                 DrawerHeader(
                   decoration: BoxDecoration(
-                    color: Colors.redAccent,
+                    color: Colors.cyan[700],
                   ),
                 ),
                 ListTile(
@@ -71,14 +78,14 @@ class Home extends StatelessWidget {
                   padding: const EdgeInsets.all(15),
                   children: <Widget>[
                     Container(
-                      height: 90,
-                      child: const Center(child: Text('Bienvenido a COVID-19 Relief', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))),
+                      height: 80,
+                      child: const Center(child: Text('Bienvenido a COVID-19 Relief', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold))),
                     ),
                     Container(
-                      height: 120,
-                      padding: EdgeInsets.fromLTRB(10,0,10,0),
+                      height: 130,
+                      padding: EdgeInsets.fromLTRB(25,0,25,0),
                       decoration: BoxDecoration(
-                        color: Colors.cyan[400],
+                        color: Colors.white,
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       child: const Center(child: Text('Te recordamos que esta es una plataforma facilitada por la Universidad '
@@ -91,35 +98,48 @@ class Home extends StatelessWidget {
                       height: 40,
                     ),
                     Container(
-                      height: 50,
-                      padding: EdgeInsets.fromLTRB(50,0,50,0),
+                      height: 60,
+                      padding: EdgeInsets.fromLTRB(60,0,60,0),
                       child:
                       RaisedButton(
                           padding: const EdgeInsets.all(2.0),
                           textColor: Colors.white,
-                          color: Colors.orangeAccent[700],
+                          color: Colors.lightBlue[900],
+                          shape: StadiumBorder(),
                           onPressed:() {
-                            print("button press");
                             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Category()),);
                           },
-                          child: new Text("Quiero ayudar"),
+                          child: new Text("Quiero ayudar",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w800,
+                                fontSize: 15,
+                                fontFamily: 'Open Sans',)
+                          ),
                       ),
                     ),
                     Container(
                       height: 15,
                     ),
                     Container(
-                      height: 50,
-                      padding: EdgeInsets.fromLTRB(50,0,50,0),
+                      height: 60,
+                      padding: EdgeInsets.fromLTRB(60,0,60,0),
                       child:
                       RaisedButton(
                         padding: const EdgeInsets.all(2.0),
                         textColor: Colors.white,
-                        color: Colors.orangeAccent[700],
+                        color: Colors.lightBlue[900],
+                        shape: StadiumBorder(),
                         onPressed:() {
                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Category()),);
                         },
-                        child: new Text("Necesito ayuda"),
+                        child: new Text("Necesito ayuda",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w800,
+                              fontFamily: 'Open Sans',),
+                        ),
                       ),
                     ),
                     Container(

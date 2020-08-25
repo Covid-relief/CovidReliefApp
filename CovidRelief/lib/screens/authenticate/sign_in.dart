@@ -77,21 +77,31 @@ class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.red[100],
+      backgroundColor: Colors.teal[50],
       appBar: AppBar(
-        backgroundColor: Colors.red[400],
+        backgroundColor: Colors.cyan[700],
         elevation: 1.0,
-        title: Text('Iniciar Sesión'),
+        title: Text('Iniciar Sesión',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w900,
+            fontFamily: 'Open Sans',
+            fontSize: 25),),
         actions: <Widget>[
           FlatButton.icon(
             icon: Icon(Icons.person),
-            label: Text('Registrarse'),
-            color: Color(0xFF1976D2),
+            label: Text('Registrarse',
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontFamily: 'Open Sans',
+              ),
+            ),
+            color: Colors.teal[200],
             onPressed: () => widget.toggleView(),
             shape: RoundedRectangleBorder(
                 side: BorderSide(
-                    color: Color(0xFF1976D2),
-                    width: 1,
+                    color: Colors.teal[200],
+                    width: 0.5,
                     style: BorderStyle.solid),
                 borderRadius: BorderRadius.circular(30)),
           ),
@@ -144,7 +154,7 @@ class _SignInState extends State<SignIn> {
                 ],
               )),
               RaisedButton(
-                  color: Colors.pink[400],
+                  color: Colors.teal,
                   child: Text(
                     'Iniciar Sesión',
                     style: TextStyle(color: Colors.white),
@@ -163,7 +173,6 @@ class _SignInState extends State<SignIn> {
                   }
               ),
               // Google Sign In button
-
               GoogleSignInButton(
                 onPressed: () async {
                   /*if (_formKey.currentState.validate()) {
@@ -174,7 +183,6 @@ class _SignInState extends State<SignIn> {
                       });
                     }
                   }*/
-
                   _auth.signInWithGoogle();
                 },
               ),
