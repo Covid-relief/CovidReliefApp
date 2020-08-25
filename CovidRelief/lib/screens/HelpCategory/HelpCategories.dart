@@ -1,13 +1,13 @@
 import 'package:CovidRelief/models/profile.dart';
 import 'package:CovidRelief/screens/HelpCategory/PersonalizedHelp.dart';
 import 'package:CovidRelief/screens/authenticate/authenticate.dart';
+import 'package:CovidRelief/screens/home/home.dart';
 import 'package:CovidRelief/screens/home/settings_form.dart';
 import 'package:flutter/material.dart';
 import 'package:CovidRelief/services/auth.dart';
 import 'package:CovidRelief/services/database.dart';
 import 'package:provider/provider.dart';
 import 'package:CovidRelief/screens/home/user_profile.dart';
-
 
 
 class Category extends StatelessWidget {
@@ -22,7 +22,45 @@ class Category extends StatelessWidget {
               title: Text('CovidRelief'),
               backgroundColor: Colors.red[400],
               elevation: 0.0,),
+          drawer: Drawer(
+            child: ListView(
+              children: [
+                DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Colors.redAccent,
+                  ),
+                ),
+                ListTile(
+                  leading: Icon(Icons.account_circle),
+                  title: Text('Inicio',),
+                  onTap: () async {
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.account_circle),
+                  title: Text('Perfil',),
+                  onTap: () async {
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserProfile()),);
+                  },
+                ),
+                //FlatButton.icon(
+                //  icon : Icon(Icons.settings),
+                // label: Text("Configuración"),
+                // onPressed:() => _showSettingsPanel(),
+                // ),
 
+                FlatButton.icon(
+                  icon: Icon(Icons.person),
+                  label: Text('Cerrar Sesión'),
+                  onPressed: () async {
+                    await _auth.signOut();
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Authenticate()),);
+                  },
+                ),
+              ],
+            ),
+          ),
             body:
             ListView(
               padding: const EdgeInsets.all(15),
@@ -61,7 +99,7 @@ class Category extends StatelessWidget {
                     textColor: Colors.white,
                     color: Colors.orangeAccent[700],
                     onPressed:() {
-
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Help()),);
                     },
                     child: new Text("Tecnología"),
                   ),
@@ -77,8 +115,8 @@ class Category extends StatelessWidget {
                     padding: const EdgeInsets.all(2.0),
                     textColor: Colors.white,
                     color: Colors.orangeAccent[700],
-                    onPressed:() {
-
+                    onPressed:() async {
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Help()),);
                     },
                     child: new Text("Medicina"),
                   ),
@@ -94,8 +132,8 @@ class Category extends StatelessWidget {
                     padding: const EdgeInsets.all(2.0),
                     textColor: Colors.white,
                     color: Colors.orangeAccent[700],
-                    onPressed:() {
-
+                    onPressed:() async {
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Help()),);
                     },
                     child: new Text("Psicología"),
                   ),

@@ -1,6 +1,11 @@
+import 'package:CovidRelief/screens/authenticate/authenticate.dart';
+import 'package:CovidRelief/screens/home/home.dart';
+import 'package:CovidRelief/screens/home/user_profile.dart';
+import 'package:CovidRelief/services/auth.dart';
 import 'package:flutter/material.dart';
 
 class Help extends StatelessWidget{
+  final AuthService _auth = AuthService();
 
     @override
     // State<StatefulWidget> createState() {
@@ -11,6 +16,45 @@ class Help extends StatelessWidget{
             title: Text('CovidRelief'),
             backgroundColor: Colors.red[400],
             elevation: 0.0,),
+          drawer: Drawer(
+            child: ListView(
+              children: [
+                DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Colors.redAccent,
+                  ),
+                ),
+                ListTile(
+                  leading: Icon(Icons.account_circle),
+                  title: Text('Inicio',),
+                  onTap: () async {
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.account_circle),
+                  title: Text('Perfil',),
+                  onTap: () async {
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserProfile()),);
+                  },
+                ),
+                //FlatButton.icon(
+                //  icon : Icon(Icons.settings),
+                // label: Text("Configuración"),
+                // onPressed:() => _showSettingsPanel(),
+                // ),
+
+                FlatButton.icon(
+                  icon: Icon(Icons.person),
+                  label: Text('Cerrar Sesión'),
+                  onPressed: () async {
+                    await _auth.signOut();
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Authenticate()),);
+                  },
+                ),
+              ],
+            ),
+          ),
           body:
           ListView(
             padding: const EdgeInsets.all(15),
@@ -33,7 +77,7 @@ class Help extends StatelessWidget{
                   onPressed:() async {
                     //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ),);
                   },
-                  child: new Text("Puedo dar tips y consejos generales"),
+                  child: new Text("Tips y consejos generales"),
                 ),
               ),
               Container(
@@ -49,7 +93,7 @@ class Help extends StatelessWidget{
                   color: Colors.orangeAccent[700],
                   onPressed:() {
                   },
-                  child: new Text("Quiero dar apoyo personalizado y que me contacten"),
+                  child: new Text("Apoyo personalizado y contacto personal"),
                 ),
               ),
               Container(
