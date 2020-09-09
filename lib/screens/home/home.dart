@@ -63,7 +63,7 @@ class Home extends StatelessWidget {
                  // onPressed:() => _showSettingsPanel(),
                // ),
                ListTile(
-                  leading: Icon(Icons.leak_add),
+                  leading: Icon(Icons.track_changes),
                   title: Text('Contact Trace',),
                   onTap: () async {
                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ContactTrace()),);

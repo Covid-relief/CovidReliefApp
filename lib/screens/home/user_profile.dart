@@ -62,7 +62,7 @@ class UserProfile extends StatelessWidget {
                   },
                 ),
                 ListTile(
-                  leading: Icon(Icons.leak_add),
+                  leading: Icon(Icons.track_changes),
                   title: Text('Contact Trace',),
                   onTap: () async {
                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ContactTrace()),);
