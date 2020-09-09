@@ -4,6 +4,12 @@ import 'package:CovidRelief/screens/home/user_profile.dart';
 import 'package:CovidRelief/services/auth.dart';
 import 'package:CovidRelief/shared/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:CovidRelief/screens/give_help/uploadImage.dart';
+import 'package:intl/intl.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class PostHelp extends StatefulWidget {
 
@@ -12,6 +18,17 @@ class PostHelp extends StatefulWidget {
 }
 
 class _PostHelpState extends State<PostHelp> {
+
+  File sampleImage;
+
+  Future getImage()async{
+    var tempImage = await ImagePicker.pickImage(source: ImageSource.gallery);
+    setState((){
+      sampleImage = tempImage;
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,137 +43,153 @@ class _PostHelpState extends State<PostHelp> {
                   fontSize: 25),),
             backgroundColor: Colors.lightBlue[900],
             elevation: 0.0,),
-            body: ListView(
-              children: <Widget>[
-                SizedBox(height: 30.0),
-                Container(
-                  padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
-                  child: Text('Keywords: ')
-                ),
-                Row(
-                  children: <Widget>[
-                  // aca va el feature de las keywords
-                  ],
-                ),
-                SizedBox(height: 30.0),
-                Container(
+            body: Form(
+              child: ListView(
+                children: <Widget>[
+                  SizedBox(height: 30.0),
+                  Container(
                     padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
-                    child: TextFormField(
-                      decoration: textInputDecoration.copyWith(hintText: 'Titulo'),
-                    ),
-                ),
-                SizedBox(height: 30.0),
-                Container(
+                    child: Text('Keywords: ')
+                  ),
+                  Row(
+                    children: <Widget>[
+                    // aca va el feature de las keywords
+                    ],
+                  ),
+                  SizedBox(height: 30.0),
+                  Container(
+                      padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
+                      child: TextFormField(
+                        decoration: textInputDecoration.copyWith(hintText: 'Titulo'),
+                      ),
+                  ),
+                  SizedBox(height: 30.0),
+                  Container(
+                      padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
+                      child:TextFormField(
+                        keyboardType: TextInputType.multiline,
+                        maxLines: 15,
+                        decoration: textInputDecoration.copyWith(hintText: 'Escribe tu consejo... (opcional)'),
+                        //contentPadding: new EdgeInsets.fromLTRB(15, 0, 0, 200),
+                      ),
+                  ),
+                  SizedBox(height: 30.0),
+                  Container(
                     padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
-                    child:TextFormField(
-                      keyboardType: TextInputType.multiline,
-                      maxLines: 15,
-                      decoration: textInputDecoration.copyWith(hintText: 'Escribe tu consejo... (opcional)'),
-                      //contentPadding: new EdgeInsets.fromLTRB(15, 0, 0, 200),
+                    child: Text('Adjuntos (opcional)')
+                  ),
+                  SizedBox(height: 20.0),
+                  Column(children: <Widget>[
+                    Row(children: <Widget>[
+                    // button to submit links
+                    SizedBox(
+                      width: 110,
+                      child: MaterialButton(
+                      onPressed: () {},
+                      color: Colors.blue,
+                      textColor: Colors.white,
+                      child: Icon(
+                        Icons.insert_link,
+                        size: 24,
+                      ),
+                      //padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
+                      shape: CircleBorder(),
                     ),
-                ),
-                SizedBox(height: 30.0),
-                Container(
-                  padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
-                  child: Text('Adjuntos (opcional)')
-                ),
-                SizedBox(height: 20.0),
-                Column(children: <Widget>[
+                    ),
+
+                    // button to submit images
+                    
+                    SizedBox(
+                      width: 75,
+                      child: MaterialButton(
+                      onPressed: () => getImage(),
+                      color: Colors.blue,
+                      textColor: Colors.white,
+                      child: Icon(
+                        Icons.add_photo_alternate,
+                        size: 24,
+                      ),
+                      //padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
+                      shape: CircleBorder(),
+                    ),
+                    ),
+
+                    // button to submit videos
+
+                    SizedBox(
+                      width: 75,
+                      child: MaterialButton(
+                      onPressed: () {},
+                      color: Colors.blue,
+                      textColor: Colors.white,
+                      child: Icon(
+                        Icons.video_library,
+                        size: 24,
+                      ),
+                      //padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
+                      shape: CircleBorder(),
+                    ),
+                    ),
+
+                    // button to submit documents
+                    SizedBox(
+                      width: 110,
+                      child:MaterialButton(
+                      onPressed: () {},
+                      color: Colors.blue,
+                      textColor: Colors.white,
+                      child: Icon(
+                        Icons.archive,
+                        size: 24,
+                      ),
+                      //padding: EdgeInsets.all(16),
+                      shape: CircleBorder(),
+                    ),
+                    ),
+
+                  ],),
                   Row(children: <Widget>[
-                  // button to submit links
-                  SizedBox(
-                    width: 110,
-                    child: MaterialButton(
-                    onPressed: () {},
-                    color: Colors.blue,
-                    textColor: Colors.white,
-                    child: Icon(
-                      Icons.insert_link,
-                      size: 24,
+                    // link text
+                    Container(
+                      padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
+                      child: Text('Link')
                     ),
-                    //padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
-                    shape: CircleBorder(),
-                  ),
-                  ),
-
-                  // button to submit images
+                    // image text
+                    Container(
+                      padding: EdgeInsets.fromLTRB(58, 0, 0, 0),
+                      child: Text('Imagen')
+                    ),
+                    // video text
+                    Container(
+                      padding: EdgeInsets.fromLTRB(33, 0, 0, 0),
+                      child: Text('Video')
+                    ),
+                    // documenttext
+                    Container(
+                      padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
+                      child: Text('Documento')
+                    ),
+                  ],)
+                  ],),
                   
-                  SizedBox(
-                    width: 75,
-                    child: MaterialButton(
-                    onPressed: () {},
-                    color: Colors.blue,
-                    textColor: Colors.white,
-                    child: Icon(
-                      Icons.add_photo_alternate,
-                      size: 24,
+                  SizedBox(height: 30.0),
+                  Container(
+                    child: imageUp(sampleImage),
+                  ),
+                  
+                  // arreglar el display 
+                  RaisedButton(
+                    color: Colors.teal,
+                    child: Text(
+                      'Publicar',
+                      style: TextStyle(color: Colors.white),
                     ),
-                    //padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
-                    shape: CircleBorder(),
+                    onPressed: () {
+                    },
                   ),
-                  ),
-
-                  // button to submit videos
-
-                  SizedBox(
-                    width: 75,
-                    child: MaterialButton(
-                    onPressed: () {},
-                    color: Colors.blue,
-                    textColor: Colors.white,
-                    child: Icon(
-                      Icons.video_library,
-                      size: 24,
-                    ),
-                    //padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
-                    shape: CircleBorder(),
-                  ),
-                  ),
-
-                  // button to submit documents
-                  SizedBox(
-                    width: 110,
-                    child:MaterialButton(
-                    onPressed: () {},
-                    color: Colors.blue,
-                    textColor: Colors.white,
-                    child: Icon(
-                      Icons.archive,
-                      size: 24,
-                    ),
-                    //padding: EdgeInsets.all(16),
-                    shape: CircleBorder(),
-                  ),
-                  ),
-
-                ],),
-                Row(children: <Widget>[
-                  // link text
-                  Container(
-                    padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
-                    child: Text('Link')
-                  ),
-                  // image text
-                  Container(
-                    padding: EdgeInsets.fromLTRB(58, 0, 0, 0),
-                    child: Text('Imagen')
-                  ),
-                  // video text
-                  Container(
-                    padding: EdgeInsets.fromLTRB(33, 0, 0, 0),
-                    child: Text('Video')
-                  ),
-                  // documenttext
-                  Container(
-                    padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
-                    child: Text('Documento')
-                  ),
-                ],)
-                ],),
-                
-                // falta boton de enviar
-              ],
-            )
+                ],
+            ),
+          )
       );
   }
 }
