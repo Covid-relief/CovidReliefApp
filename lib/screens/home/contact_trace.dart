@@ -1,7 +1,6 @@
 import 'package:CovidRelief/models/profile.dart';
 import 'package:CovidRelief/screens/authenticate/authenticate.dart';
 import 'package:CovidRelief/screens/home/home.dart';
-import 'package:CovidRelief/screens/home/contact_trace.dart';
 import 'package:CovidRelief/screens/home/settings_form.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +8,10 @@ import 'package:CovidRelief/services/auth.dart';
 import 'package:CovidRelief/models/user.dart';
 import 'package:provider/provider.dart';
 import 'package:CovidRelief/services/database.dart';
+import 'package:CovidRelief/screens/home/user_profile.dart';
 
-class UserProfile extends StatelessWidget {
+
+class ContactTrace extends StatelessWidget {
 
 @override
   Widget build(BuildContext context) {
@@ -34,7 +35,7 @@ class UserProfile extends StatelessWidget {
 
         return Scaffold(
           appBar: AppBar(
-            title: Text('Perfil'),
+            title: Text('CONTACT TRACE'),
             backgroundColor: Colors.cyan[700],
               /*
               actions: <Widget> [
@@ -60,12 +61,13 @@ class UserProfile extends StatelessWidget {
                   onTap: () async {
                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
                   },
+                  
                 ),
                 ListTile(
-                  leading: Icon(Icons.leak_add),
-                  title: Text('Contact Trace',),
+                  leading: Icon(Icons.account_circle),
+                  title: Text('Perfil',),
                   onTap: () async {
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ContactTrace()),);
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserProfile()),);
                   },
                 ),
                 FlatButton.icon(
