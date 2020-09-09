@@ -3,6 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:nearby_connections/nearby_connections.dart';
+import 'package:CovidRelief/screens/home/home.dart';
+import 'package:CovidRelief/services/auth.dart';
+import 'package:CovidRelief/screens/authenticate/authenticate.dart';
+import 'package:CovidRelief/screens/home/user_profile.dart';
+
 
 import 'components/contact_card.dart';
 import 'constants.dart';
@@ -29,7 +34,7 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
     await getCurrentUser();
 
     _firestore
-        .collection('users')
+        .collection('perfiles')
         .document(loggedInUser.email)
         .collection('met_with')
         .snapshots()
@@ -59,7 +64,7 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
     DateTime timeNow = DateTime.now(); //get today's time
 
     _firestore
-        .collection('users')
+        .collection('perfiles')
         .document(loggedInUser.email)
         .collection('met_with')
         .snapshots()
@@ -87,7 +92,7 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
         print('I saw id:$id with name:$name'); // the name here is an email
 
         var docRef =
-            _firestore.collection('users').document(loggedInUser.email);
+            _firestore.collection('perfiles').document(loggedInUser.email);
 
         //  When I discover someone I will see their email and add that email to the database of my contacts
         //  also get the current time & location and add it to the database
@@ -111,7 +116,7 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
 
   Future<String> getUsernameOfEmail({String email}) async {
     String res = '';
-    await _firestore.collection('users').document(email).get().then((doc) {
+    await _firestore.collection('perfiles').document(email).get().then((doc) {
       if (doc.exists) {
         res = doc.data['name'];
       } else {
@@ -145,21 +150,51 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Icon(
-          Icons.menu,
-          color: Colors.red[800],
-        ),
-        centerTitle: true,
-        title: Text(
-          'UFM-Contact-Trace',
-          style: TextStyle(
-            color: Colors.red[800],
-            fontWeight: FontWeight.bold,
-            fontSize: 28.0,
+            title: Text('Contact Trace'),
+            backgroundColor: Colors.cyan[700],
+              /*
+              actions: <Widget> [
+                FlatButton.icon(
+                  icon : Icon(Icons.settings),
+                  label: Text("Configuración"),
+                  onPressed:() {},
+                ),
+              ],
+              */
           ),
-        ),
-        backgroundColor: Colors.white,
-      ),
+          drawer: Drawer(
+            child: ListView(
+              children: [
+                DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Colors.cyan[700],
+                  ),
+                ),
+                ListTile(
+                  leading: Icon(Icons.home),
+                  title: Text('Inicio',),
+                  onTap: () async {
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.account_circle),
+                  title: Text('Perfil',),
+                  onTap: () async {
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserProfile()),);
+                  },
+                ),
+                FlatButton.icon(
+                  icon: Icon(Icons.person),
+                  label: Text('Cerrar Sesión'),
+                  onPressed: () async {
+                    await _auth.signOut();
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Authenticate()),);
+                  },
+                ),
+              ],
+            ),
+          ),
       body: Column(
         children: <Widget>[
           Expanded(
@@ -174,7 +209,7 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
                 height: 100.0,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Colors.red[400],
+                  color: Colors.blue[700],
                   borderRadius: BorderRadius.circular(20.0),
                   boxShadow: [
                     BoxShadow(
@@ -216,7 +251,7 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20.0)),
               elevation: 5.0,
-              color: Colors.red[300],
+              color: Colors.blue[300],
               onPressed: () async {
                 try {
                   bool a = await Nearby().startAdvertising(
