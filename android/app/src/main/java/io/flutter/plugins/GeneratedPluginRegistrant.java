@@ -25,5 +25,7 @@ public final class GeneratedPluginRegistrant {
     flutterEngine.getPlugins().add(new com.it_nomads.fluttersecurestorage.FlutterSecureStoragePlugin());
     flutterEngine.getPlugins().add(new io.flutter.plugins.googlesignin.GoogleSignInPlugin());
     flutterEngine.getPlugins().add(new io.flutter.plugins.imagepicker.ImagePickerPlugin());
+    flutterEngine.getPlugins().add(new com.lyokone.location.LocationPlugin());
+      com.pkmnapps.nearby_connections.NearbyConnectionsPlugin.registerWith(shimPluginRegistry.registrarFor("com.pkmnapps.nearby_connections.NearbyConnectionsPlugin"));
   }
 }
