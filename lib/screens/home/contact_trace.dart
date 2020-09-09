@@ -35,7 +35,7 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
         .snapshots()
         .listen((snapshot) {
       for (var doc in snapshot.documents) {
-        String currUsername = doc.data['username'];
+        String currUsername = doc.data['name'];
         DateTime currTime = doc.data.containsKey('contact time')
             ? (doc.data['contact time'] as Timestamp).toDate()
             : null;
@@ -92,7 +92,7 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
         //  When I discover someone I will see their email and add that email to the database of my contacts
         //  also get the current time & location and add it to the database
         docRef.collection('met_with').document(name).setData({
-          'username': await getUsernameOfEmail(email: name),
+          'name': await getUsernameOfEmail(email: name),
           'contact time': DateTime.now(),
           'contact location': (await location.getLocation()).toString(),
         });
@@ -113,7 +113,7 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
     String res = '';
     await _firestore.collection('users').document(email).get().then((doc) {
       if (doc.exists) {
-        res = doc.data['username'];
+        res = doc.data['name'];
       } else {
         // doc.data() will be undefined in this case
         print("No such document!");
