@@ -65,7 +65,7 @@ class UserProfile extends StatelessWidget {
                   leading: Icon(Icons.track_changes),
                   title: Text('Contact Trace',),
                   onTap: () async {
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ContactTrace()),);
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => NearbyInterface()),);
                   },
                 ),
                 FlatButton.icon(
