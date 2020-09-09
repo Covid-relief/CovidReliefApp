@@ -1,3 +1,4 @@
+import 'package:CovidRelief/screens/HelpCategory/HelpForm.dart';
 import 'package:CovidRelief/screens/authenticate/authenticate.dart';
 import 'package:CovidRelief/screens/home/home.dart';
 import 'package:CovidRelief/screens/home/user_profile.dart';
@@ -97,7 +98,8 @@ class Help extends StatelessWidget{
                   padding: const EdgeInsets.all(0.0),
                   textColor: Colors.white,
                   color: Colors.teal[200],
-                  onPressed:() {
+                  onPressed:() async {
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HelpForm()),);
                   },
                   child: Text("Apoyo personalizado y contacto personal", style: TextStyle(fontSize: 20), textAlign: TextAlign.center)
                 ),
