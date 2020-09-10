@@ -1,10 +1,10 @@
-import 'package:CovidRelief/screens/HelpCategory/ShowPdf.dart';
+import 'package:CovidRelief/screens/HelpCategory/HelpForm.dart';
 import 'package:CovidRelief/screens/authenticate/authenticate.dart';
 import 'package:CovidRelief/screens/home/home.dart';
 import 'package:CovidRelief/screens/home/user_profile.dart';
 import 'package:CovidRelief/services/auth.dart';
 import 'package:flutter/material.dart';
-//import 'package:flutter_plugin_pdf_viewer/flutter_plugin_pdf_viewer.dart';
+import 'package:CovidRelief/screens/HelpCategory/ShowPdf.dart';
 
 class Help extends StatelessWidget {
   final AuthService _auth = AuthService();
@@ -94,7 +94,7 @@ class Help extends StatelessWidget {
             ),
             Container(
               height: 120,
-              padding: EdgeInsets.fromLTRB(70, 0, 70, 05),
+              padding: EdgeInsets.fromLTRB(70, 0, 70, 0),
               child: RaisedButton(
                 padding: const EdgeInsets.all(0.0),
                 textColor: Colors.white,
@@ -130,7 +130,12 @@ class Help extends StatelessWidget {
                   padding: const EdgeInsets.all(0.0),
                   textColor: Colors.white,
                   color: Colors.teal[200],
-                  onPressed: () {},
+                  onPressed: () async {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => HelpForm()),
+                    );
+                  },
                   child: Text("Apoyo personalizado y contacto personal",
                       style: TextStyle(fontSize: 20),
                       textAlign: TextAlign.center)),
