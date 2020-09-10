@@ -1,4 +1,5 @@
 import 'package:CovidRelief/screens/home/settings_form.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:CovidRelief/services/auth.dart';
 import 'package:CovidRelief/shared/constants.dart';
@@ -22,6 +23,8 @@ class _RegisterState extends State<Register> {
   final AuthService _auth = AuthService();
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final _formKey = GlobalKey<FormState>();
+  Firestore _firestore = Firestore.instance;
+
   String error = '';
 
   // text field state
@@ -98,7 +101,7 @@ class _RegisterState extends State<Register> {
                   String value = await storage.read(key: "mykey");
                   if(_formKey.currentState.validate()){
                     print('Se ha registrado exitosamente');
-                    dynamic result = await _auth.registerEmailandPassword(email, value);
+                    final result = await _auth.registerEmailandPassword(email, value);
                     if(result == null) {
                       setState(() {
                         error = 'Por favor ingrese un correo valido';
