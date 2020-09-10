@@ -94,7 +94,7 @@ class Help extends StatelessWidget {
             ),
             Container(
               height: 120,
-              padding: EdgeInsets.fromLTRB(70, 0, 70, 0),
+              padding: EdgeInsets.fromLTRB(70, 0, 70, 5),
               child: RaisedButton(
                 padding: const EdgeInsets.all(0.0),
                 textColor: Colors.white,
