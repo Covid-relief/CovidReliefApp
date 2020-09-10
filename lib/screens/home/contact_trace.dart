@@ -34,13 +34,13 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
     await getCurrentUser();
 
     _firestore
-        .collection('perfiles')
+        .collection('users')
         .document(loggedInUser.email)
         .collection('met_with')
         .snapshots()
         .listen((snapshot) {
       for (var doc in snapshot.documents) {
-        String currUsername = doc.data['name'];
+        String currUsername = doc.data['username'];
         DateTime currTime = doc.data.containsKey('contact time')
             ? (doc.data['contact time'] as Timestamp).toDate()
             : null;
@@ -64,7 +64,7 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
     DateTime timeNow = DateTime.now(); //get today's time
 
     _firestore
-        .collection('perfiles')
+        .collection('users')
         .document(loggedInUser.email)
         .collection('met_with')
         .snapshots()
@@ -92,12 +92,13 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
         print('I saw id:$id with name:$name'); // the name here is an email
 
         var docRef =
-            _firestore.collection('perfiles').document(loggedInUser.email);
+            _firestore.collection('users').document(loggedInUser.email);
 
         //  When I discover someone I will see their email and add that email to the database of my contacts
         //  also get the current time & location and add it to the database
         docRef.collection('met_with').document(name).setData({
-          'name': await getUsernameOfEmail(email: name),
+          //'name': await getUsernameOfEmail(email: name),
+          'username': name,
           'contact time': DateTime.now(),
           'contact location': (await location.getLocation()).toString(),
         });
@@ -116,7 +117,7 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
 
   Future<String> getUsernameOfEmail({String email}) async {
     String res = '';
-    await _firestore.collection('perfiles').document(email).get().then((doc) {
+    await _firestore.collection('users').document(email).get().then((doc) {
       if (doc.exists) {
         res = doc.data['name'];
       } else {
@@ -131,6 +132,9 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
     try {
       final user = await _auth.currentUser();
       if (user != null) {
+        await _firestore.collection('users').document(user.email).setData({
+          'username': user.email,
+        });
         loggedInUser = user;
       }
     } catch (e) {

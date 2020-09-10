@@ -31,7 +31,7 @@ class ContactCard extends StatelessWidget {
         title: Text(
           email,
           style: TextStyle(
-            color: Colors.red[700],
+            color: Colors.blue[700],
             fontWeight: FontWeight.bold,
           ),
         ),

@@ -1,5 +1,6 @@
 import 'package:CovidRelief/models/profile.dart';
 import 'package:CovidRelief/screens/authenticate/authenticate.dart';
+import 'package:CovidRelief/screens/home/settings_form.dart';
 import 'package:CovidRelief/screens/home/home.dart';
 import 'package:CovidRelief/screens/home/contact_trace.dart';
 import 'package:CovidRelief/screens/home/settings_form.dart';
