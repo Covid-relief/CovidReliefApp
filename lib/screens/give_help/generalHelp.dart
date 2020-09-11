@@ -12,13 +12,20 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 class PostHelp extends StatefulWidget {
+  String typeOfHelp;
+  String categoryOfHelp;
+  PostHelp({this.typeOfHelp, this.categoryOfHelp});
 
   @override
-  _PostHelpState createState() => _PostHelpState();
+  _PostHelpState createState() => _PostHelpState(typeOfHelp:typeOfHelp, categoryOfHelp:categoryOfHelp);
 }
 
 class _PostHelpState extends State<PostHelp> {
+  String typeOfHelp;
+  String categoryOfHelp;
+  _PostHelpState({this.typeOfHelp, this.categoryOfHelp});
 
+  final _formKey = GlobalKey<FormState>();
   String titulo;
   String descripcion;
   String categoria;
@@ -52,6 +59,7 @@ class _PostHelpState extends State<PostHelp> {
             backgroundColor: Colors.lightBlue[900],
             elevation: 0.0,),
             body: Form(
+              key:_formKey,
               child: ListView(
                 children: <Widget>[
                   /* Feature para el siguiente sprint
@@ -98,7 +106,7 @@ class _PostHelpState extends State<PostHelp> {
                     SizedBox(
                       width: 110,
                       child: MaterialButton(
-                      onPressed: () {},
+                      onPressed: () {print('Tipo de consulta '+typeOfHelp.toString()+' categoria '+ categoryOfHelp.toString());},
                       color: Colors.blue,
                       textColor: Colors.white,
                       child: Icon(
@@ -190,7 +198,7 @@ class _PostHelpState extends State<PostHelp> {
                     child: imageUp(sampleImage),
                   ),
                   
-                  // arreglar el display 
+                  // arreglar el display. Le fal
                   RaisedButton(
                     elevation: 10.0,
                     color: Colors.teal,
@@ -199,20 +207,22 @@ class _PostHelpState extends State<PostHelp> {
                       style: TextStyle(color: Colors.white),
                     ),
                     onPressed: () async{
-                      // update the data in the DB
-                      print(titulo.toString() + descripcion.toString() + sampleImage.toString());
-                      uploadFiles(
-                        titulo.toString(), 
-                        descripcion.toString(), 
-                        categoria, 
-                        keywords, 
-                        video, 
-                        archivo, 
-                        link, 
-                        username.toString(), 
-                        sampleImage); //
+                      if(_formKey.currentState.validate()){
+                        // update the data in the DB
+                        print('Enviando ' + titulo.toString() + descripcion.toString() + sampleImage.toString());
+                        uploadFiles(
+                          titulo, 
+                          descripcion, 
+                          categoryOfHelp, 
+                          keywords, 
+                          video, 
+                          archivo, 
+                          link, 
+                          username, 
+                          sampleImage);
 
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
+                      }
                     } // onPressed
                     
                     //

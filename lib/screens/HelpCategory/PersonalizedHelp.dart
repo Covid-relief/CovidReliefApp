@@ -6,6 +6,105 @@ import 'package:CovidRelief/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:CovidRelief/screens/HelpCategory/ShowPdf.dart';
 
+
+import 'package:CovidRelief/screens/give_help/generalHelp.dart';
+
+import 'package:CovidRelief/screens/HelpCategory/ShowPdf.dart';
+
+class Help extends StatelessWidget {
+  final AuthService _auth = AuthService();
+
+
+  String typeOfHelp;
+  String categoryOfHelp;
+  Help({this.typeOfHelp, this.categoryOfHelp});
+
+  String tituloPantalla(){
+    if(typeOfHelp=='quiero ayudar'){
+      return '¿Cómo deseas ayudar?';
+    }else{
+      return '¿Cómo deseas pedir ayuda?';
+    }
+  }
+
+    @override
+    // State<StatefulWidget> createState() {
+    Widget build(BuildContext context) {
+      return Scaffold(
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            title: Text('Covid Relief',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w900,
+                  fontStyle: FontStyle.italic,
+                  fontFamily: 'Open Sans',
+                  fontSize: 25),),
+            backgroundColor: Colors.lightBlue[900],
+            elevation: 0.0,),
+          drawer: Drawer(
+            child: ListView(
+              children: [
+                DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Colors.lightBlue[900],
+                  ),
+                ),
+                ListTile(
+                  leading: Icon(Icons.account_circle),
+                  title: Text('Inicio',),
+                  onTap: () async {
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.account_circle),
+                  title: Text('Perfil',),
+                  onTap: () async {
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserProfile()),);
+                  },
+                ),
+                //FlatButton.icon(
+                //  icon : Icon(Icons.settings),
+                // label: Text("Configuración"),
+                // onPressed:() => _showSettingsPanel(),
+                // ),
+
+                FlatButton.icon(
+                  icon: Icon(Icons.person),
+                  label: Text('Cerrar Sesión'),
+                  onPressed: () async {
+                    await _auth.signOut();
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Authenticate()),);
+                  },
+                ),
+              ],
+            ),
+          ),
+          body:
+          ListView(
+            padding: const EdgeInsets.all(15),
+            children: <Widget>[
+              Container(
+                height: 90,
+                child: new Center(child: Text(tituloPantalla(), style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold))),
+
+  @override
+  // State<StatefulWidget> createState() {
+  Widget build(BuildContext context) {
+    return Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          title: Text(
+            'Covid Relief',
+            style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w900,
+                fontStyle: FontStyle.italic,
+                fontFamily: 'Open Sans',
+                fontSize: 25),
+          ),
+
 class Help extends StatelessWidget {
   final AuthService _auth = AuthService();
 
@@ -24,6 +123,7 @@ class Help extends StatelessWidget {
                 fontFamily: 'Open Sans',
                 fontSize: 25),
           ),
+
           backgroundColor: Colors.lightBlue[900],
           elevation: 0.0,
         ),
@@ -34,6 +134,7 @@ class Help extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.lightBlue[900],
                 ),
+
               ),
               ListTile(
                 leading: Icon(Icons.account_circle),
@@ -47,10 +148,29 @@ class Help extends StatelessWidget {
                   );
                 },
               ),
+
+
+              Container(
+                height: 120,
+                padding: EdgeInsets.fromLTRB(70,0,70,0),
+                child:
+                RaisedButton(
+                  padding: const EdgeInsets.all(0.0),
+                  textColor: Colors.white,
+                  color: Colors.teal[200],
+                  onPressed:() async {
+                    if(typeOfHelp=='quiero ayudar'){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => PostHelp(typeOfHelp:typeOfHelp, categoryOfHelp:categoryOfHelp)),);
+                    }
+                  },
+                  child: Text("Tips y consejos generales", style: TextStyle(fontSize: 20), textAlign: TextAlign.center),
+
+
               ListTile(
                 leading: Icon(Icons.account_circle),
                 title: Text(
                   'Perfil',
+
                 ),
                 onTap: () async {
                   Navigator.pushReplacement(
@@ -75,6 +195,7 @@ class Help extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => Authenticate()),
                   );
                 },
+
               ),
             ],
           ),
@@ -106,6 +227,39 @@ class Help extends StatelessWidget {
                     style: TextStyle(fontSize: 20),
                     textAlign: TextAlign.center),
               ),
+
+              ),
+            ],
+          ),
+        ),
+        body: ListView(
+          padding: const EdgeInsets.all(15),
+          children: <Widget>[
+            Container(
+              height: 90,
+              child: const Center(
+                  child: Text('¿Cómo deseas ayudar?',
+                      style: TextStyle(
+                          fontSize: 25, fontWeight: FontWeight.bold))),
+            ),
+            Container(
+              height: 20,
+            ),
+            Container(
+              height: 120,
+              padding: EdgeInsets.fromLTRB(70, 0, 70, 5),
+              child: RaisedButton(
+                padding: const EdgeInsets.all(0.0),
+                textColor: Colors.white,
+                color: Colors.teal[200],
+                onPressed: () async {
+                  //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ),);
+                },
+                child: Text("Tips y consejos generales",
+                    style: TextStyle(fontSize: 20),
+                    textAlign: TextAlign.center),
+              ),
+
             ),
             GestureDetector(
                 child: Text("Guía para dar consejos generales",
