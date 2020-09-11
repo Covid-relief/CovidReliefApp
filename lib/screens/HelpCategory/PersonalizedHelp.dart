@@ -4,6 +4,8 @@ import 'package:CovidRelief/screens/home/home.dart';
 import 'package:CovidRelief/screens/home/user_profile.dart';
 import 'package:CovidRelief/services/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:CovidRelief/screens/HelpCategory/ShowPdf.dart';
+
 
 import 'package:CovidRelief/screens/give_help/generalHelp.dart';
 
@@ -102,6 +104,26 @@ class Help extends StatelessWidget {
                 fontFamily: 'Open Sans',
                 fontSize: 25),
           ),
+
+class Help extends StatelessWidget {
+  final AuthService _auth = AuthService();
+
+  @override
+  // State<StatefulWidget> createState() {
+  Widget build(BuildContext context) {
+    return Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          title: Text(
+            'Covid Relief',
+            style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w900,
+                fontStyle: FontStyle.italic,
+                fontFamily: 'Open Sans',
+                fontSize: 25),
+          ),
+
           backgroundColor: Colors.lightBlue[900],
           elevation: 0.0,
         ),
@@ -127,6 +149,7 @@ class Help extends StatelessWidget {
                 },
               ),
 
+
               Container(
                 height: 120,
                 padding: EdgeInsets.fromLTRB(70,0,70,0),
@@ -141,6 +164,7 @@ class Help extends StatelessWidget {
                     }
                   },
                   child: Text("Tips y consejos generales", style: TextStyle(fontSize: 20), textAlign: TextAlign.center),
+
 
               ListTile(
                 leading: Icon(Icons.account_circle),
@@ -171,6 +195,7 @@ class Help extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => Authenticate()),
                   );
                 },
+
               ),
             ],
           ),
@@ -202,6 +227,39 @@ class Help extends StatelessWidget {
                     style: TextStyle(fontSize: 20),
                     textAlign: TextAlign.center),
               ),
+
+              ),
+            ],
+          ),
+        ),
+        body: ListView(
+          padding: const EdgeInsets.all(15),
+          children: <Widget>[
+            Container(
+              height: 90,
+              child: const Center(
+                  child: Text('¿Cómo deseas ayudar?',
+                      style: TextStyle(
+                          fontSize: 25, fontWeight: FontWeight.bold))),
+            ),
+            Container(
+              height: 20,
+            ),
+            Container(
+              height: 120,
+              padding: EdgeInsets.fromLTRB(70, 0, 70, 5),
+              child: RaisedButton(
+                padding: const EdgeInsets.all(0.0),
+                textColor: Colors.white,
+                color: Colors.teal[200],
+                onPressed: () async {
+                  //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ),);
+                },
+                child: Text("Tips y consejos generales",
+                    style: TextStyle(fontSize: 20),
+                    textAlign: TextAlign.center),
+              ),
+
             ),
             GestureDetector(
                 child: Text("Guía para dar consejos generales",

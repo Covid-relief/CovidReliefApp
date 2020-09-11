@@ -141,11 +141,26 @@ class _RegisterState extends State<Register> {
                 onPressed: () async {
 
 
+
                     // popup de terminos y condiciones
                     createAlertDialog(context);
 
 
 
+
+
+                  String value = await storage.read(key: "mykey");
+                  if(_formKey.currentState.validate()){
+                    print('Se ha registrado exitosamente');
+                    final result = await _auth.registerEmailandPassword(email, value);
+                    if(result == null) {
+                      setState(() {
+                        error = 'Por favor ingrese un correo valido';
+                      });
+                    } else {
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserDataForm()),);
+                    };
+                  }
 
                 },
               ),
