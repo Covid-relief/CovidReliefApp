@@ -24,7 +24,9 @@ uploadFiles(titulo, descripcion, categoria, keywords, video, archivo, link, user
 
   var timeKey = new DateTime.now();
 
-  final StorageUploadTask uploadTask = myPost.child(timeKey.toString() + ".jpg").putFile(sampleImage); 
+  // logica aca si no hay imagenes, videos, archivos, etc
+  if(sampleImage!=null){
+    final StorageUploadTask uploadTask = myPost.child(timeKey.toString() + ".jpg").putFile(sampleImage); 
 
   var postUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
 
@@ -33,4 +35,8 @@ uploadFiles(titulo, descripcion, categoria, keywords, video, archivo, link, user
   print("Post url = " + url);
 
   saveToDatabase(titulo, descripcion, categoria, keywords, video, archivo, link, username, url);
+  }else{
+    saveToDatabase(titulo, descripcion, categoria, keywords, null, archivo, link, username, null);
+  }
+  
 }

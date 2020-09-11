@@ -3,6 +3,7 @@ import 'package:CovidRelief/screens/home/home.dart';
 import 'package:CovidRelief/screens/home/user_profile.dart';
 import 'package:CovidRelief/services/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:CovidRelief/screens/give_help/generalHelp.dart';
 
 class Help extends StatelessWidget{
   final AuthService _auth = AuthService();
@@ -81,7 +82,7 @@ class Help extends StatelessWidget{
                   textColor: Colors.white,
                   color: Colors.teal[200],
                   onPressed:() async {
-                    //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ),);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => PostHelp()),);
                   },
                   child: Text("Tips y consejos generales", style: TextStyle(fontSize: 20), textAlign: TextAlign.center),
                 ),
