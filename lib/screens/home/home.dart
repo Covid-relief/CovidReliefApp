@@ -1,5 +1,6 @@
 import 'package:CovidRelief/models/profile.dart';
 import 'package:CovidRelief/screens/authenticate/authenticate.dart';
+import 'package:CovidRelief/screens/home/contact_trace.dart';
 import 'package:CovidRelief/screens/home/settings_form.dart';
 import 'package:flutter/material.dart';
 import 'package:CovidRelief/services/auth.dart';
@@ -62,6 +63,13 @@ class Home extends StatelessWidget {
                  // label: Text("Configuración"),
                  // onPressed:() => _showSettingsPanel(),
                // ),
+               ListTile(
+                  leading: Icon(Icons.track_changes),
+                  title: Text('Contact Trace',),
+                  onTap: () async {
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => NearbyInterface()),);
+                  },
+                ),
 
                 FlatButton.icon(
                   icon: Icon(Icons.person),

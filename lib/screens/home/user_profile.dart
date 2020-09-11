@@ -1,6 +1,8 @@
 import 'package:CovidRelief/models/profile.dart';
 import 'package:CovidRelief/screens/authenticate/authenticate.dart';
+import 'package:CovidRelief/screens/home/settings_form.dart';
 import 'package:CovidRelief/screens/home/home.dart';
+import 'package:CovidRelief/screens/home/contact_trace.dart';
 import 'package:CovidRelief/screens/home/settings_form.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -54,10 +56,17 @@ class UserProfile extends StatelessWidget {
                   ),
                 ),
                 ListTile(
-                  leading: Icon(Icons.account_circle),
+                  leading: Icon(Icons.home),
                   title: Text('Inicio',),
                   onTap: () async {
                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.track_changes),
+                  title: Text('Contact Trace',),
+                  onTap: () async {
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => NearbyInterface()),);
                   },
                 ),
                 FlatButton.icon(

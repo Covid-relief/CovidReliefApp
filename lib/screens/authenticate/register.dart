@@ -1,4 +1,5 @@
 import 'package:CovidRelief/screens/home/settings_form.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:CovidRelief/services/auth.dart';
 import 'package:CovidRelief/shared/constants.dart';
@@ -22,12 +23,55 @@ class _RegisterState extends State<Register> {
   final AuthService _auth = AuthService();
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final _formKey = GlobalKey<FormState>();
+  Firestore _firestore = Firestore.instance;
+
   String error = '';
 
   // text field state
   String email = '';
   String password = '';
 
+  //terminos y condiciones Alert PopUp
+  createAlertDialog(BuildContext context){
+
+    return showDialog(context: context, builder: (context) {
+      return AlertDialog(
+        title: Text("Acepte los términos y condiciones para continuar"),
+        content: Text("Los análisis y consejos expuestos en esta plataforma, son"
+            "exclusivamente responsabilidad de su autor. Los consejos, trabajos"
+            "o aseveraciones aquí compartidas, no son necesariamente compartidas"
+            "ni representan la postura oficial de la Universidad Francisco Marroquín"),
+
+        actions: <Widget>[
+          MaterialButton(
+            elevation: 5.0,
+            child: Text('Acepto los términos y condiciones'),
+            color: Colors.red,
+            onPressed: () async {
+              String value = await storage.read(key: "mykey");
+              if (_formKey.currentState.validate()) {
+                print('Se ha registrado exitosamente');
+                final result = await _auth.registerEmailandPassword(
+                    email, value);
+                if (result == null) {
+                  setState(() {
+                    error = 'Por favor ingrese un correo valido';
+                  });
+                } else {
+                  Navigator.pushReplacement(
+                    context, MaterialPageRoute(builder: (context) =>
+                      UserDataForm()),);
+                };
+              }
+
+            },
+          )
+        ],
+      );
+
+    });
+
+  }
 
 
   @override
@@ -95,18 +139,14 @@ class _RegisterState extends State<Register> {
                   style: TextStyle(color: Colors.white),
                 ),
                 onPressed: () async {
-                  String value = await storage.read(key: "mykey");
-                  if(_formKey.currentState.validate()){
-                    print('Se ha registrado exitosamente');
-                    dynamic result = await _auth.registerEmailandPassword(email, value);
-                    if(result == null) {
-                      setState(() {
-                        error = 'Por favor ingrese un correo valido';
-                      });
-                    } else {
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserDataForm()),);
-                    };
-                  }
+
+
+                    // popup de terminos y condiciones
+                    createAlertDialog(context);
+
+
+
+
                 },
               ),
               GoogleSignInButton(
