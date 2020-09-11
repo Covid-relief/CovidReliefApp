@@ -12,12 +12,18 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 class PostHelp extends StatefulWidget {
+  String typeOfHelp;
+  String categoryOfHelp;
+  PostHelp({this.typeOfHelp, this.categoryOfHelp});
 
   @override
-  _PostHelpState createState() => _PostHelpState();
+  _PostHelpState createState() => _PostHelpState(typeOfHelp:typeOfHelp, categoryOfHelp:categoryOfHelp);
 }
 
 class _PostHelpState extends State<PostHelp> {
+  String typeOfHelp;
+  String categoryOfHelp;
+  _PostHelpState({this.typeOfHelp, this.categoryOfHelp});
 
   final _formKey = GlobalKey<FormState>();
   String titulo;
@@ -100,7 +106,7 @@ class _PostHelpState extends State<PostHelp> {
                     SizedBox(
                       width: 110,
                       child: MaterialButton(
-                      onPressed: () {},
+                      onPressed: () {print('Tipo de consulta '+typeOfHelp.toString()+' categoria '+ categoryOfHelp.toString());},
                       color: Colors.blue,
                       textColor: Colors.white,
                       child: Icon(
@@ -207,7 +213,7 @@ class _PostHelpState extends State<PostHelp> {
                         uploadFiles(
                           titulo, 
                           descripcion, 
-                          categoria, 
+                          categoryOfHelp, 
                           keywords, 
                           video, 
                           archivo, 

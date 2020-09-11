@@ -12,6 +12,11 @@ import 'package:CovidRelief/screens/home/user_profile.dart';
 
 class Category extends StatelessWidget {
   final AuthService _auth = AuthService();
+
+  String typeOfHelp;
+  Category({this.typeOfHelp});
+  var categoryOfHelp;
+
   @override
  // State<StatefulWidget> createState() {
     Widget build(BuildContext context) {
@@ -83,7 +88,8 @@ class Category extends StatelessWidget {
                     textColor: Colors.white,
                     color: Colors.teal[200],
                     onPressed:() async {
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Help()),);
+                      categoryOfHelp='business';
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Help(typeOfHelp:typeOfHelp, categoryOfHelp:categoryOfHelp)),);
                     },
                     child: new Text("Business", style: TextStyle(fontSize: 20)),
                   ),
@@ -100,7 +106,8 @@ class Category extends StatelessWidget {
                     textColor: Colors.white,
                     color: Colors.teal[200],
                     onPressed:() {
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Help()),);
+                      categoryOfHelp='tecnologia';
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Help(typeOfHelp:typeOfHelp, categoryOfHelp:categoryOfHelp)),);
                     },
                     child: new Text("Tecnología", style: TextStyle(fontSize: 20)),
                   ),
@@ -117,7 +124,8 @@ class Category extends StatelessWidget {
                     textColor: Colors.white,
                     color: Colors.teal[200],
                     onPressed:() async {
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Help()),);
+                      categoryOfHelp='medicina';
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Help(typeOfHelp:typeOfHelp, categoryOfHelp:categoryOfHelp)),);
                     },
                     child: new Text("Medicina", style: TextStyle(fontSize: 20)),
                   ),
@@ -134,7 +142,8 @@ class Category extends StatelessWidget {
                     textColor: Colors.white,
                     color: Colors.teal[200],
                     onPressed:() async {
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Help()),);
+                      categoryOfHelp='psicologia';
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Help(typeOfHelp:typeOfHelp, categoryOfHelp:categoryOfHelp)),);
                     },
                     child: new Text("Psicología", style: TextStyle(fontSize: 20)),
                   ),

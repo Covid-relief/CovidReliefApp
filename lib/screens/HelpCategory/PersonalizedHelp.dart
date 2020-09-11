@@ -8,6 +8,18 @@ import 'package:CovidRelief/screens/give_help/generalHelp.dart';
 class Help extends StatelessWidget{
   final AuthService _auth = AuthService();
 
+  String typeOfHelp;
+  String categoryOfHelp;
+  Help({this.typeOfHelp, this.categoryOfHelp});
+
+  String tituloPantalla(){
+    if(typeOfHelp=='quiero ayudar'){
+      return '¿Cómo deseas ayudar?';
+    }else{
+      return '¿Cómo deseas pedir ayuda?';
+    }
+  }
+
     @override
     // State<StatefulWidget> createState() {
     Widget build(BuildContext context) {
@@ -68,7 +80,7 @@ class Help extends StatelessWidget{
             children: <Widget>[
               Container(
                 height: 90,
-                child: const Center(child: Text('¿Cómo deseas ayudar?', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold))),
+                child: new Center(child: Text(tituloPantalla(), style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold))),
               ),
               Container(
                 height: 20,
@@ -82,7 +94,9 @@ class Help extends StatelessWidget{
                   textColor: Colors.white,
                   color: Colors.teal[200],
                   onPressed:() async {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => PostHelp()),);
+                    if(typeOfHelp=='quiero ayudar'){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => PostHelp(typeOfHelp:typeOfHelp, categoryOfHelp:categoryOfHelp)),);
+                    }
                   },
                   child: Text("Tips y consejos generales", style: TextStyle(fontSize: 20), textAlign: TextAlign.center),
                 ),
