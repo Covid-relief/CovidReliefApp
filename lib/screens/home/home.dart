@@ -13,6 +13,7 @@ import 'package:CovidRelief/screens/HelpCategory/HelpCategories.dart';
 class Home extends StatelessWidget {
 
   final AuthService _auth = AuthService();
+  var typeOfHelp;
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +67,7 @@ class Home extends StatelessWidget {
                   leading: Icon(Icons.track_changes),
                   title: Text('Contact Trace',),
                   onTap: () async {
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ContactTrace()),);
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => NearbyInterface()),);
                   },
                 ),
 
@@ -115,7 +116,8 @@ class Home extends StatelessWidget {
                           color: Colors.lightBlue[900],
                           shape: StadiumBorder(),
                           onPressed:() {
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Category()),);
+                            typeOfHelp='quiero ayudar';
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Category(typeOfHelp:typeOfHelp)),);
                           },
                           child: new Text("Quiero ayudar",
                               style: TextStyle(
@@ -139,7 +141,8 @@ class Home extends StatelessWidget {
                         color: Colors.lightBlue[900],
                         shape: StadiumBorder(),
                         onPressed:() {
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Category()),);
+                          typeOfHelp='necesito ayuda';
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Category(typeOfHelp:typeOfHelp)),);
                         },
                         child: new Text("Necesito ayuda",
                           style: TextStyle(
