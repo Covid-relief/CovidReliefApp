@@ -140,7 +140,7 @@ class Help extends StatelessWidget {
                   textColor: Colors.white,
                   color: Colors.teal[200],
                   onPressed: () async {
-                    if(typeOfHelp=='quiero ayudar'){
+                    if(typeOfHelp!='quiero ayudar'){
                       Navigator.push(context,MaterialPageRoute(builder: (context) => HelpForm()),);
                     }
                   },
