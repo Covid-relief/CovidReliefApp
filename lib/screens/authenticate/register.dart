@@ -38,9 +38,9 @@ class _RegisterState extends State<Register> {
       return AlertDialog(
         title: Text("Acepte los términos y condiciones para continuar"),
         content: Text("Los análisis y consejos expuestos en esta plataforma, son"
-            "exclusivamente responsabilidad de su autor. Los consejos, trabajos"
-            "o aseveraciones aquí compartidas, no son necesariamente compartidas"
-            "ni representan la postura oficial de la Universidad Francisco Marroquín"),
+            " exclusivamente responsabilidad de su autor. Los consejos, trabajos"
+            " o aseveraciones aquí compartidas, no son necesariamente compartidas"
+            " ni representan la postura oficial de la Universidad Francisco Marroquín"),
 
         actions: <Widget>[
           MaterialButton(
