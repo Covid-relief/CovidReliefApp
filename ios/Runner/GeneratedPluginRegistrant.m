@@ -82,6 +82,12 @@
 @import sqflite;
 #endif
 
+#if __has_include(<video_player/FLTVideoPlayerPlugin.h>)
+#import <video_player/FLTVideoPlayerPlugin.h>
+#else
+@import video_player;
+#endif
+
 @implementation GeneratedPluginRegistrant
 
 + (void)registerWithRegistry:(NSObject<FlutterPluginRegistry>*)registry {
@@ -98,6 +104,7 @@
   [LocationPlugin registerWithRegistrar:[registry registrarForPlugin:@"LocationPlugin"]];
   [FLTPathProviderPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTPathProviderPlugin"]];
   [SqflitePlugin registerWithRegistrar:[registry registrarForPlugin:@"SqflitePlugin"]];
+  [FLTVideoPlayerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTVideoPlayerPlugin"]];
 }
 
 @end

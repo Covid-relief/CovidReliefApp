@@ -6,7 +6,7 @@ import 'package:CovidRelief/services/database.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:CovidRelief/screens/give_help/postToDB.dart';
-
+import 'package:video_player/video_player.dart';
 
 /**
  * Aqui basicamente hacemos widgets para mostrar los files y hacemos conexion con la subida de datos (que esta en postToDB.dart)
@@ -19,24 +19,38 @@ Widget imageUp (sampleImage){
   }
 }
 
-uploadFiles(titulo, descripcion, categoria, keywords, video, archivo, link, username,sampleImage) async{
+VideoPlayerController videoUp (video){
+  if (video!=null){
+    //var videoPlayerControl = VideoPlayerController.file(video);
+    return VideoPlayerController.file(video);
+  }else{
+    return VideoPlayerController.network('');
+  }
+}
+
+uploadFiles(titulo, descripcion, categoria, keywords, video, archivo, link, username, sampleImage) async{
   final StorageReference myPost = FirebaseStorage.instance.ref().child("Post Files");
 
   var timeKey = new DateTime.now();
+  var img;
+  var vid;
 
   // logica aca si no hay imagenes, videos, archivos, etc
-  if(sampleImage!=null){
-    final StorageUploadTask uploadTask = myPost.child(timeKey.toString() + ".jpg").putFile(sampleImage); 
+   if(sampleImage!=null){
+    final StorageUploadTask uploadImg = myPost.child(timeKey.toString() + "img.jpg").putFile(sampleImage); 
+    var imgUrl = await (await uploadImg.onComplete).ref.getDownloadURL();
+    img = imgUrl.toString();
 
-  var postUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
-
-  var url = postUrl.toString();
-
-  print("Post url = " + url);
-
-  saveToDatabase(titulo, descripcion, categoria, keywords, video, archivo, link, username, url);
-  }else{
-    saveToDatabase(titulo, descripcion, categoria, keywords, null, archivo, link, username, null);
+    print("Post url = " + img);
   }
+
+  if(video!=null){
+    final StorageUploadTask uploadVid = myPost.child(timeKey.toString() + "vid.mp4").putFile(video, StorageMetadata(contentType: 'video/mp4'));
+    var vidUrl = await (await uploadVid.onComplete).ref.getDownloadURL();
+    vid = vidUrl.toString();
+
+    print("Video url = " + vid);
+  }
+  saveToDatabase(titulo, descripcion, categoria, keywords, vid, archivo, link, username, img);
   
 }

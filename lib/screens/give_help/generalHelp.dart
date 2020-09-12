@@ -10,6 +10,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:video_player/video_player.dart';
 
 class PostHelp extends StatefulWidget {
   String typeOfHelp;
@@ -43,6 +44,13 @@ class _PostHelpState extends State<PostHelp> {
     });
   }
 
+  Future pickVideo() async {
+    File myVideo = await ImagePicker.pickVideo(source: ImageSource.gallery);
+    setState(() {
+      video = myVideo; 
+      //videoPlayerControl.play();
+    });
+}
 
   @override
   Widget build(BuildContext context) {
@@ -140,7 +148,7 @@ class _PostHelpState extends State<PostHelp> {
                     SizedBox(
                       width: 75,
                       child: MaterialButton(
-                      onPressed: () {},
+                      onPressed: ()  => pickVideo(),
                       color: Colors.blue,
                       textColor: Colors.white,
                       child: Icon(
@@ -197,8 +205,19 @@ class _PostHelpState extends State<PostHelp> {
                   Container(
                     child: imageUp(sampleImage),
                   ),
+
+                  Container(
+                    child: Center(
+                      child: videoUp(video).value.initialized
+                          ? AspectRatio(
+                              aspectRatio: videoUp(video).value.aspectRatio,
+                              child: VideoPlayer(videoUp(video)),
+                            )
+                          : Container(),
+                    ),
+                  ),
                   
-                  // arreglar el display. Le fal
+                  // arreglar el display. 
                   RaisedButton(
                     elevation: 10.0,
                     color: Colors.teal,
