@@ -1,5 +1,6 @@
 import 'package:CovidRelief/models/profile.dart';
 import 'package:CovidRelief/screens/authenticate/authenticate.dart';
+import 'package:CovidRelief/screens/home/contact_trace.dart';
 import 'package:CovidRelief/screens/home/settings_form.dart';
 import 'package:flutter/material.dart';
 import 'package:CovidRelief/services/auth.dart';
@@ -12,6 +13,7 @@ import 'package:CovidRelief/screens/HelpCategory/HelpCategories.dart';
 class Home extends StatelessWidget {
 
   final AuthService _auth = AuthService();
+  var typeOfHelp;
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +63,13 @@ class Home extends StatelessWidget {
                  // label: Text("Configuración"),
                  // onPressed:() => _showSettingsPanel(),
                // ),
+               ListTile(
+                  leading: Icon(Icons.track_changes),
+                  title: Text('Contact Trace',),
+                  onTap: () async {
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => NearbyInterface()),);
+                  },
+                ),
 
                 FlatButton.icon(
                   icon: Icon(Icons.person),
@@ -107,7 +116,8 @@ class Home extends StatelessWidget {
                           color: Colors.lightBlue[900],
                           shape: StadiumBorder(),
                           onPressed:() {
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Category()),);
+                            typeOfHelp='quiero ayudar';
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Category(typeOfHelp:typeOfHelp)),);
                           },
                           child: new Text("Quiero ayudar",
                               style: TextStyle(
@@ -131,7 +141,8 @@ class Home extends StatelessWidget {
                         color: Colors.lightBlue[900],
                         shape: StadiumBorder(),
                         onPressed:() {
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Category()),);
+                          typeOfHelp='necesito ayuda';
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Category(typeOfHelp:typeOfHelp)),);
                         },
                         child: new Text("Necesito ayuda",
                           style: TextStyle(
