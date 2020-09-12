@@ -44,7 +44,8 @@ class ContactCard extends StatelessWidget {
                 child: Column(
                   children: <Widget>[
                     BottomSheetText(
-                        question: 'Username', result: contactUsername),
+                        //question: 'Username', result: contactUsername)
+                        question: 'Username', result: '*****************'),
                     SizedBox(height: 5.0),
                     BottomSheetText(
                         question: 'Contact Time',
