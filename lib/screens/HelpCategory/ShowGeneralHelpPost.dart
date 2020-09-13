@@ -10,20 +10,18 @@ import 'package:CovidRelief/services/auth.dart';
 
 //import 'package:video_player/video_player.dart';
 
-class ViewPosts extends StatefulWidget
-{
+class ViewPosts extends StatefulWidget {
+  String categoryOfHelp;
+  ViewPosts({this.categoryOfHelp});
 
   @override
-  State<StatefulWidget> createState()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
-  {
-    return _ViewPostsState();
-  }
+  _ViewPostsState createState() => _ViewPostsState(categoryOfHelp:categoryOfHelp);
 }
 
-class _ViewPostsState extends State<ViewPosts>
-{
+class _ViewPostsState extends State<ViewPosts> {
+  String categoryOfHelp;
+  _ViewPostsState({this.categoryOfHelp});
 
-  var categoryOfHelp;
 
   List<Posts> postsList = [];
 
@@ -32,7 +30,7 @@ class _ViewPostsState extends State<ViewPosts>
   {
     super.initState();
 
-    DatabaseReference postsRef = FirebaseDatabase.instance.reference().child("Posts");
+    DatabaseReference postsRef = FirebaseDatabase.instance.reference().child(categoryOfHelp);
 
     postsRef.once().then((DataSnapshot snap)
     {
@@ -45,7 +43,6 @@ class _ViewPostsState extends State<ViewPosts>
       {
         Posts posts = new Posts
           (
-          DATA[individualKey]['Categoria'],
           DATA[individualKey]['Descripcion'],
           DATA[individualKey]['Fecha'],
           DATA[individualKey]['Hora'],
@@ -64,13 +61,29 @@ class _ViewPostsState extends State<ViewPosts>
     );
   }
 
+  showImage(img){
+    if(img!=null){
+      return new Image.network(img, fit: BoxFit.cover);
+    }else{
+      return SizedBox();
+    }
+  }
+
+  showDescript(descript){
+    if(descript!=null){
+      return new Text(descript, style: TextStyle(fontStyle: FontStyle.normal), textAlign: TextAlign.left);
+    }else{
+      return SizedBox();
+    }
+  }
+
   @override
   Widget build(BuildContext context)
   {
     return Scaffold
       (
       appBar: AppBar(
-        title: Text('Ayuda General'),
+        title: Text('Ayuda General de ' + categoryOfHelp),
       ),
       body: new Container
         (
@@ -81,7 +94,6 @@ class _ViewPostsState extends State<ViewPosts>
             {
               return PostsUI
                 (
-                  postsList[index].Categoria,
                   postsList[index].Descripcion,
                   postsList[index].Fecha,
                   postsList[index].Hora,
@@ -95,7 +107,7 @@ class _ViewPostsState extends State<ViewPosts>
     );
   }
 
-  Widget PostsUI(String Categoria, String Descripcion, String Fecha, String Hora, String Imagen, String Titulo, String Video)
+  Widget PostsUI(String Descripcion, String Fecha, String Hora, String Imagen, String Titulo, String Video)
   {
     return new Card
       (
@@ -142,26 +154,11 @@ class _ViewPostsState extends State<ViewPosts>
 
             SizedBox(height: 10.0,),
 
-            new Text(
-              Categoria,
-              style: TextStyle(fontStyle: FontStyle.italic),
-            ),
+            showImage(Imagen),
 
             SizedBox(height: 10.0,),
 
-            new Text(
-              Descripcion,
-              style: TextStyle(fontStyle: FontStyle.normal),
-              textAlign: TextAlign.center,
-            ),
-
-            SizedBox(height: 10.0),
-
-            new Image.network(Imagen, fit: BoxFit.cover),
-
-            SizedBox(height: 10.0),
-
-            new Image.network(Video, fit: BoxFit.cover)
+            showDescript(Descripcion),
 
           ],
 
