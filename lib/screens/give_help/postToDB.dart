@@ -22,7 +22,6 @@ saveToDatabase(titulo, descripcion, categoria, keywords, video, archivo, link, u
   var data = {
     "Titulo":titulo,
     "Descripcion":descripcion,
-    "Categoria":categoria, 
     "Keywords":keywords, 
     "Video":video, 
     "Archivo":archivo, 
@@ -32,5 +31,5 @@ saveToDatabase(titulo, descripcion, categoria, keywords, video, archivo, link, u
     "Fecha":date,
     "Hora":time
   };
-  ref.child("Posts").push().set(data);
+  ref.child(categoria).push().set(data);
 }
