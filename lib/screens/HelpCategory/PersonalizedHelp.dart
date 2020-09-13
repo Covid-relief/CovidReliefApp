@@ -129,7 +129,7 @@ class Help extends StatelessWidget {
                   //Aquí empecé a programar
                   else
                   {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => ViewPosts(),));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ViewPosts(categoryOfHelp: categoryOfHelp),));
                   }
                 },
                 child: Text("Tips y consejos generales",
