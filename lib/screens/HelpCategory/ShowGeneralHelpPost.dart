@@ -14,7 +14,7 @@ class ViewPosts extends StatefulWidget
 {
 
   @override
-  State<StatefulWidget> createState()
+  State<StatefulWidget> createState()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
   {
     return _ViewPostsState();
   }
