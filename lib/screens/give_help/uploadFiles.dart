@@ -34,14 +34,15 @@ uploadFiles(titulo, descripcion, categoria, keywords, video, archivo, link, user
   var timeKey = new DateTime.now();
   var img;
   var vid;
+  var arc;
 
-  // logica aca si no hay imagenes, videos, archivos, etc
+  // logica aca si hay imagenes, videos, archivos
    if(sampleImage!=null){
     final StorageUploadTask uploadImg = myPost.child(timeKey.toString() + "img.jpg").putFile(sampleImage); 
     var imgUrl = await (await uploadImg.onComplete).ref.getDownloadURL();
     img = imgUrl.toString();
 
-    print("Post url = " + img);
+    print("Image url = " + img);
   }
 
   if(video!=null){
@@ -51,6 +52,18 @@ uploadFiles(titulo, descripcion, categoria, keywords, video, archivo, link, user
 
     print("Video url = " + vid);
   }
-  saveToDatabase(titulo, descripcion, categoria, keywords, vid, archivo, link, username, img);
+
+  if(archivo!=null){
+    var completePath = archivo.toString();
+    var fileName = (completePath.split('/').last).split('.').last;
+    var ext =  fileName.substring(0, fileName.length-1);
+
+    final StorageUploadTask uploadArc = myPost.child(timeKey.toString() + 'arc.' +ext).putFile(archivo);
+    var arcUrl = await (await uploadArc.onComplete).ref.getDownloadURL();
+    arc = arcUrl.toString();
+
+    print("Archivo url = " + arc);
+  }
+  saveToDatabase(titulo, descripcion, categoria, keywords, vid, arc, link, username, img);
   
 }

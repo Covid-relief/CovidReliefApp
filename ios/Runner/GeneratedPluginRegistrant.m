@@ -34,6 +34,12 @@
 @import firebase_storage;
 #endif
 
+#if __has_include(<flutter_document_picker/FlutterDocumentPickerPlugin.h>)
+#import <flutter_document_picker/FlutterDocumentPickerPlugin.h>
+#else
+@import flutter_document_picker;
+#endif
+
 #if __has_include(<flutter_facebook_login/FacebookLoginPlugin.h>)
 #import <flutter_facebook_login/FacebookLoginPlugin.h>
 #else
@@ -96,6 +102,7 @@
   [FLTFirebaseCorePlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseCorePlugin"]];
   [FLTFirebaseDatabasePlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseDatabasePlugin"]];
   [FLTFirebaseStoragePlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseStoragePlugin"]];
+  [FlutterDocumentPickerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterDocumentPickerPlugin"]];
   [FacebookLoginPlugin registerWithRegistrar:[registry registrarForPlugin:@"FacebookLoginPlugin"]];
   [FlutterPluginPdfViewerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterPluginPdfViewerPlugin"]];
   [FlutterSecureStoragePlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterSecureStoragePlugin"]];
