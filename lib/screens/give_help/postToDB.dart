@@ -9,7 +9,7 @@ import 'package:CovidRelief/screens/home/home.dart';
  * Aqui recibimos los files para enviarlos a la realtime database
  */
 
-saveToDatabase(titulo, descripcion, categoria, keywords, video, archivo, link, username, url){
+saveToDatabase(titulo, descripcion, categoria, keywords, video, archivo, link, username, img){
   var dbTimeKey = new DateTime.now();
   var formatDate = new DateFormat('MMM d, yyyy');
   var formatTime = new DateFormat('EEEE, hh:mm aaa');
@@ -28,7 +28,7 @@ saveToDatabase(titulo, descripcion, categoria, keywords, video, archivo, link, u
     "Archivo":archivo, 
     "Link":link, 
     "username":username, 
-    "Imagen":url,
+    "Imagen":img,
     "Fecha":date,
     "Hora":time
   };
