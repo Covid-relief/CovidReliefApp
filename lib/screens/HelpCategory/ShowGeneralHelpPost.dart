@@ -69,6 +69,14 @@ class _ViewPostsState extends State<ViewPosts> {
     }
   }
 
+  showDescript(descript){
+    if(descript!=null){
+      return new Text(descript, style: TextStyle(fontStyle: FontStyle.normal), textAlign: TextAlign.left);
+    }else{
+      return SizedBox();
+    }
+  }
+
   @override
   Widget build(BuildContext context)
   {
@@ -150,11 +158,7 @@ class _ViewPostsState extends State<ViewPosts> {
 
             SizedBox(height: 10.0,),
 
-            // new Text(
-            //   Descripcion,
-            //   style: TextStyle(fontStyle: FontStyle.normal),
-            //   textAlign: TextAlign.center,
-            // ),
+            showDescript(Descripcion),
 
           ],
 
