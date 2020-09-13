@@ -6,7 +6,6 @@ import 'package:CovidRelief/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:CovidRelief/screens/HelpCategory/ShowPdf.dart';
 import 'package:CovidRelief/screens/give_help/generalHelp.dart';
-import 'package:CovidRelief/screens/HelpCategory/ShowGeneralHelpPost.dart';
 
 import '../give_help/generalHelp.dart';
 import 'HelpForm.dart';
