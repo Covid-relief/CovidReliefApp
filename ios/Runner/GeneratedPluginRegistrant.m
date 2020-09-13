@@ -34,6 +34,12 @@
 @import firebase_storage;
 #endif
 
+#if __has_include(<flutter_document_picker/FlutterDocumentPickerPlugin.h>)
+#import <flutter_document_picker/FlutterDocumentPickerPlugin.h>
+#else
+@import flutter_document_picker;
+#endif
+
 #if __has_include(<flutter_facebook_login/FacebookLoginPlugin.h>)
 #import <flutter_facebook_login/FacebookLoginPlugin.h>
 #else
@@ -82,6 +88,12 @@
 @import sqflite;
 #endif
 
+#if __has_include(<video_player/FLTVideoPlayerPlugin.h>)
+#import <video_player/FLTVideoPlayerPlugin.h>
+#else
+@import video_player;
+#endif
+
 @implementation GeneratedPluginRegistrant
 
 + (void)registerWithRegistry:(NSObject<FlutterPluginRegistry>*)registry {
@@ -90,6 +102,7 @@
   [FLTFirebaseCorePlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseCorePlugin"]];
   [FLTFirebaseDatabasePlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseDatabasePlugin"]];
   [FLTFirebaseStoragePlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseStoragePlugin"]];
+  [FlutterDocumentPickerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterDocumentPickerPlugin"]];
   [FacebookLoginPlugin registerWithRegistrar:[registry registrarForPlugin:@"FacebookLoginPlugin"]];
   [FlutterPluginPdfViewerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterPluginPdfViewerPlugin"]];
   [FlutterSecureStoragePlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterSecureStoragePlugin"]];
@@ -98,6 +111,7 @@
   [LocationPlugin registerWithRegistrar:[registry registrarForPlugin:@"LocationPlugin"]];
   [FLTPathProviderPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTPathProviderPlugin"]];
   [SqflitePlugin registerWithRegistrar:[registry registrarForPlugin:@"SqflitePlugin"]];
+  [FLTVideoPlayerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTVideoPlayerPlugin"]];
 }
 
 @end
