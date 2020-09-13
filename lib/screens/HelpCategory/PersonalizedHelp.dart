@@ -6,6 +6,10 @@ import 'package:CovidRelief/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:CovidRelief/screens/HelpCategory/ShowPdf.dart';
 import 'package:CovidRelief/screens/give_help/generalHelp.dart';
+import 'package:CovidRelief/screens/HelpCategory/ShowGeneralHelpPost.dart';
+
+import '../give_help/generalHelp.dart';
+import 'HelpForm.dart';
 
 class Help extends StatelessWidget {
   final AuthService _auth = AuthService();
@@ -120,7 +124,12 @@ class Help extends StatelessWidget {
                 color: Colors.teal[200],
                 onPressed: () async {
                   if(typeOfHelp=='quiero ayudar'){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => PostHelp(typeOfHelp:typeOfHelp, categoryOfHelp:categoryOfHelp)),);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => PostHelp(typeOfHelp: typeOfHelp, categoryOfHelp: categoryOfHelp)),);
+                  }
+                  //Aquí empecé a programar
+                  else
+                  {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ViewPosts(categoryOfHelp: categoryOfHelp),));
                   }
                 },
                 child: Text("Tips y consejos generales",
