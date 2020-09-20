@@ -10,6 +10,9 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:video_player/video_player.dart';
+import 'package:flutter_document_picker/flutter_document_picker.dart';
+
 
 class PostHelp extends StatefulWidget {
   String typeOfHelp;
@@ -32,10 +35,23 @@ class _PostHelpState extends State<PostHelp> {
   List <String> keywords;
   File video;
   File archivo;
-  String link; // ya veremos
+  String link;
   String username; // ya veremos
   File sampleImage;
 
+  // change color when something uploaded
+  Color styleArchivo (archivo) {
+    Color color;
+    if (archivo!=null) {
+      color=Colors.green;
+    }else{
+      color=Colors.blue;
+    }
+    return color;
+  }
+
+
+  // set image
   Future getImage()async{
     var tempImage = await ImagePicker.pickImage(source: ImageSource.gallery);
     setState((){
@@ -43,6 +59,63 @@ class _PostHelpState extends State<PostHelp> {
     });
   }
 
+  // set video
+  Future pickVideo() async {
+    File myVideo = await ImagePicker.pickVideo(source: ImageSource.gallery);
+    setState(() {
+      video = myVideo; 
+      //videoPlayerControl.play();
+    });
+  }
+
+  // set file
+  Future pickFile() async{
+    // types: pdf, csv, docx, doc, xslx, xsl, ppt, pub, txt
+    final params = FlutterDocumentPickerParams(     
+      //allowedFileExtensions: ['pdf', 'csv', 'docx', 'doc', 'xslx', 'xsl', 'ppt', 'pub', 'txt'],
+      allowedMimeTypes: ['application/*'],
+      //allowedMimeTypes: ['application/pdf', 'text/csv', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 
+      //  'application/msword', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel',
+      //  'application/vnd.ms-powerpoint', 'application/x-mspublisher', 'text/plain'],
+    );
+
+    final myFile = await FlutterDocumentPicker.openDocument(params: params);
+    var newFile = new File(myFile).writeAsString(myFile);
+    File data = await newFile;
+
+    setState(() {
+      archivo = data; 
+    });
+  }
+
+  // set link
+  openPopup(){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Adjuntar link'),
+          content: Stack(
+            children: <Widget>[
+              Container(
+                child: TextField(
+                    decoration: InputDecoration(
+                      icon: Icon(Icons.insert_link),
+                      labelText: 'Ingresa tu link',
+                    ),
+                  onChanged: (valLink) => setState(() {link = valLink;}),
+                  ),
+              ),
+            ],),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Enviar'),
+                onPressed: () {Navigator.of(context).pop();},
+              ),
+            ],
+        );
+      });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +163,7 @@ class _PostHelpState extends State<PostHelp> {
                         keyboardType: TextInputType.multiline,
                         maxLines: 15,
                         decoration: textInputDecoration.copyWith(hintText: 'Escribe tu consejo... (opcional)'),
-                        onChanged: (valtdesc) => {if (valtdesc!=null) {setState(() => descripcion = valtdesc)}else{setState(() => descripcion = 'none')}},
+                        onChanged: (valtdesc) => {if (valtdesc!=null) {setState(() => descripcion = valtdesc)}else{setState(() => descripcion = null)}},
                         //contentPadding: new EdgeInsets.fromLTRB(15, 0, 0, 200),
                       ),
                   ),
@@ -102,12 +175,13 @@ class _PostHelpState extends State<PostHelp> {
                   SizedBox(height: 20.0),
                   Column(children: <Widget>[
                     Row(children: <Widget>[
+
                     // button to submit links
                     SizedBox(
                       width: 110,
                       child: MaterialButton(
-                      onPressed: () {print('Tipo de consulta '+typeOfHelp.toString()+' categoria '+ categoryOfHelp.toString());},
-                      color: Colors.blue,
+                      onPressed: () async {openPopup();},
+                      color: styleArchivo(link),
                       textColor: Colors.white,
                       child: Icon(
                         Icons.insert_link,
@@ -119,12 +193,11 @@ class _PostHelpState extends State<PostHelp> {
                     ),
 
                     // button to submit images
-                    
                     SizedBox(
                       width: 75,
                       child: MaterialButton(
                       onPressed: () => getImage(),
-                      color: Colors.blue,
+                      color: styleArchivo(sampleImage),
                       textColor: Colors.white,
                       child: Icon(
                         Icons.add_photo_alternate,
@@ -136,12 +209,11 @@ class _PostHelpState extends State<PostHelp> {
                     ),
 
                     // button to submit videos
-
                     SizedBox(
                       width: 75,
                       child: MaterialButton(
-                      onPressed: () {},
-                      color: Colors.blue,
+                      onPressed: ()  => pickVideo(),
+                      color: styleArchivo(video),
                       textColor: Colors.white,
                       child: Icon(
                         Icons.video_library,
@@ -156,8 +228,8 @@ class _PostHelpState extends State<PostHelp> {
                     SizedBox(
                       width: 110,
                       child:MaterialButton(
-                      onPressed: () {},
-                      color: Colors.blue,
+                      onPressed: () => pickFile(),
+                      color: styleArchivo(archivo),
                       textColor: Colors.white,
                       child: Icon(
                         Icons.archive,
@@ -197,8 +269,20 @@ class _PostHelpState extends State<PostHelp> {
                   Container(
                     child: imageUp(sampleImage),
                   ),
+
+                  // no esta funcionando
+                  Container(
+                    child: Center(
+                      child: videoUp(video).value.initialized
+                          ? AspectRatio(
+                              aspectRatio: videoUp(video).value.aspectRatio,
+                              child: VideoPlayer(videoUp(video)),
+                            )
+                          : Container(),
+                    ),
+                  ),
                   
-                  // arreglar el display. Le fal
+                  // arreglar el display. 
                   RaisedButton(
                     elevation: 10.0,
                     color: Colors.teal,
@@ -209,7 +293,7 @@ class _PostHelpState extends State<PostHelp> {
                     onPressed: () async{
                       if(_formKey.currentState.validate()){
                         // update the data in the DB
-                        print('Enviando ' + titulo.toString() + descripcion.toString() + sampleImage.toString());
+                        print('Enviando ' + titulo.toString());
                         uploadFiles(
                           titulo, 
                           descripcion, 
@@ -225,7 +309,6 @@ class _PostHelpState extends State<PostHelp> {
                       }
                     } // onPressed
                     
-                    //
                   ),
                 ],
             ),
