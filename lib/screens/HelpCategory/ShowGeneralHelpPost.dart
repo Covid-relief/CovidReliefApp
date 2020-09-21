@@ -154,11 +154,13 @@ class _ViewPostsState extends State<ViewPosts> {
 
             SizedBox(height: 10.0,),
 
+            showDescript(Descripcion),
+
             showImage(Imagen),
 
             SizedBox(height: 10.0,),
 
-            showDescript(Descripcion),
+            
 
           ],
 
