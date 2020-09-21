@@ -10,6 +10,7 @@ class DatabaseService{
   //coleccion de referencias 
 
   final CollectionReference userscollection = Firestore.instance.collection('perfiles');
+  final CollectionReference userhelpscollection = Firestore.instance.collection('solicitarayuda');
 
   Future updateUserData(String birthday,String country, String creation, String gender, String name, String phone, String state, String type) async {
 
@@ -23,6 +24,16 @@ class DatabaseService{
       'state' : state,
       'type' : type,
     
+    });
+
+  }
+
+  Future updateHelpForm(String name, String email, String phone, String description ) async {
+    return await userhelpscollection.document(uid).setData({
+      'description' : description,
+      'email' : email,
+      'name' : name,
+      'phone' : phone,
     });
 
   }

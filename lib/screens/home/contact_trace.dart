@@ -291,7 +291,8 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
                 itemBuilder: (context, index) {
                   return ContactCard(
                     imagePath: 'images/profile1.jpg',
-                    email: contactTraces[index],
+                    //email: contactTraces[index]+"*****",
+                    email: "********"+contactTraces[index].substring((contactTraces[index].length/2).toInt(),contactTraces[index].length),
                     infection: 'Not-Infected',
                     contactUsername: contactTraces[index],
                     contactTime: contactTimes[index],
