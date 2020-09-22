@@ -106,7 +106,7 @@ class Category extends StatelessWidget {
                     textColor: Colors.white,
                     color: Colors.teal[200],
                     onPressed:() {
-                      categoryOfHelp='tecnologia';
+                      categoryOfHelp='tecnología';
                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Help(typeOfHelp:typeOfHelp, categoryOfHelp:categoryOfHelp)),);
                     },
                     child: new Text("Tecnología", style: TextStyle(fontSize: 20)),
@@ -142,7 +142,7 @@ class Category extends StatelessWidget {
                     textColor: Colors.white,
                     color: Colors.teal[200],
                     onPressed:() async {
-                      categoryOfHelp='psicologia';
+                      categoryOfHelp='psicología';
                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Help(typeOfHelp:typeOfHelp, categoryOfHelp:categoryOfHelp)),);
                     },
                     child: new Text("Psicología", style: TextStyle(fontSize: 20)),
