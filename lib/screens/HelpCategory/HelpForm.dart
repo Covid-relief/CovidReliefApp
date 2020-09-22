@@ -1,6 +1,10 @@
-
+import 'package:CovidRelief/models/forms.dart';
+import 'package:CovidRelief/screens/home/home.dart';
+import 'package:CovidRelief/services/database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HelpForm extends StatefulWidget {
   @override
@@ -10,6 +14,12 @@ class HelpForm extends StatefulWidget {
 }
 
 class HelpFormState extends State<HelpForm>{
+
+  String _formName;
+  String _formEmail;
+  String _formPhone;
+  String _formDescription; // not displaying in the app
+
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -18,10 +28,12 @@ class HelpFormState extends State<HelpForm>{
       appBar: AppBar(
         title: Text('Solicitud de apoyo personalizado'),
       ),
-      body: _buildForm(),
+      body:
+      _buildForm()
     );
   }
 
+// _buildForm()
   // APP LAYER?
   Widget _buildForm() {
     return Column(
@@ -46,37 +58,64 @@ class HelpFormState extends State<HelpForm>{
   }
 
   Widget _buildNameField() {
-    return TextFormField(
-      decoration: InputDecoration(labelText: 'Nombre completo'),
-    );
-  }
-
-  Widget _buildEmailField() {
-    return TextFormField(
-      decoration: InputDecoration(
-        labelText: 'Correo electrónico',
-
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20,0,20,0),
+      child: TextFormField(
+        decoration: InputDecoration(labelText: 'Nombre completo'),
+        validator: (valname) => valname.isEmpty ? 'Por favor ingrese su nombre' : null,
+        onChanged: (valname) => setState(() => _formEmail = valname),
       ),
     );
   }
 
+  Widget _buildEmailField() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20,0,20,0),
+      child: TextFormField(
+        decoration: InputDecoration(
+          labelText: 'Correo electrónico',
+        ),
+        validator: (val) => val.isEmpty ? 'Ingrese un correo electrónico válido' : null,
+        onChanged: (valemail) => setState(() => _formEmail = valemail),
+      ),
+    );
+  }
+
+
   Widget _buildPhoneField() {
-    return TextFormField(
-      decoration: InputDecoration(labelText: 'Número de teléfono'),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20,0,20,0),
+      child: TextFormField(
+        decoration: InputDecoration(labelText: 'Número de teléfono'),
+        validator: (valphone) => valphone.isEmpty ? 'Por favor ingrese su número de teléfono' : null,
+        onChanged: (valphone) => setState(() => _formPhone = valphone),
+      ),
     );
   }
 
   Widget _buildProblemField() {
-    return TextFormField(
-      decoration: InputDecoration(labelText: 'Describe brevemente tu problema'),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20,0,20,0),
+      child: TextFormField(
+        decoration: InputDecoration(labelText: 'Describe brevemente tu problema'),
+        validator: (valdescription) => valdescription.isEmpty ? 'Por favor ingrese su número de teléfono' : null,
+        onChanged: (valdescription) => setState(() => _formDescription = valdescription),
+      ),
     );
   }
-
 
   Widget _buildSubmitButton() {
     return RaisedButton(
-      onPressed: () {},
+      onPressed: () {_submitForm();
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);},
       child: Text('Enviar Solicitud'),
     );
   }
+
+  void _submitForm() async {
+    if(_formKey.currentState.validate()){
+      await Firestore.instance.collection('solicitarayuda').add({'description':_formDescription,'email':_formEmail, 'name':_formName, 'phone':_formPhone,});
+    }
+  }
+
 }
