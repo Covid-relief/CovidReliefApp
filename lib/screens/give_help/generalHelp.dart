@@ -151,8 +151,8 @@ class _PostHelpState extends State<PostHelp> {
                   Container(
                       padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
                       child: TextFormField(
-                        decoration: textInputDecoration.copyWith(hintText: 'Titulo'),
-                        validator: (valtitulo){return valtitulo.isEmpty ? 'Escribir un titulo': null;},
+                        decoration: textInputDecoration.copyWith(hintText: 'Título'),
+                        validator: (valtitulo){return valtitulo.isEmpty ? 'Escribir un título': null;},
                         onChanged: (valtitulo) => setState(() => titulo = valtitulo),
                       ),
                   ),
