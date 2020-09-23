@@ -83,7 +83,7 @@ class _ViewPostsState extends State<ViewPosts> {
     return Scaffold
       (
       appBar: AppBar(
-        title: Text('Ayuda General de ' + categoryOfHelp),
+        title: Text('Ayuda general de ' + categoryOfHelp),
       ),
       body: new Container
         (
@@ -154,11 +154,13 @@ class _ViewPostsState extends State<ViewPosts> {
 
             SizedBox(height: 10.0,),
 
+            showDescript(Descripcion),
+
             showImage(Imagen),
 
             SizedBox(height: 10.0,),
 
-            showDescript(Descripcion),
+            
 
           ],
 

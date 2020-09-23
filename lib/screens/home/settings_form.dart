@@ -81,20 +81,6 @@ class _UserDataFormState extends State<UserDataForm> {
               fontFamily: 'Open Sans',
               fontSize: 25),),
         backgroundColor: Colors.cyan[700],
-        actions: <Widget>[
-          FlatButton.icon(
-            icon: Icon(Icons.person),
-            label: Text('Inicio',
-              style: TextStyle(
-                fontWeight: FontWeight.w700,
-                fontFamily: 'Open Sans',
-              ),
-            ),
-            onPressed: ()  {
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
-            },
-          ),
-        ],
       ),
       body: StreamBuilder<UserData>(
         stream: DatabaseService(uid: user.uid).userData,
@@ -241,11 +227,11 @@ class _UserDataFormState extends State<UserDataForm> {
                           // if there's no new data, remain with the same as before
                           _currentBirthday.toString() ?? userData.birthday, 
                           _currentCountry ?? userData.country,
-                          _currentCreation ?? 'hoy',
+                          _currentCreation ?? 'creation',
                           _currentgender ?? userData.gender,
                           _currentName ?? userData.name, 
                           _currentPhone ?? userData.phone,
-                          _currentState ?? 'activo',
+                          _currentState ?? 'state',
                           _currenType ?? userData.type,
                         );
                         // redirect to profile page
