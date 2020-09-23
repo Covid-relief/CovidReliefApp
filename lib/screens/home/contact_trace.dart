@@ -8,6 +8,11 @@ import 'package:CovidRelief/services/auth.dart';
 import 'package:CovidRelief/screens/authenticate/authenticate.dart';
 import 'package:CovidRelief/screens/home/user_profile.dart';
 
+import 'package:crypto/crypto.dart';
+import 'dart:async';
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
+import 'dart:convert';
 
 import 'components/contact_card.dart';
 import 'constants.dart';
@@ -292,7 +297,8 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
                   return ContactCard(
                     imagePath: 'images/profile1.jpg',
                     //email: contactTraces[index]+"*****",
-                    email: "********"+contactTraces[index].substring((contactTraces[index].length/2).toInt(),contactTraces[index].length),
+                    //email: "********"+contactTraces[index].substring((contactTraces[index].length/2).toInt(),contactTraces[index].length),
+                    email: "${sha1.convert(utf8.encode(contactTraces[index]))}", // data being hashed
                     infection: 'Not-Infected',
                     contactUsername: contactTraces[index],
                     contactTime: contactTimes[index],
