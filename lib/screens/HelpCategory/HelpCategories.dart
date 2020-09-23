@@ -44,14 +44,14 @@ class Category extends StatelessWidget {
                   leading: Icon(Icons.account_circle),
                   title: Text('Inicio',),
                   onTap: () async {
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => Home()),);
                   },
                 ),
                 ListTile(
                   leading: Icon(Icons.account_circle),
                   title: Text('Perfil',),
                   onTap: () async {
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserProfile()),);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfile()),);
                   },
                 ),
                 //FlatButton.icon(
@@ -65,7 +65,7 @@ class Category extends StatelessWidget {
                   label: Text('Cerrar Sesión'),
                   onPressed: () async {
                     await _auth.signOut();
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Authenticate()),);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => Authenticate()),);
                   },
                 ),
               ],

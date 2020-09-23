@@ -107,7 +107,7 @@ class HelpFormState extends State<HelpForm>{
   Widget _buildSubmitButton() {
     return RaisedButton(
       onPressed: () {_submitForm();
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);},
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Home()),);},
       child: Text('Enviar Solicitud'),
     );
   }

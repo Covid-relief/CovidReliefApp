@@ -305,7 +305,7 @@ class _PostHelpState extends State<PostHelp> {
                           username, 
                           sampleImage);
 
-                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => Home()),);
                       }
                     } // onPressed
                     
