@@ -108,20 +108,23 @@ class Help extends StatelessWidget {
         body: ListView(
           padding: const EdgeInsets.all(15),
           children: <Widget>[
+            Container(height: 30,),
             Container(
               height: 90,
               child: new Center(child: Text(tituloPantalla(), style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold))),
             ),
             Container(
-              height: 20,
+              height: 10,
             ),
             Container(
-              height: 120,
-              padding: EdgeInsets.fromLTRB(70, 0, 70, 5),
+              height: 70,
+              padding: EdgeInsets.fromLTRB(70, 0, 70, 0),
               child: RaisedButton(
-                padding: const EdgeInsets.all(0.0),
+                padding: const EdgeInsets.all(2.0),
+                elevation: 5.0,
                 textColor: Colors.white,
-                color: Colors.teal[200],
+                shape: StadiumBorder(),
+                color: Colors.teal,
                 onPressed: () async {
                   if(typeOfHelp=='quiero ayudar'){
                     Navigator.push(context, MaterialPageRoute(builder: (context) => PostHelp(typeOfHelp: typeOfHelp, categoryOfHelp: categoryOfHelp)),);
@@ -137,17 +140,22 @@ class Help extends StatelessWidget {
                     textAlign: TextAlign.center),
               ),
             ),
+            Container(
+              height: 10,
+            ),
             showMyGuide(),
             Container(
               height: 20,
             ),
             Container(
-              height: 120,
+              height: 70,
               padding: EdgeInsets.fromLTRB(70, 0, 70, 0),
               child: RaisedButton(
-                  padding: const EdgeInsets.all(0.0),
+                  padding: const EdgeInsets.all(2.0),
                   textColor: Colors.white,
-                  color: Colors.teal[200],
+                  elevation: 5.0,
+                  color: Colors.teal,
+                  shape: StadiumBorder(),
                   onPressed: () async {
                     if(typeOfHelp!='quiero ayudar'){
                       Navigator.push(context,MaterialPageRoute(builder: (context) => HelpForm()),);
@@ -158,7 +166,7 @@ class Help extends StatelessWidget {
                       textAlign: TextAlign.center)),
             ),
             Container(
-              height: 90,
+              height: 160,
             ),
             Container(
               padding: EdgeInsets.fromLTRB(50, 0, 50, 0),

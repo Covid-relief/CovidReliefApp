@@ -27,6 +27,7 @@ class HelpFormState extends State<HelpForm>{
     return Scaffold(
       appBar: AppBar(
         title: Text('Solicitud de apoyo personalizado'),
+        backgroundColor: Colors.lightBlue[900],
       ),
       body:
       _buildForm()
@@ -105,10 +106,18 @@ class HelpFormState extends State<HelpForm>{
   }
 
   Widget _buildSubmitButton() {
-    return RaisedButton(
-      onPressed: () {_submitForm();
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);},
-      child: Text('Enviar Solicitud'),
+    return Container(
+      height: 70,
+      padding: EdgeInsets.fromLTRB(70,0,70,0),
+      child:
+        RaisedButton(
+          padding: const EdgeInsets.symmetric(horizontal: 35),
+          color: Colors.teal,
+          shape: StadiumBorder(),
+          onPressed: () {_submitForm();
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);},
+          child: Text('Enviar Solicitud',style: TextStyle(color: Colors.white, fontSize: 20),),
+        ),
     );
   }
 

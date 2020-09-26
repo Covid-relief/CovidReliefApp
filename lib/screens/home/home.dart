@@ -41,14 +41,14 @@ class Home extends StatelessWidget {
                     fontFamily: 'Open Sans',
                     fontSize: 25),
               ),
-              backgroundColor: Colors.cyan[700],
+              backgroundColor:  Colors.lightBlue[900],
               elevation: 0.0,),
            drawer: Drawer(
             child: ListView(
               children: [
                 DrawerHeader(
                   decoration: BoxDecoration(
-                    color: Colors.cyan[700],
+                    color: Colors.lightBlue[900],
                   ),
                 ),
                 ListTile(
@@ -107,13 +107,14 @@ class Home extends StatelessWidget {
                       height: 40,
                     ),
                     Container(
-                      height: 60,
-                      padding: EdgeInsets.fromLTRB(60,0,60,0),
+                      height: 70,
+                      padding: EdgeInsets.fromLTRB(70,0,70,0),
                       child:
                       RaisedButton(
                           padding: const EdgeInsets.all(2.0),
                           textColor: Colors.white,
-                          color: Colors.lightBlue[900],
+                          elevation: 5.0,
+                          color: Colors.teal,
                           shape: StadiumBorder(),
                           onPressed:() {
                             typeOfHelp='quiero ayudar';
@@ -122,8 +123,7 @@ class Home extends StatelessWidget {
                           child: new Text("Quiero ayudar",
                               style: TextStyle(
                                 color: Colors.white,
-                                fontWeight: FontWeight.w800,
-                                fontSize: 15,
+                                fontSize: 20,
                                 fontFamily: 'Open Sans',)
                           ),
                       ),
@@ -132,13 +132,14 @@ class Home extends StatelessWidget {
                       height: 15,
                     ),
                     Container(
-                      height: 60,
-                      padding: EdgeInsets.fromLTRB(60,0,60,0),
+                      height: 70,
+                      padding: EdgeInsets.fromLTRB(70,0,70,0),
                       child:
                       RaisedButton(
                         padding: const EdgeInsets.all(2.0),
                         textColor: Colors.white,
-                        color: Colors.lightBlue[900],
+                        elevation: 5.0,
+                        color: Colors.teal,
                         shape: StadiumBorder(),
                         onPressed:() {
                           typeOfHelp='necesito ayuda';
@@ -147,14 +148,13 @@ class Home extends StatelessWidget {
                         child: new Text("Necesito ayuda",
                           style: TextStyle(
                               color: Colors.white,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w800,
+                              fontSize: 20,
                               fontFamily: 'Open Sans',),
                         ),
                       ),
                     ),
                     Container(
-                      height: 60,
+                      height: 40,
                     ),
                     Container(
                       child: Row(
@@ -162,13 +162,17 @@ class Home extends StatelessWidget {
                         children: [
                           RaisedButton(
                               onPressed: null,
+                              elevation: 5.0,
                               shape: StadiumBorder(),
-                              child: new Text("Conferencias", style: TextStyle(color: Colors.black))
+                              padding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+                              child: new Text("Conferencias", style: TextStyle(color: Colors.white))
                           ),
                           RaisedButton(
                               onPressed: null,
+                              elevation: 5.0,
                               shape: StadiumBorder(),
-                              child: new Text("Noticias", style: TextStyle(color: Colors.black))
+                              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                              child: new Text(" Noticias ", style: TextStyle(color: Colors.white))
                           )
                         ],
                       ),
