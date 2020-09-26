@@ -55,7 +55,7 @@ class Home extends StatelessWidget {
                   leading: Icon(Icons.account_circle),
                   title: Text('Perfil',),
                   onTap: () async {
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserProfile()),);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfile()),);
                   },
                 ),
                 //FlatButton.icon(
@@ -67,7 +67,7 @@ class Home extends StatelessWidget {
                   leading: Icon(Icons.track_changes),
                   title: Text('Contact Trace',),
                   onTap: () async {
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => NearbyInterface()),);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => NearbyInterface()),);
                   },
                 ),
 
@@ -76,7 +76,7 @@ class Home extends StatelessWidget {
                   label: Text('Cerrar Sesión'),
                   onPressed: () async {
                     await _auth.signOut();
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Authenticate()),);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => Authenticate()),);
                   },
                 ),
               ],
@@ -118,7 +118,7 @@ class Home extends StatelessWidget {
                           shape: StadiumBorder(),
                           onPressed:() {
                             typeOfHelp='quiero ayudar';
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Category(typeOfHelp:typeOfHelp)),);
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => Category(typeOfHelp:typeOfHelp)),);
                           },
                           child: new Text("Quiero ayudar",
                               style: TextStyle(
@@ -143,7 +143,7 @@ class Home extends StatelessWidget {
                         shape: StadiumBorder(),
                         onPressed:() {
                           typeOfHelp='necesito ayuda';
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Category(typeOfHelp:typeOfHelp)),);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Category(typeOfHelp:typeOfHelp)),);
                         },
                         child: new Text("Necesito ayuda",
                           style: TextStyle(

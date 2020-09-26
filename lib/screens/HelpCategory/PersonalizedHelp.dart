@@ -72,7 +72,7 @@ class Help extends StatelessWidget {
                   'Inicio',
                 ),
                 onTap: () async {
-                  Navigator.pushReplacement(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => Home()),
                   );
@@ -84,7 +84,7 @@ class Help extends StatelessWidget {
                   'Perfil',
                 ),
                 onTap: () async {
-                  Navigator.pushReplacement(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => UserProfile()),
                   );
@@ -96,7 +96,7 @@ class Help extends StatelessWidget {
                 label: Text('Cerrar Sesión'),
                 onPressed: () async {
                   await _auth.signOut();
-                  Navigator.pushReplacement(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => Authenticate()),
                   );
