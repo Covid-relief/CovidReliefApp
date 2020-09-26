@@ -1,15 +1,22 @@
+import 'package:CovidRelief/models/forms.dart';
 import 'package:CovidRelief/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:CovidRelief/models/user.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  //final FirebaseDatabase _authHelpForm = FirebaseDatabase.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   User _userFromFirebaseUser(FirebaseUser user) {
     return user != null ? User(uid: user.uid) : null;
   }
+
+  // UserForm _helpRequestForm(FirebaseUser userform) {
+  //   return userform != null ? UserForm(uid: userform.uid) : null;
+  // }
 
   Stream<User> get user {
     return _auth.onAuthStateChanged.map(_userFromFirebaseUser);
@@ -44,7 +51,23 @@ class AuthService {
   }
 
   //metodo para registrarse
+  // Future requestHelpForm() async {
+  //   try{
+  //     DatabaseReference result = await _authHelpForm.reference();
+  //
+  //     await DatabaseService().updateHelpForm(
+  //         'birthday',
+  //         'country',
+  //         'creation',
+  //         'gender');
+  //     return _helpRequestForm();
+  //   } catch (error) {
+  //     print(error.toString());
+  //     return null;
+  //   }
+  //   }
 
+  //metodo para registrarse
   Future registerEmailandPassword(String email, String password) async {
     try {
       AuthResult result = await _auth.createUserWithEmailAndPassword(
