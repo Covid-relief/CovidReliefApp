@@ -44,14 +44,14 @@ class Category extends StatelessWidget {
                   leading: Icon(Icons.account_circle),
                   title: Text('Inicio',),
                   onTap: () async {
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => Home()),);
                   },
                 ),
                 ListTile(
                   leading: Icon(Icons.account_circle),
                   title: Text('Perfil',),
                   onTap: () async {
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserProfile()),);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfile()),);
                   },
                 ),
                 //FlatButton.icon(
@@ -65,7 +65,7 @@ class Category extends StatelessWidget {
                   label: Text('Cerrar Sesión'),
                   onPressed: () async {
                     await _auth.signOut();
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Authenticate()),);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => Authenticate()),);
                   },
                 ),
               ],
@@ -80,13 +80,18 @@ class Category extends StatelessWidget {
                   child: const Center(child: Text('Categorías de ayuda', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold))),
                 ),
                 Container(
+                  height: 10,
+                ),
+                Container(
                   height: 70,
                   padding: EdgeInsets.fromLTRB(70,0,70,0),
                   child:
                   RaisedButton(
                     padding: const EdgeInsets.all(2.0),
                     textColor: Colors.white,
-                    color: Colors.teal[200],
+                    color: Colors.teal,
+                    elevation: 5.0,
+                    shape: StadiumBorder(),
                     onPressed:() async {
                       categoryOfHelp='business';
                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Help(typeOfHelp:typeOfHelp, categoryOfHelp:categoryOfHelp)),);
@@ -104,9 +109,11 @@ class Category extends StatelessWidget {
                   RaisedButton(
                     padding: const EdgeInsets.all(2.0),
                     textColor: Colors.white,
-                    color: Colors.teal[200],
+                    color: Colors.teal,
+                    elevation: 5.0,
+                    shape: StadiumBorder(),
                     onPressed:() {
-                      categoryOfHelp='tecnologia';
+                      categoryOfHelp='tecnología';
                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Help(typeOfHelp:typeOfHelp, categoryOfHelp:categoryOfHelp)),);
                     },
                     child: new Text("Tecnología", style: TextStyle(fontSize: 20)),
@@ -122,7 +129,9 @@ class Category extends StatelessWidget {
                   RaisedButton(
                     padding: const EdgeInsets.all(2.0),
                     textColor: Colors.white,
-                    color: Colors.teal[200],
+                    elevation: 5.0,
+                    color: Colors.teal,
+                    shape: StadiumBorder(),
                     onPressed:() async {
                       categoryOfHelp='medicina';
                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Help(typeOfHelp:typeOfHelp, categoryOfHelp:categoryOfHelp)),);
@@ -139,17 +148,19 @@ class Category extends StatelessWidget {
                   child:
                   RaisedButton(
                     padding: const EdgeInsets.all(2.0),
+                    elevation: 5.0,
                     textColor: Colors.white,
-                    color: Colors.teal[200],
+                    color: Colors.teal,
+                    shape: StadiumBorder(),
                     onPressed:() async {
-                      categoryOfHelp='psicologia';
+                      categoryOfHelp='psicología';
                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Help(typeOfHelp:typeOfHelp, categoryOfHelp:categoryOfHelp)),);
                     },
                     child: new Text("Psicología", style: TextStyle(fontSize: 20)),
                   ),
                 ),
                 Container(
-                  height: 40,
+                  height: 100,
                 ),
                 Container(
                     padding: EdgeInsets.fromLTRB(50,0,50,0),
