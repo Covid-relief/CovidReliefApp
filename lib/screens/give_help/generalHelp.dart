@@ -161,7 +161,7 @@ class _PostHelpState extends State<PostHelp> {
                       padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
                       child:TextFormField(
                         keyboardType: TextInputType.multiline,
-                        maxLines: 15,
+                        maxLines: 12,
                         decoration: textInputDecoration.copyWith(hintText: 'Escribe tu consejo... (opcional)'),
                         onChanged: (valtdesc) => {if (valtdesc!=null) {setState(() => descripcion = valtdesc)}else{setState(() => descripcion = null)}},
                         //contentPadding: new EdgeInsets.fromLTRB(15, 0, 0, 200),
@@ -174,11 +174,13 @@ class _PostHelpState extends State<PostHelp> {
                   ),
                   SizedBox(height: 20.0),
                   Column(children: <Widget>[
-                    Row(children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
 
                     // button to submit links
-                    SizedBox(
-                      width: 110,
+                      SizedBox(
+                      width: 90,
                       child: MaterialButton(
                       onPressed: () async {openPopup();},
                       color: styleArchivo(link),
@@ -193,8 +195,8 @@ class _PostHelpState extends State<PostHelp> {
                     ),
 
                     // button to submit images
-                    SizedBox(
-                      width: 75,
+                      SizedBox(
+                      width: 90,
                       child: MaterialButton(
                       onPressed: () => getImage(),
                       color: styleArchivo(sampleImage),
@@ -210,7 +212,7 @@ class _PostHelpState extends State<PostHelp> {
 
                     // button to submit videos
                     SizedBox(
-                      width: 75,
+                      width: 90,
                       child: MaterialButton(
                       onPressed: ()  => pickVideo(),
                       color: styleArchivo(video),
@@ -226,7 +228,7 @@ class _PostHelpState extends State<PostHelp> {
 
                     // button to submit documents
                     SizedBox(
-                      width: 110,
+                      width: 90,
                       child:MaterialButton(
                       onPressed: () => pickFile(),
                       color: styleArchivo(archivo),
@@ -247,21 +249,21 @@ class _PostHelpState extends State<PostHelp> {
                       padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
                       child: Text('Link')
                     ),
+                    Container(
+                        padding: EdgeInsets.fromLTRB(45, 0, 0, 0),
+                        child: Text('Documento')
+                    ),
                     // image text
                     Container(
-                      padding: EdgeInsets.fromLTRB(58, 0, 0, 0),
+                      padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
                       child: Text('Imagen')
                     ),
                     // video text
                     Container(
-                      padding: EdgeInsets.fromLTRB(33, 0, 0, 0),
+                      padding: EdgeInsets.fromLTRB(53, 0, 0, 0),
                       child: Text('Video')
                     ),
                     // documenttext
-                    Container(
-                      padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
-                      child: Text('Documento')
-                    ),
                   ],)
                   ],),
                   
@@ -282,33 +284,38 @@ class _PostHelpState extends State<PostHelp> {
                     ),
                   ),
                   
-                  // arreglar el display. 
-                  RaisedButton(
-                    elevation: 10.0,
-                    color: Colors.teal,
-                    child: Text(
-                      'Publicar',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    onPressed: () async{
-                      if(_formKey.currentState.validate()){
-                        // update the data in the DB
-                        print('Enviando ' + titulo.toString());
-                        uploadFiles(
-                          titulo, 
-                          descripcion, 
-                          categoryOfHelp, 
-                          keywords, 
-                          video, 
-                          archivo, 
-                          link, 
-                          username, 
-                          sampleImage);
-
+                  // arreglar el display.
+                  Container(
+                    height: 70,
+                    padding: EdgeInsets.fromLTRB(70,0,70,0),
+                    child:
+                    RaisedButton(
+                        elevation: 5.0,
+                        color: Colors.teal,
+                        shape: StadiumBorder(),
+                        child: Text(
+                          'Publicar',
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                        ),
+                        onPressed: () async{
+                          if(_formKey.currentState.validate()){
+                            // update the data in the DB
+                            print('Enviando ' + titulo.toString());
+                            uploadFiles(
+                                titulo,
+                                descripcion,
+                                categoryOfHelp,
+                                keywords,
+                                video,
+                                archivo,
+                                link,
+                                username,
+                                sampleImage,
+                                "evaluate");
                         Navigator.push(context, MaterialPageRoute(builder: (context) => Home()),);
                       }
                     } // onPressed
-                    
+                    ),
                   ),
                 ],
             ),

@@ -28,7 +28,7 @@ VideoPlayerController videoUp (video){
   }
 }
 
-uploadFiles(titulo, descripcion, categoria, keywords, video, archivo, link, username, sampleImage) async{
+uploadFiles(titulo, descripcion, categoria, keywords, video, archivo, link, username, sampleImage, estado) async{
   final StorageReference myPost = FirebaseStorage.instance.ref().child("Post Files");
 
   var timeKey = new DateTime.now();
@@ -64,6 +64,6 @@ uploadFiles(titulo, descripcion, categoria, keywords, video, archivo, link, user
 
     print("Archivo url = " + arc);
   }
-  saveToDatabase(titulo, descripcion, categoria, keywords, vid, arc, link, username, img);
+  saveToDatabase(titulo, descripcion, categoria, keywords, vid, arc, link, username, img, estado);
   
 }
