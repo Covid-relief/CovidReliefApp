@@ -32,7 +32,7 @@ class _ViewPostsState extends State<ViewPosts> {
 
     DatabaseReference postsRef = FirebaseDatabase.instance.reference().child(categoryOfHelp);
 
-    postsRef.once().then((DataSnapshot snap)
+    postsRef.orderByChild('Estado').equalTo("approved").once().then((DataSnapshot snap)
     {
       var KEYS = snap.value.keys;
       var DATA = snap.value;
