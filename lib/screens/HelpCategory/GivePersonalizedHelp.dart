@@ -5,24 +5,23 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class HelpForm extends StatefulWidget {
+class GivePersonalizedHelp extends StatefulWidget {
   String categoryOfHelp;
-  HelpForm({this.categoryOfHelp});
+  GivePersonalizedHelp({this.categoryOfHelp});
   
   @override
-  HelpFormState createState() {
-    return HelpFormState(categoryOfHelp:categoryOfHelp);
+  _GivePersonalizedHelpState createState() {
+    return _GivePersonalizedHelpState(categoryOfHelp:categoryOfHelp);
   }
 }
 
-class HelpFormState extends State<HelpForm>{
+class _GivePersonalizedHelpState extends State<GivePersonalizedHelp>{
   String categoryOfHelp;
-  HelpFormState({this.categoryOfHelp});
+  _GivePersonalizedHelpState({this.categoryOfHelp});
 
   String _formName;
   String _formEmail;
   String _formPhone;
-  String _formDescription;
   bool _contactMail=false;
   bool _contactMessage=false;
 
@@ -35,7 +34,7 @@ class HelpFormState extends State<HelpForm>{
     // Build a Form widget using the _formKey created above.
     return Scaffold(
       appBar: AppBar(
-        title: Text('Solicitud de apoyo personalizado'),
+        title: Text('Apoyar en ' + categoryOfHelp),
         backgroundColor: Colors.lightBlue[900],
       ),
       body: SingleChildScrollView(
@@ -59,8 +58,6 @@ class HelpFormState extends State<HelpForm>{
         SizedBox(height: 25.0,),
         _buildPhoneField(),
         SizedBox(height: 25.0,),
-        _buildProblemField(),
-        SizedBox(height: 25.0,),
         _buildContactMail(),
         _buildContactMessage(),
         SizedBox(height: 15.0,),
@@ -71,8 +68,8 @@ class HelpFormState extends State<HelpForm>{
 
   Widget _buildDisclaimer() {
     return Text('Te recordamos que esta es una plataforma facilitada por la Universidad '
-        'Francisco Marroquín pero de ninguna manera es responsable de los consejos e ideas aquí presentadas '
-        'y el éxito o fracaso de los mismos.',
+        'Francisco Marroquín pero de ninguna manera es responsable de las solicitudes e ideas aquí presentadas '
+        'y el éxito o fracaso de las mismas.',
       textAlign: TextAlign.center,
     );
   }
@@ -113,17 +110,6 @@ class HelpFormState extends State<HelpForm>{
     );
   }
 
-  Widget _buildProblemField() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20,0,20,0),
-      child: TextFormField(
-        decoration: InputDecoration(labelText: 'Describe brevemente tu problema'),
-        validator: (valdescription) => valdescription.isEmpty ? 'Por favor ingrese su número de teléfono' : null,
-        onChanged: (valdescription) => setState(() => _formDescription = valdescription),
-      ),
-    );
-  }
-
   Widget _buildContactMail() {
       return CheckboxListTile(
         title: Text("Contactarme por correo"),
@@ -153,21 +139,20 @@ class HelpFormState extends State<HelpForm>{
           onPressed: () {
             print(_formName);
             print(_formKey);
-            print(_formDescription);
             print(_formEmail);
             print(_formPhone);
-            _submitForm();
+            //_submitForm(); aun no se usara
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);},
-          child: Text('Enviar Solicitud',style: TextStyle(color: Colors.white, fontSize: 20),),
+          child: Text('Empezar a apoyar',style: TextStyle(color: Colors.white, fontSize: 20),),
         ),
     );
+
   }
 
   void _submitForm() async {
-    DocumentReference ref = await databaseReference.collection("solicitarayuda_" + categoryOfHelp)
+    DocumentReference ref = await databaseReference.collection("darayuda_" + categoryOfHelp)
         .add({
           'email': _formEmail,
-          'description': _formDescription,
           'name': _formName,
           'phone': _formPhone
         });

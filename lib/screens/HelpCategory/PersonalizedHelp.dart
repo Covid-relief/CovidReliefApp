@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:CovidRelief/screens/HelpCategory/ShowPdf.dart';
 import 'package:CovidRelief/screens/give_help/generalHelp.dart';
 import 'package:CovidRelief/screens/HelpCategory/ShowGeneralHelpPost.dart';
+import 'package:CovidRelief/screens/HelpCategory/GivePersonalizedHelp.dart';
 
 import '../give_help/generalHelp.dart';
 import 'HelpForm.dart';
@@ -159,6 +160,8 @@ class Help extends StatelessWidget {
                   onPressed: () async {
                     if(typeOfHelp!='quiero ayudar'){
                       Navigator.push(context,MaterialPageRoute(builder: (context) => HelpForm(categoryOfHelp:categoryOfHelp)),);
+                    }else{
+                      Navigator.push(context,MaterialPageRoute(builder: (context) => GivePersonalizedHelp(categoryOfHelp:categoryOfHelp)),);
                     }
                   },
                   child: Text("Apoyo personalizado y contacto personal",
