@@ -158,7 +158,7 @@ class Help extends StatelessWidget {
                   shape: StadiumBorder(),
                   onPressed: () async {
                     if(typeOfHelp!='quiero ayudar'){
-                      Navigator.push(context,MaterialPageRoute(builder: (context) => HelpForm()),);
+                      Navigator.push(context,MaterialPageRoute(builder: (context) => HelpForm(categoryOfHelp:categoryOfHelp)),);
                     }
                   },
                   child: Text("Apoyo personalizado y contacto personal",

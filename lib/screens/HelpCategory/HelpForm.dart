@@ -1,16 +1,23 @@
 import 'package:CovidRelief/screens/home/home.dart';
+import 'package:CovidRelief/services/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HelpForm extends StatefulWidget {
+  String categoryOfHelp;
+  HelpForm({this.categoryOfHelp});
+  
   @override
   HelpFormState createState() {
-    return HelpFormState();
+    return HelpFormState(categoryOfHelp:categoryOfHelp);
   }
 }
 
 class HelpFormState extends State<HelpForm>{
+  String categoryOfHelp;
+  HelpFormState({this.categoryOfHelp});
 
   String _formName;
   String _formEmail;
@@ -127,14 +134,13 @@ class HelpFormState extends State<HelpForm>{
   }
 
   void _submitForm() async {
-    DocumentReference ref = await databaseReference.collection("solicitarayuda")
+    DocumentReference ref = await databaseReference.collection("solicitarayuda_" + categoryOfHelp)
         .add({
-      'email': _formEmail,
-      'description': _formDescription,
-      'name': _formName,
-      'phone': _formPhone
-    });
+          'email': _formEmail,
+          'description': _formDescription,
+          'name': _formName,
+          'phone': _formPhone
+        });
     print(ref.documentID);
   }
-
 }
