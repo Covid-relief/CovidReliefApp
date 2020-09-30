@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'Posts.dart';
-import 'package:CovidRelief/screens/HelpCategory/PersonalizedHelp.dart';
-import 'package:CovidRelief/screens/authenticate/authenticate.dart';
-import 'package:CovidRelief/screens/home/home.dart';
-import 'package:CovidRelief/screens/home/user_profile.dart';
-import 'package:CovidRelief/services/auth.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'dart:isolate';
+import 'dart:ui';
 
 //import 'package:video_player/video_player.dart';
 
@@ -22,7 +22,6 @@ class _ViewPostsState extends State<ViewPosts> {
   String categoryOfHelp;
   _ViewPostsState({this.categoryOfHelp});
 
-
   List<Posts> postsList = [];
 
   @override
@@ -32,7 +31,7 @@ class _ViewPostsState extends State<ViewPosts> {
 
     DatabaseReference postsRef = FirebaseDatabase.instance.reference().child(categoryOfHelp);
 
-    postsRef.once().then((DataSnapshot snap)
+    postsRef.orderByChild('Estado').equalTo("approved").once().then((DataSnapshot snap)
     {
       var KEYS = snap.value.keys;
       var DATA = snap.value;
@@ -49,6 +48,7 @@ class _ViewPostsState extends State<ViewPosts> {
           DATA[individualKey]['Imagen'],
           DATA[individualKey]['Titulo'],
           DATA[individualKey]['Video'],
+          DATA[individualKey]['Archivo'],
         );
 
         postsList.add(posts);
@@ -77,17 +77,66 @@ class _ViewPostsState extends State<ViewPosts> {
     }
   }
 
+  showFile(archive) {
+    if(archive!=null){
+      return new OutlineButton(
+        child: new Text(
+          "Descargar archivo",
+            style: TextStyle(
+              color: Colors.blue
+            ),
+          ),
+        onPressed: () async {
+          final status = await Permission.storage.request();
+          if(status.isGranted){
+            final externalDir = await getExternalStorageDirectory();
+            FlutterDownloader.enqueue(
+              url: archive,
+              savedDir: externalDir.path,
+              fileName: "Archivo de " + categoryOfHelp,
+              showNotification: true,
+              openFileFromNotification: true
+            );
+          }else{
+            print('Permission denied');
+          }
+        },
+        shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+        borderSide: BorderSide(color: Colors.blue),
+      );
+    }else{
+      return SizedBox();
+    }
+  }
+
   @override
   Widget build(BuildContext context)
   {
     return Scaffold
       (
+      backgroundColor: Colors.blue[100],
       appBar: AppBar(
+        /*
+        flexibleSpace: Container(
+          decoration: new BoxDecoration(
+            gradient: new LinearGradient(
+              colors: [
+                const Color(0xFF3366FF),
+                const Color(0xFF00CCFF)
+              ],
+              begin: const FractionalOffset(0.0, 0.0),
+              end: const FractionalOffset(0.5, 0.0),
+              stops: [0.0, 0.5],
+              tileMode: TileMode.clamp
+            ),
+          ),
+        ),
+        */
         title: Text('Ayuda general de ' + categoryOfHelp),
       ),
       body: new Container
         (
-        child: postsList.length == 0 ? new Text("No hay ningún consejo general disponible por el momento"): new ListView.builder
+        child: postsList.length == 0 ? CircularProgressIndicator(): new ListView.builder
           (
             itemCount: postsList.length,
             itemBuilder: (_, index)
@@ -99,7 +148,8 @@ class _ViewPostsState extends State<ViewPosts> {
                   postsList[index].Hora,
                   postsList[index].Imagen,
                   postsList[index].Titulo,
-                  postsList[index].Video
+                  postsList[index].Video,
+                  postsList[index].Archivo
               );//PostsUi
             }
         ),
@@ -107,69 +157,69 @@ class _ViewPostsState extends State<ViewPosts> {
     );
   }
 
-  Widget PostsUI(String Descripcion, String Fecha, String Hora, String Imagen, String Titulo, String Video)
+  Widget PostsUI(String Descripcion, String Fecha, String Hora, String Imagen, String Titulo, String Video, String Archivo)
   {
     return new Card
       (
-      elevation: 10.0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      //elevation: 10.0,
       margin: EdgeInsets.all(15.0),
+      child:  new Container(
+          padding: new EdgeInsets.all(14.0),
+          child: new Column
+            (
+            crossAxisAlignment: CrossAxisAlignment.start,
 
-      child: new Container
-        (
-        padding: new EdgeInsets.all(14.0),
+            children: <Widget>
+            [
+              new Row
+                (
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
-        child: new Column
-          (
-          crossAxisAlignment: CrossAxisAlignment.start,
-
-          children: <Widget>
-          [
-            new Row
-              (
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-              children: <Widget>
-              [
-                new Text(
-                  Fecha,
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                  textAlign: TextAlign.center,
-                ),
+                children: <Widget>
+                [
+                  new Text(
+                    Fecha,
+                    style: TextStyle(fontStyle: FontStyle.italic),
+                    textAlign: TextAlign.center,
+                  ),
 
 
-                new Text(
-                  Hora,
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                  textAlign: TextAlign.center,
-                )
-              ],
-            ),
+                  new Text(
+                    Hora,
+                    style: TextStyle(fontStyle: FontStyle.italic),
+                    textAlign: TextAlign.center,
+                  )
+                ],
+              ),
 
-            SizedBox(height: 10.0,),
+              SizedBox(height: 14.0,),
 
-            new Text(
-              Titulo,
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
+              new Text(
+                Titulo,
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 17.0,
+                  fontFamily: 'Poppins',
+                  ),
+              ),
+              
+              SizedBox(height: 12.0,),
 
-            SizedBox(height: 10.0,),
+              showDescript(Descripcion),
+              
+              SizedBox(height: 15.0,),
 
-            showDescript(Descripcion),
+              showImage(Imagen),
 
-            showImage(Imagen),
+              SizedBox(height: 10.0,),
 
-            SizedBox(height: 10.0,),
+              showFile(Archivo),
+            ],
 
-            
-
-          ],
+          ),
 
         ),
-
-      ),
-
-    ); // Card
-
+      );
   } // Widget PostsUI
-
 }
