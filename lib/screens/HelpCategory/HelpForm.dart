@@ -1,4 +1,3 @@
-import 'package:CovidRelief/models/forms.dart';
 import 'package:CovidRelief/screens/home/home.dart';
 import 'package:CovidRelief/services/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,20 +6,27 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HelpForm extends StatefulWidget {
+  String categoryOfHelp;
+  HelpForm({this.categoryOfHelp});
+  
   @override
   HelpFormState createState() {
-    return HelpFormState();
+    return HelpFormState(categoryOfHelp:categoryOfHelp);
   }
 }
 
 class HelpFormState extends State<HelpForm>{
+  String categoryOfHelp;
+  HelpFormState({this.categoryOfHelp});
 
   String _formName;
   String _formEmail;
   String _formPhone;
   String _formDescription; // not displaying in the app
+  final databaseReference = Firestore.instance;
 
   final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
@@ -64,7 +70,7 @@ class HelpFormState extends State<HelpForm>{
       child: TextFormField(
         decoration: InputDecoration(labelText: 'Nombre completo'),
         validator: (valname) => valname.isEmpty ? 'Por favor ingrese su nombre' : null,
-        onChanged: (valname) => setState(() => _formEmail = valname),
+        onChanged: (valname) => setState(() => _formName = valname),
       ),
     );
   }
@@ -114,7 +120,13 @@ class HelpFormState extends State<HelpForm>{
           padding: const EdgeInsets.symmetric(horizontal: 35),
           color: Colors.teal,
           shape: StadiumBorder(),
-          onPressed: () {_submitForm();
+          onPressed: () {
+            print(_formName);
+            print(_formKey);
+            print(_formDescription);
+            print(_formEmail);
+            print(_formPhone);
+            _submitForm();
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);},
           child: Text('Enviar Solicitud',style: TextStyle(color: Colors.white, fontSize: 20),),
         ),
@@ -122,9 +134,13 @@ class HelpFormState extends State<HelpForm>{
   }
 
   void _submitForm() async {
-    if(_formKey.currentState.validate()){
-      await Firestore.instance.collection('solicitarayuda').add({'description':_formDescription,'email':_formEmail, 'name':_formName, 'phone':_formPhone,});
-    }
+    DocumentReference ref = await databaseReference.collection("solicitarayuda_" + categoryOfHelp)
+        .add({
+          'email': _formEmail,
+          'description': _formDescription,
+          'name': _formName,
+          'phone': _formPhone
+        });
+    print(ref.documentID);
   }
-
 }
