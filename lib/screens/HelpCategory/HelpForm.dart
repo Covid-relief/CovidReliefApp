@@ -70,10 +70,13 @@ class HelpFormState extends State<HelpForm>{
   }
 
   Widget _buildDisclaimer() {
-    return Text('Te recordamos que esta es una plataforma facilitada por la Universidad '
+    return Container(
+      padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+      child: Text('Te recordamos que esta es una plataforma facilitada por la Universidad '
         'Francisco Marroquín pero de ninguna manera es responsable de los consejos e ideas aquí presentadas '
         'y el éxito o fracaso de los mismos.',
-      textAlign: TextAlign.center,
+        textAlign: TextAlign.center
+        ),
     );
   }
 

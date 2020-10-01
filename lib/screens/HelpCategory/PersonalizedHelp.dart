@@ -137,7 +137,7 @@ class Help extends StatelessWidget {
                   }
                 },
                 child: Text("Tips y consejos generales",
-                    style: TextStyle(fontSize: 20),
+                    style: TextStyle(fontSize: 19),
                     textAlign: TextAlign.center),
               ),
             ),
@@ -165,7 +165,7 @@ class Help extends StatelessWidget {
                     }
                   },
                   child: Text("Apoyo personalizado y contacto personal",
-                      style: TextStyle(fontSize: 20),
+                      style: TextStyle(fontSize: 17),
                       textAlign: TextAlign.center)),
             ),
             Container(

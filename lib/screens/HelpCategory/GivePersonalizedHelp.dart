@@ -67,10 +67,13 @@ class _GivePersonalizedHelpState extends State<GivePersonalizedHelp>{
   }
 
   Widget _buildDisclaimer() {
-    return Text('Te recordamos que esta es una plataforma facilitada por la Universidad '
+    return Container(
+      padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+      child: Text('Te recordamos que esta es una plataforma facilitada por la Universidad '
         'Francisco Marroquín pero de ninguna manera es responsable de las solicitudes e ideas aquí presentadas '
         'y el éxito o fracaso de las mismas.',
-      textAlign: TextAlign.center,
+        textAlign: TextAlign.center
+      )
     );
   }
 
@@ -143,7 +146,7 @@ class _GivePersonalizedHelpState extends State<GivePersonalizedHelp>{
             print(_formPhone);
             //_submitForm(); aun no se usara
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);},
-          child: Text('Empezar a apoyar',style: TextStyle(color: Colors.white, fontSize: 20),),
+          child: Text('Empezar a apoyar', textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: 20),),
         ),
     );
 
