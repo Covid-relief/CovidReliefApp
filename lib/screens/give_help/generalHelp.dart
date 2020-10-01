@@ -175,102 +175,108 @@ class _PostHelpState extends State<PostHelp> {
                   SizedBox(height: 20.0),
                   Column(children: <Widget>[
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
 
                     // button to submit links
                       SizedBox(
                       width: 90,
-                      child: MaterialButton(
-                      onPressed: () async {openPopup();},
-                      color: styleArchivo(link),
-                      textColor: Colors.white,
-                      child: Icon(
-                        Icons.insert_link,
-                        size: 24,
-                      ),
-                      //padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
-                      shape: CircleBorder(),
+                      child: Column(
+                        children: <Widget>[
+                          MaterialButton(
+                          onPressed: () async {openPopup();},
+                          color: styleArchivo(link),
+                          textColor: Colors.white,
+                          child: Icon(
+                            Icons.insert_link,
+                            size: 24,
+                          ),
+                          shape: CircleBorder(),
+                        ),
+                        SizedBox(height: 5.0),
+                        Container(
+                          child: Text('Link')
+                        ),
+                      ],)
                     ),
+
+                    // button to submit files
+                      SizedBox(
+                      width: 90,
+                      child: Column(
+                        children: <Widget>[
+                          MaterialButton(
+                            onPressed: () => pickFile(),
+                            color: styleArchivo(archivo),
+                            textColor: Colors.white,
+                            child: Icon(
+                              Icons.archive,
+                              size: 24,
+                            ),
+                            shape: CircleBorder(),
+                          ),
+                          SizedBox(height: 5.0),
+                          Container(
+                            child: Text('Documento')
+                        ),
+                        ],
+                      )
                     ),
 
                     // button to submit images
-                      SizedBox(
-                      width: 90,
-                      child: MaterialButton(
-                      onPressed: () => getImage(),
-                      color: styleArchivo(sampleImage),
-                      textColor: Colors.white,
-                      child: Icon(
-                        Icons.add_photo_alternate,
-                        size: 24,
-                      ),
-                      //padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
-                      shape: CircleBorder(),
-                    ),
-                    ),
-
-                    // button to submit videos
                     SizedBox(
                       width: 90,
-                      child: MaterialButton(
-                      onPressed: ()  => pickVideo(),
-                      color: styleArchivo(video),
-                      textColor: Colors.white,
-                      child: Icon(
-                        Icons.video_library,
-                        size: 24,
-                      ),
-                      //padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
-                      shape: CircleBorder(),
-                    ),
+                      child: Column(
+                        children: <Widget>[
+                          MaterialButton(
+                            onPressed: ()  => getImage(),
+                            color: styleArchivo(sampleImage),
+                            textColor: Colors.white,
+                            child: Icon(
+                              Icons.add_photo_alternate,
+                              size: 24,
+                            ),
+                            shape: CircleBorder(),
+                          ),
+                          SizedBox(height: 5.0),
+                          Container(
+                            child: Text('Imagen')
+                          ),
+                        ],
+                      )
                     ),
 
                     // button to submit documents
                     SizedBox(
                       width: 90,
-                      child:MaterialButton(
-                      onPressed: () => pickFile(),
-                      color: styleArchivo(archivo),
-                      textColor: Colors.white,
-                      child: Icon(
-                        Icons.archive,
-                        size: 24,
-                      ),
-                      //padding: EdgeInsets.all(16),
-                      shape: CircleBorder(),
-                    ),
+                      child: Column(children: <Widget>[
+                        MaterialButton(
+                          onPressed: () => pickVideo(),
+                          color: styleArchivo(video),
+                          textColor: Colors.white,
+                          child: Icon(
+                            Icons.video_library,
+                            size: 24,
+                          ),
+                          shape: CircleBorder(),
+                        ),
+                        SizedBox(height: 5.0),
+                        Container(
+                          child: Text('Video')
+                        ),
+                      ],
+                      )
                     ),
 
                   ],),
-                  Row(children: <Widget>[
-                    // link text
-                    Container(
-                      padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
-                      child: Text('Link')
-                    ),
-                    Container(
-                        padding: EdgeInsets.fromLTRB(45, 0, 0, 0),
-                        child: Text('Documento')
-                    ),
-                    // image text
-                    Container(
-                      padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
-                      child: Text('Imagen')
-                    ),
-                    // video text
-                    Container(
-                      padding: EdgeInsets.fromLTRB(53, 0, 0, 0),
-                      child: Text('Video')
-                    ),
-                    // documenttext
-                  ],)
                   ],),
                   
-                  SizedBox(height: 30.0),
+                  SizedBox(height: 40.0),
                   Container(
                     child: imageUp(sampleImage),
                   ),
+                  SizedBox(height: 15.0),
 
                   // no esta funcionando
                   Container(

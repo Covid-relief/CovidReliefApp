@@ -88,7 +88,7 @@ class Home extends StatelessWidget {
                   children: <Widget>[
                     Container(
                       height: 80,
-                      child: const Center(child: Text('Bienvenido a COVID-19 Relief', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold))),
+                      child: const Center(child: Text('Bienvenido a COVID-19 Relief', textAlign: TextAlign.center, style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold))),
                     ),
                     Container(
                       height: 130,
