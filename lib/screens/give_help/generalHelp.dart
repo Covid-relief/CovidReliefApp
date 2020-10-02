@@ -45,7 +45,7 @@ class _PostHelpState extends State<PostHelp> {
     if (archivo!=null) {
       color=Colors.green;
     }else{
-      color=Colors.blue;
+      color=Colors.redAccent;
     }
     return color;
   }
@@ -120,8 +120,22 @@ class _PostHelpState extends State<PostHelp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-          backgroundColor: Colors.teal[50],
+          backgroundColor: Colors.red[50],
           appBar: AppBar(
+            flexibleSpace: Container(
+                decoration: new BoxDecoration(
+                  gradient: new LinearGradient(
+                    colors: [
+                      const Color(0xFFFF5252),
+                      const Color(0xFFFF1744)
+                    ],
+                    begin: const FractionalOffset(0.0, 0.0),
+                    end: const FractionalOffset(0.5, 0.0),
+                    stops: [0.0, 0.5],
+                    tileMode: TileMode.clamp
+                  ),
+                ),
+              ),
             title: Text('Consejo general',
               style: TextStyle(
                   color: Colors.white,
@@ -129,8 +143,8 @@ class _PostHelpState extends State<PostHelp> {
                   fontStyle: FontStyle.italic,
                   fontFamily: 'Open Sans',
                   fontSize: 25),),
-            backgroundColor: Colors.lightBlue[900],
-            elevation: 0.0,),
+            //backgroundColor: Colors.lightBlue[900],
+          ),
             body: Form(
               key:_formKey,
               child: ListView(
@@ -175,102 +189,108 @@ class _PostHelpState extends State<PostHelp> {
                   SizedBox(height: 20.0),
                   Column(children: <Widget>[
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
 
                     // button to submit links
                       SizedBox(
                       width: 90,
-                      child: MaterialButton(
-                      onPressed: () async {openPopup();},
-                      color: styleArchivo(link),
-                      textColor: Colors.white,
-                      child: Icon(
-                        Icons.insert_link,
-                        size: 24,
-                      ),
-                      //padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
-                      shape: CircleBorder(),
+                      child: Column(
+                        children: <Widget>[
+                          MaterialButton(
+                          onPressed: () async {openPopup();},
+                          color: styleArchivo(link),
+                          textColor: Colors.white,
+                          child: Icon(
+                            Icons.insert_link,
+                            size: 24,
+                          ),
+                          shape: CircleBorder(),
+                        ),
+                        SizedBox(height: 5.0),
+                        Container(
+                          child: Text('Link')
+                        ),
+                      ],)
                     ),
+
+                    // button to submit files
+                      SizedBox(
+                      width: 90,
+                      child: Column(
+                        children: <Widget>[
+                          MaterialButton(
+                            onPressed: () => pickFile(),
+                            color: styleArchivo(archivo),
+                            textColor: Colors.white,
+                            child: Icon(
+                              Icons.archive,
+                              size: 24,
+                            ),
+                            shape: CircleBorder(),
+                          ),
+                          SizedBox(height: 5.0),
+                          Container(
+                            child: Text('Documento')
+                        ),
+                        ],
+                      )
                     ),
 
                     // button to submit images
-                      SizedBox(
-                      width: 90,
-                      child: MaterialButton(
-                      onPressed: () => getImage(),
-                      color: styleArchivo(sampleImage),
-                      textColor: Colors.white,
-                      child: Icon(
-                        Icons.add_photo_alternate,
-                        size: 24,
-                      ),
-                      //padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
-                      shape: CircleBorder(),
-                    ),
-                    ),
-
-                    // button to submit videos
                     SizedBox(
                       width: 90,
-                      child: MaterialButton(
-                      onPressed: ()  => pickVideo(),
-                      color: styleArchivo(video),
-                      textColor: Colors.white,
-                      child: Icon(
-                        Icons.video_library,
-                        size: 24,
-                      ),
-                      //padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
-                      shape: CircleBorder(),
-                    ),
+                      child: Column(
+                        children: <Widget>[
+                          MaterialButton(
+                            onPressed: ()  => getImage(),
+                            color: styleArchivo(sampleImage),
+                            textColor: Colors.white,
+                            child: Icon(
+                              Icons.add_photo_alternate,
+                              size: 24,
+                            ),
+                            shape: CircleBorder(),
+                          ),
+                          SizedBox(height: 5.0),
+                          Container(
+                            child: Text('Imagen')
+                          ),
+                        ],
+                      )
                     ),
 
                     // button to submit documents
                     SizedBox(
                       width: 90,
-                      child:MaterialButton(
-                      onPressed: () => pickFile(),
-                      color: styleArchivo(archivo),
-                      textColor: Colors.white,
-                      child: Icon(
-                        Icons.archive,
-                        size: 24,
-                      ),
-                      //padding: EdgeInsets.all(16),
-                      shape: CircleBorder(),
-                    ),
+                      child: Column(children: <Widget>[
+                        MaterialButton(
+                          onPressed: () => pickVideo(),
+                          color: styleArchivo(video),
+                          textColor: Colors.white,
+                          child: Icon(
+                            Icons.video_library,
+                            size: 24,
+                          ),
+                          shape: CircleBorder(),
+                        ),
+                        SizedBox(height: 5.0),
+                        Container(
+                          child: Text('Video')
+                        ),
+                      ],
+                      )
                     ),
 
                   ],),
-                  Row(children: <Widget>[
-                    // link text
-                    Container(
-                      padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
-                      child: Text('Link')
-                    ),
-                    Container(
-                        padding: EdgeInsets.fromLTRB(45, 0, 0, 0),
-                        child: Text('Documento')
-                    ),
-                    // image text
-                    Container(
-                      padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
-                      child: Text('Imagen')
-                    ),
-                    // video text
-                    Container(
-                      padding: EdgeInsets.fromLTRB(53, 0, 0, 0),
-                      child: Text('Video')
-                    ),
-                    // documenttext
-                  ],)
                   ],),
                   
-                  SizedBox(height: 30.0),
+                  SizedBox(height: 40.0),
                   Container(
                     child: imageUp(sampleImage),
                   ),
+                  SizedBox(height: 15.0),
 
                   // no esta funcionando
                   Container(
@@ -290,8 +310,8 @@ class _PostHelpState extends State<PostHelp> {
                     padding: EdgeInsets.fromLTRB(70,0,70,0),
                     child:
                     RaisedButton(
-                        elevation: 5.0,
-                        color: Colors.teal,
+                        //elevation: 5.0,
+                        color: Colors.blueAccent,
                         shape: StadiumBorder(),
                         child: Text(
                           'Publicar',
