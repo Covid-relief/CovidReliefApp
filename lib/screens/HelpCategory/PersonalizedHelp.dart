@@ -47,6 +47,20 @@ class Help extends StatelessWidget {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
+          flexibleSpace: Container(
+                decoration: new BoxDecoration(
+                  gradient: new LinearGradient(
+                    colors: [
+                      const Color(0xFFFF5252),
+                      const Color(0xFFFF1744)
+                    ],
+                    begin: const FractionalOffset(0.0, 0.0),
+                    end: const FractionalOffset(0.5, 0.0),
+                    stops: [0.0, 0.5],
+                    tileMode: TileMode.clamp
+                  ),
+                ),
+              ),
           title: Text(
             'Covid Relief',
             style: TextStyle(
@@ -56,17 +70,27 @@ class Help extends StatelessWidget {
                 fontFamily: 'Open Sans',
                 fontSize: 25),
           ),
-          backgroundColor: Colors.lightBlue[900],
-          elevation: 0.0,
+          //backgroundColor: Colors.lightBlue[900],
         ),
         drawer: Drawer(
           child: ListView(
             children: [
               DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Colors.lightBlue[900],
+                  decoration: BoxDecoration(
+                    color: Colors.redAccent[400],
+                  ),
+                  child: Text(
+                    'Covid Relief', 
+                    style: TextStyle(
+                      height: 5.0,
+                      color: Colors.white,
+                      fontSize: 30,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: 'Open Sans',
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
                 ),
-              ),
               ListTile(
                 leading: Icon(Icons.account_circle),
                 title: Text(
@@ -109,23 +133,23 @@ class Help extends StatelessWidget {
         body: ListView(
           padding: const EdgeInsets.all(15),
           children: <Widget>[
-            Container(height: 30,),
+            Container(height: 50),
             Container(
               height: 90,
               child: new Center(child: Text(tituloPantalla(), style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold))),
             ),
             Container(
-              height: 10,
+              height: 20,
             ),
             Container(
               height: 70,
               padding: EdgeInsets.fromLTRB(70, 0, 70, 0),
               child: RaisedButton(
                 padding: const EdgeInsets.all(2.0),
-                elevation: 5.0,
+                //elevation: 5.0,
                 textColor: Colors.white,
                 shape: StadiumBorder(),
-                color: Colors.teal,
+                color: Colors.blueAccent,
                 onPressed: () async {
                   if(typeOfHelp=='quiero ayudar'){
                     Navigator.push(context, MaterialPageRoute(builder: (context) => PostHelp(typeOfHelp: typeOfHelp, categoryOfHelp: categoryOfHelp)),);
@@ -142,11 +166,11 @@ class Help extends StatelessWidget {
               ),
             ),
             Container(
-              height: 10,
+              height: 15.0,
             ),
             showMyGuide(),
             Container(
-              height: 20,
+              height: 35,
             ),
             Container(
               height: 70,
@@ -154,8 +178,8 @@ class Help extends StatelessWidget {
               child: RaisedButton(
                   padding: const EdgeInsets.all(2.0),
                   textColor: Colors.white,
-                  elevation: 5.0,
-                  color: Colors.teal,
+                  //elevation: 5.0,
+                  color: Colors.blueAccent,
                   shape: StadiumBorder(),
                   onPressed: () async {
                     if(typeOfHelp!='quiero ayudar'){
@@ -171,27 +195,27 @@ class Help extends StatelessWidget {
             Container(
               height: 160,
             ),
-            Container(
-              padding: EdgeInsets.fromLTRB(50, 0, 50, 0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text(
-                    'Para comunicarte con la facultad de medicina UFM, '
-                    'llama al siguiente número',
-                    textAlign: TextAlign.center,
-                  ),
-                  RichText(
-                      text: TextSpan(children: [
-                    WidgetSpan(child: Icon(Icons.phone)),
-                    TextSpan(
-                      text: '  2413 3235',
-                      style: TextStyle(color: Colors.black),
-                    )
-                  ]))
-                ],
-              ),
-            ),
+            // Container(
+            //   padding: EdgeInsets.fromLTRB(50, 0, 50, 0),
+            //   child: Column(
+            //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //     children: [
+            //       Text(
+            //         'Para comunicarte con la facultad de medicina UFM, '
+            //         'llama al siguiente número',
+            //         textAlign: TextAlign.center,
+            //       ),
+            //       RichText(
+            //           text: TextSpan(children: [
+            //         WidgetSpan(child: Icon(Icons.phone)),
+            //         TextSpan(
+            //           text: '  2413 3235',
+            //           style: TextStyle(color: Colors.black),
+            //         )
+            //       ]))
+            //     ],
+            //   ),
+            // ),
           ],
         ));
   }

@@ -113,15 +113,14 @@ class _ViewPostsState extends State<ViewPosts> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue[100],
+      backgroundColor: Colors.red[50],
       appBar: AppBar(
-        /*
         flexibleSpace: Container(
           decoration: new BoxDecoration(
             gradient: new LinearGradient(
               colors: [
-                const Color(0xFF3366FF),
-                const Color(0xFF00CCFF)
+                const Color(0xFFFF5252),
+                const Color(0xFFFF1744)
               ],
               begin: const FractionalOffset(0.0, 0.0),
               end: const FractionalOffset(0.5, 0.0),
@@ -130,7 +129,6 @@ class _ViewPostsState extends State<ViewPosts> {
             ),
           ),
         ),
-        */
         title: Text('Ayuda general de ' + categoryOfHelp),
       ),
       body: new Container(

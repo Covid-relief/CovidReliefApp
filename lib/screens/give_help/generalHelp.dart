@@ -45,7 +45,7 @@ class _PostHelpState extends State<PostHelp> {
     if (archivo!=null) {
       color=Colors.green;
     }else{
-      color=Colors.blue;
+      color=Colors.redAccent;
     }
     return color;
   }
@@ -120,8 +120,22 @@ class _PostHelpState extends State<PostHelp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-          backgroundColor: Colors.teal[50],
+          backgroundColor: Colors.red[50],
           appBar: AppBar(
+            flexibleSpace: Container(
+                decoration: new BoxDecoration(
+                  gradient: new LinearGradient(
+                    colors: [
+                      const Color(0xFFFF5252),
+                      const Color(0xFFFF1744)
+                    ],
+                    begin: const FractionalOffset(0.0, 0.0),
+                    end: const FractionalOffset(0.5, 0.0),
+                    stops: [0.0, 0.5],
+                    tileMode: TileMode.clamp
+                  ),
+                ),
+              ),
             title: Text('Consejo general',
               style: TextStyle(
                   color: Colors.white,
@@ -129,8 +143,8 @@ class _PostHelpState extends State<PostHelp> {
                   fontStyle: FontStyle.italic,
                   fontFamily: 'Open Sans',
                   fontSize: 25),),
-            backgroundColor: Colors.lightBlue[900],
-            elevation: 0.0,),
+            //backgroundColor: Colors.lightBlue[900],
+          ),
             body: Form(
               key:_formKey,
               child: ListView(
@@ -296,8 +310,8 @@ class _PostHelpState extends State<PostHelp> {
                     padding: EdgeInsets.fromLTRB(70,0,70,0),
                     child:
                     RaisedButton(
-                        elevation: 5.0,
-                        color: Colors.teal,
+                        //elevation: 5.0,
+                        color: Colors.blueAccent,
                         shape: StadiumBorder(),
                         child: Text(
                           'Publicar',

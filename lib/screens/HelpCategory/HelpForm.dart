@@ -35,8 +35,22 @@ class HelpFormState extends State<HelpForm>{
     // Build a Form widget using the _formKey created above.
     return Scaffold(
       appBar: AppBar(
-        title: Text('Solicitud de apoyo personalizado'),
-        backgroundColor: Colors.lightBlue[900],
+        flexibleSpace: Container(
+          decoration: new BoxDecoration(
+            gradient: new LinearGradient(
+              colors: [
+                const Color(0xFFFF5252),
+                const Color(0xFFFF1744)
+              ],
+              begin: const FractionalOffset(0.0, 0.0),
+              end: const FractionalOffset(0.5, 0.0),
+              stops: [0.0, 0.5],
+              tileMode: TileMode.clamp
+            ),
+          ),
+        ),
+        title: Text('Solicitud de apoyo personal'),
+        //backgroundColor: Colors.lightBlue[900],
       ),
       body: SingleChildScrollView(
         child: _buildForm()
@@ -84,9 +98,22 @@ class HelpFormState extends State<HelpForm>{
     return Padding(
       padding: const EdgeInsets.fromLTRB(20,0,20,0),
       child: TextFormField(
-        decoration: InputDecoration(labelText: 'Nombre completo'),
+        decoration: InputDecoration(
+          labelText: 'Nombre completo',
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Color(0x1F000000), width: 0.0),
+            borderRadius: BorderRadius.circular(5.0),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Color(0xFFFFEBEE), width: 1.5),
+            borderRadius: BorderRadius.circular(5.0),
+          ),
+          fillColor: Color(0xFFF5F5F5),
+          filled: true
+        ),
         validator: (valname) => valname.isEmpty ? 'Por favor ingrese su nombre' : null,
         onChanged: (valname) => setState(() => _formName = valname),
+        
       ),
     );
   }
@@ -97,6 +124,16 @@ class HelpFormState extends State<HelpForm>{
       child: TextFormField(
         decoration: InputDecoration(
           labelText: 'Correo electrónico',
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Color(0x1F000000), width: 0.0),
+            borderRadius: BorderRadius.circular(5.0),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Color(0xFFFFEBEE), width: 1.5),
+            borderRadius: BorderRadius.circular(5.0),
+          ),
+          fillColor: Color(0xFFF5F5F5),
+          filled: true
         ),
         validator: (val) => val.isEmpty ? 'Ingrese un correo electrónico válido' : null,
         onChanged: (valemail) => setState(() => _formEmail = valemail),
@@ -109,7 +146,19 @@ class HelpFormState extends State<HelpForm>{
     return Padding(
       padding: const EdgeInsets.fromLTRB(20,0,20,0),
       child: TextFormField(
-        decoration: InputDecoration(labelText: 'Número de teléfono'),
+        decoration: InputDecoration(
+          labelText: 'Número de teléfono',
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Color(0x1F000000), width: 0.0),
+            borderRadius: BorderRadius.circular(5.0),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Color(0xFFFFEBEE), width: 1.5),
+            borderRadius: BorderRadius.circular(5.0),
+          ),
+          fillColor: Color(0xFFF5F5F5),
+          filled: true
+        ),
         validator: (valphone) => valphone.isEmpty ? 'Por favor ingrese su número de teléfono' : null,
         onChanged: (valphone) => setState(() => _formPhone = valphone),
       ),
@@ -120,7 +169,19 @@ class HelpFormState extends State<HelpForm>{
     return Padding(
       padding: const EdgeInsets.fromLTRB(20,0,20,0),
       child: TextFormField(
-        decoration: InputDecoration(labelText: 'Describe brevemente tu problema'),
+        decoration: InputDecoration(
+          labelText: 'Describe brevemente tu problema',
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Color(0x1F000000), width: 0.0),
+            borderRadius: BorderRadius.circular(5.0),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Color(0xFFFFEBEE), width: 1.5),
+            borderRadius: BorderRadius.circular(5.0),
+          ),
+          fillColor: Color(0xFFF5F5F5),
+          filled: true
+        ),
         validator: (valdescription) => valdescription.isEmpty ? 'Por favor ingrese su número de teléfono' : null,
         onChanged: (valdescription) => setState(() => _formDescription = valdescription),
       ),
@@ -151,7 +212,7 @@ class HelpFormState extends State<HelpForm>{
       child:
         RaisedButton(
           padding: const EdgeInsets.symmetric(horizontal: 35),
-          color: Colors.teal,
+          color: Colors.blueAccent,
           shape: StadiumBorder(),
           onPressed: () {
             print(_formName);
