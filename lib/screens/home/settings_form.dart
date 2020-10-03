@@ -71,16 +71,30 @@ class _UserDataFormState extends State<UserDataForm> {
     // this variable allows us to get the uid that contains the info of the user
     final user = Provider.of<User>(context);
     return Scaffold(
-      backgroundColor: Colors.teal[50],
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: new BoxDecoration(
+            gradient: new LinearGradient(
+              colors: [
+                const Color(0xFFFF5252),
+                const Color(0xFFFF1744)
+              ],
+              begin: const FractionalOffset(0.0, 0.0),
+              end: const FractionalOffset(0.5, 0.0),
+              stops: [0.0, 0.5],
+              tileMode: TileMode.clamp
+            ),
+          ),
+        ),
         title: Text('Registrarse',
           style: TextStyle(
               color: Colors.white,
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.w800,
               fontStyle: FontStyle.italic,
-              fontFamily: 'Open Sans',
+              fontFamily: 'Montserrat',
               fontSize: 25),),
-        backgroundColor: Colors.cyan[700],
+        //backgroundColor: Colors.cyan[700],
       ),
       body: StreamBuilder<UserData>(
         stream: DatabaseService(uid: user.uid).userData,
@@ -112,7 +126,10 @@ class _UserDataFormState extends State<UserDataForm> {
                     Container(
                     margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
                     child: FlatButton(
-                      color: Colors.white,
+                      color: Color(0xFFF5F5F5),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
                       // padding is the spacing inside the element
                       padding: paddingdate(),
                       child: Text(
@@ -221,6 +238,8 @@ class _UserDataFormState extends State<UserDataForm> {
                         'Enviar',
                         style: TextStyle(color: Colors.white),
                       ),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+                      hoverColor: Colors.blueAccent,
                       onPressed: () async{
                         // update the data in the DB
                         if(_formKey.currentState.validate()){

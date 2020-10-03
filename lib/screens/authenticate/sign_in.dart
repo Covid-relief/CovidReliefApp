@@ -77,33 +77,50 @@ class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.teal[50],
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.cyan[700],
-        elevation: 1.0,
+        flexibleSpace: Container(
+          decoration: new BoxDecoration(
+            gradient: new LinearGradient(
+              colors: [
+                const Color(0xFFFF5252),
+                const Color(0xFFFF1744)
+              ],
+              begin: const FractionalOffset(0.0, 0.0),
+              end: const FractionalOffset(0.5, 0.0),
+              stops: [0.0, 0.5],
+              tileMode: TileMode.clamp
+            ),
+          ),
+        ),
+        //backgroundColor: Colors.cyan[700],
+        //elevation: 1.0,
         title: Text('Iniciar Sesión',
           style: TextStyle(
             color: Colors.white,
-            fontWeight: FontWeight.w900,
-            fontFamily: 'Open Sans',
+            fontWeight: FontWeight.w800,
+            fontFamily: 'Montserrat',
             fontSize: 25),),
         actions: <Widget>[
-          FlatButton.icon(
-            icon: Icon(Icons.person),
-            label: Text('Registrarse',
-              style: TextStyle(
-                fontWeight: FontWeight.w700,
-                fontFamily: 'Open Sans',
+          Container(
+            padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+            child: FlatButton.icon(
+              icon: Icon(Icons.person),
+              label: Text('Registrarse',
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontFamily: 'Open Sans',
+                ),
               ),
+              color: Colors.redAccent,
+              onPressed: () => widget.toggleView(),
+              shape: RoundedRectangleBorder(
+                  side: BorderSide(
+                      color: Colors.red,
+                      width: 0.5,
+                      style: BorderStyle.solid),
+                  borderRadius: BorderRadius.circular(30)),
             ),
-            color: Colors.teal[200],
-            onPressed: () => widget.toggleView(),
-            shape: RoundedRectangleBorder(
-                side: BorderSide(
-                    color: Colors.teal[200],
-                    width: 0.5,
-                    style: BorderStyle.solid),
-                borderRadius: BorderRadius.circular(30)),
           ),
         ],
       ),
@@ -145,7 +162,7 @@ class _SignInState extends State<SignIn> {
                           child: Text(
                             "¿Olvidaste tu contraseña?",
                             style: TextStyle(
-                                fontSize: 15, color: Color(0xFF1976D2)),
+                                fontSize: 15, color: Colors.redAccent),
                           ),
                           onPressed: () async {
                             _auth.sendPasswordReset(email);
@@ -154,10 +171,13 @@ class _SignInState extends State<SignIn> {
                 ],
               )),
               RaisedButton(
-                  color: Colors.teal,
+                  color: Colors.blueAccent,
                   child: Text(
                     'Iniciar Sesión',
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color: Colors.white, fontFamily: 'Montserrat', fontWeight: FontWeight.bold),
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0),
                   ),
                   onPressed: () async {
                     String value = await storage.read(key: "mykey");
@@ -173,6 +193,7 @@ class _SignInState extends State<SignIn> {
                     }
                   }
               ),
+              SizedBox(height: 5.0),
               // Google Sign In button
               GoogleSignInButton(
                 onPressed: () async {
