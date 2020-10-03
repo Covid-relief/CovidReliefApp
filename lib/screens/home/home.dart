@@ -19,20 +19,34 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
 
 
-    void _showSettingsPanel(){
-      showModalBottomSheet(context: context, builder: (context){
-        return Container(
-          padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 60.0),
-          child:  UserDataForm(),
-        );
-      });
-    }
+    // void _showSettingsPanel(){
+    //   showModalBottomSheet(context: context, builder: (context){
+    //     return Container(
+    //       padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 60.0),
+    //       child:  UserDataForm(),
+    //     );
+    //   });
+    // }
     return StreamProvider<List<Perfiles>>.value(
         value: DatabaseService().perfiles,
           //child: Container(
           child: Scaffold(
-            backgroundColor: Colors.teal[50],
+            backgroundColor: Colors.white,
             appBar: AppBar(
+              flexibleSpace: Container(
+                decoration: new BoxDecoration(
+                  gradient: new LinearGradient(
+                    colors: [
+                      const Color(0xFFFF5252),
+                      const Color(0xFFFF1744)
+                    ],
+                    begin: const FractionalOffset(0.0, 0.0),
+                    end: const FractionalOffset(0.5, 0.0),
+                    stops: [0.0, 0.5],
+                    tileMode: TileMode.clamp
+                  ),
+                ),
+              ),
               title: Text('Covid Relief',
                 style: TextStyle(
                     color: Colors.white,
@@ -41,33 +55,39 @@ class Home extends StatelessWidget {
                     fontFamily: 'Open Sans',
                     fontSize: 25),
               ),
-              backgroundColor: Colors.cyan[700],
+              //backgroundColor:  Colors.lightBlue[900],
               elevation: 0.0,),
            drawer: Drawer(
             child: ListView(
               children: [
                 DrawerHeader(
                   decoration: BoxDecoration(
-                    color: Colors.cyan[700],
+                    color: Colors.redAccent[400],
+                  ),
+                  child: Text(
+                    'Covid Relief', 
+                    style: TextStyle(
+                      height: 5.0,
+                      color: Colors.white,
+                      fontSize: 30,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: 'Open Sans',
+                      fontStyle: FontStyle.italic,
+                    ),
                   ),
                 ),
                 ListTile(
                   leading: Icon(Icons.account_circle),
                   title: Text('Perfil',),
                   onTap: () async {
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserProfile()),);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfile()),);
                   },
                 ),
-                //FlatButton.icon(
-                //  icon : Icon(Icons.settings),
-                 // label: Text("Configuración"),
-                 // onPressed:() => _showSettingsPanel(),
-               // ),
                ListTile(
                   leading: Icon(Icons.track_changes),
                   title: Text('Contact Trace',),
                   onTap: () async {
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => NearbyInterface()),);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => NearbyInterface()),);
                   },
                 ),
 
@@ -76,7 +96,7 @@ class Home extends StatelessWidget {
                   label: Text('Cerrar Sesión'),
                   onPressed: () async {
                     await _auth.signOut();
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Authenticate()),);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => Authenticate()),);
                   },
                 ),
               ],
@@ -88,42 +108,44 @@ class Home extends StatelessWidget {
                   children: <Widget>[
                     Container(
                       height: 80,
-                      child: const Center(child: Text('Bienvenido a COVID-19 Relief', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold))),
+                      child: const Center(child: Text('Bienvenido a COVID-19 Relief', textAlign: TextAlign.center, style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold))),
                     ),
                     Container(
                       height: 130,
                       padding: EdgeInsets.fromLTRB(25,0,25,0),
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10.0),
+                        color: Colors.red[50],
+                        borderRadius: BorderRadius.circular(5.0),
                       ),
                       child: const Center(child: Text('Te recordamos que esta es una plataforma facilitada por la Universidad '
                           'Francisco Marroquín pero de ninguna manera es responsable de los consejos e ideas aquí presentadas '
                           'y el éxito o fracaso de los mismos.',
                            textAlign: TextAlign.center,
-                      )),
+                           style: TextStyle(height: 1.3),
+                        )
+                      ),
                     ),
                     Container(
                       height: 40,
                     ),
                     Container(
-                      height: 60,
-                      padding: EdgeInsets.fromLTRB(60,0,60,0),
+                      height: 70,
+                      padding: EdgeInsets.fromLTRB(70,0,70,0),
                       child:
                       RaisedButton(
                           padding: const EdgeInsets.all(2.0),
                           textColor: Colors.white,
-                          color: Colors.lightBlue[900],
+                          //elevation: 5.0,
+                          color: Colors.blueAccent,
                           shape: StadiumBorder(),
                           onPressed:() {
                             typeOfHelp='quiero ayudar';
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Category(typeOfHelp:typeOfHelp)),);
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => Category(typeOfHelp:typeOfHelp)),);
                           },
                           child: new Text("Quiero ayudar",
                               style: TextStyle(
                                 color: Colors.white,
-                                fontWeight: FontWeight.w800,
-                                fontSize: 15,
+                                fontSize: 20,
                                 fontFamily: 'Open Sans',)
                           ),
                       ),
@@ -132,49 +154,74 @@ class Home extends StatelessWidget {
                       height: 15,
                     ),
                     Container(
-                      height: 60,
-                      padding: EdgeInsets.fromLTRB(60,0,60,0),
+                      height: 70,
+                      padding: EdgeInsets.fromLTRB(70,0,70,0),
                       child:
                       RaisedButton(
                         padding: const EdgeInsets.all(2.0),
                         textColor: Colors.white,
-                        color: Colors.lightBlue[900],
+                        //elevation: 5.0,
+                        color: Colors.blueAccent,
                         shape: StadiumBorder(),
                         onPressed:() {
                           typeOfHelp='necesito ayuda';
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Category(typeOfHelp:typeOfHelp)),);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Category(typeOfHelp:typeOfHelp)),);
                         },
                         child: new Text("Necesito ayuda",
                           style: TextStyle(
                               color: Colors.white,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w800,
+                              fontSize: 20,
                               fontFamily: 'Open Sans',),
                         ),
                       ),
                     ),
                     Container(
-                      height: 60,
+                      height: 40,
                     ),
                     Container(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          RaisedButton(
-                              onPressed: null,
-                              shape: StadiumBorder(),
-                              child: new Text("Conferencias", style: TextStyle(color: Colors.black))
+                          Column(
+                            children: <Widget>[
+                              MaterialButton(
+                                onPressed: null,
+                                color: Colors.red,
+                                textColor: Colors.red,
+                                child: Icon(
+                                  Icons.info,
+                                  size: 40
+                                ),
+                                  shape: CircleBorder(),
+                                ),
+                              SizedBox(height: 5.0),
+                              Container(
+                                child: Text('Conferencias')
+                              ),
+                            ],
                           ),
-                          RaisedButton(
+
+                          Column(children: <Widget>[
+                            MaterialButton(
                               onPressed: null,
-                              shape: StadiumBorder(),
-                              child: new Text("Noticias", style: TextStyle(color: Colors.black))
-                          )
+                              color: Colors.red,
+                              textColor: Colors.red,
+                              child: Icon(
+                                Icons.live_tv,
+                                size: 40
+                              ),
+                                shape: CircleBorder(),
+                              ),
+                              SizedBox(height: 5.0),
+                              Container(
+                                child: Text('Noticias')
+                              ),
+                            ],)
                         ],
                       ),
                     ),
                     Container(
-                      height: 40,
+                      height: 50,
                     ),
                     Container(
                         padding: EdgeInsets.fromLTRB(50,0,50,0),
@@ -198,10 +245,6 @@ class Home extends StatelessWidget {
                     )
                   ],
                 )
-          // personal data from settings_form.dart
-             //HAY QUE DESARROLLAR EL HOME
-            // redirect to user profile
-            //UserProfile(), //UserList(), 
         ),
     );
   }

@@ -5,24 +5,23 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class HelpForm extends StatefulWidget {
+class GivePersonalizedHelp extends StatefulWidget {
   String categoryOfHelp;
-  HelpForm({this.categoryOfHelp});
+  GivePersonalizedHelp({this.categoryOfHelp});
   
   @override
-  HelpFormState createState() {
-    return HelpFormState(categoryOfHelp:categoryOfHelp);
+  _GivePersonalizedHelpState createState() {
+    return _GivePersonalizedHelpState(categoryOfHelp:categoryOfHelp);
   }
 }
 
-class HelpFormState extends State<HelpForm>{
+class _GivePersonalizedHelpState extends State<GivePersonalizedHelp>{
   String categoryOfHelp;
-  HelpFormState({this.categoryOfHelp});
+  _GivePersonalizedHelpState({this.categoryOfHelp});
 
   String _formName;
   String _formEmail;
   String _formPhone;
-  String _formDescription;
   bool _contactMail=false;
   bool _contactMessage=false;
 
@@ -49,7 +48,7 @@ class HelpFormState extends State<HelpForm>{
             ),
           ),
         ),
-        title: Text('Solicitud de apoyo personal'),
+        title: Text('Apoyar en ' + categoryOfHelp),
         //backgroundColor: Colors.lightBlue[900],
       ),
       body: SingleChildScrollView(
@@ -73,8 +72,6 @@ class HelpFormState extends State<HelpForm>{
         SizedBox(height: 25.0,),
         _buildPhoneField(),
         SizedBox(height: 25.0,),
-        _buildProblemField(),
-        SizedBox(height: 25.0,),
         _buildContactMail(),
         _buildContactMessage(),
         SizedBox(height: 15.0,),
@@ -87,10 +84,10 @@ class HelpFormState extends State<HelpForm>{
     return Container(
       padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
       child: Text('Te recordamos que esta es una plataforma facilitada por la Universidad '
-        'Francisco Marroquín pero de ninguna manera es responsable de los consejos e ideas aquí presentadas '
-        'y el éxito o fracaso de los mismos.',
+        'Francisco Marroquín pero de ninguna manera es responsable de las solicitudes e ideas aquí presentadas '
+        'y el éxito o fracaso de las mismas.',
         textAlign: TextAlign.center
-        ),
+      )
     );
   }
 
@@ -113,7 +110,6 @@ class HelpFormState extends State<HelpForm>{
         ),
         validator: (valname) => valname.isEmpty ? 'Por favor ingrese su nombre' : null,
         onChanged: (valname) => setState(() => _formName = valname),
-        
       ),
     );
   }
@@ -165,29 +161,6 @@ class HelpFormState extends State<HelpForm>{
     );
   }
 
-  Widget _buildProblemField() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20,0,20,0),
-      child: TextFormField(
-        decoration: InputDecoration(
-          labelText: 'Describe brevemente tu problema',
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Color(0x1F000000), width: 0.0),
-            borderRadius: BorderRadius.circular(5.0),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Color(0xFFFFEBEE), width: 1.5),
-            borderRadius: BorderRadius.circular(5.0),
-          ),
-          fillColor: Color(0xFFF5F5F5),
-          filled: true
-        ),
-        validator: (valdescription) => valdescription.isEmpty ? 'Por favor ingrese su número de teléfono' : null,
-        onChanged: (valdescription) => setState(() => _formDescription = valdescription),
-      ),
-    );
-  }
-
   Widget _buildContactMail() {
       return CheckboxListTile(
         title: Text("Contactarme por correo"),
@@ -217,21 +190,20 @@ class HelpFormState extends State<HelpForm>{
           onPressed: () {
             print(_formName);
             print(_formKey);
-            print(_formDescription);
             print(_formEmail);
             print(_formPhone);
-            _submitForm();
+            //_submitForm(); aun no se usara
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);},
-          child: Text('Enviar Solicitud',style: TextStyle(color: Colors.white, fontSize: 20),),
+          child: Text('Empezar a apoyar', textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: 20),),
         ),
     );
+
   }
 
   void _submitForm() async {
-    DocumentReference ref = await databaseReference.collection("solicitarayuda_" + categoryOfHelp)
+    DocumentReference ref = await databaseReference.collection("darayuda_" + categoryOfHelp)
         .add({
           'email': _formEmail,
-          'description': _formDescription,
           'name': _formName,
           'phone': _formPhone
         });
