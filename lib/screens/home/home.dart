@@ -8,12 +8,22 @@ import 'package:CovidRelief/services/database.dart';
 import 'package:provider/provider.dart';
 import 'package:CovidRelief/screens/home/user_profile.dart';
 import 'package:CovidRelief/screens/HelpCategory/HelpCategories.dart';
+import 'package:linkable/linkable.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 
 class Home extends StatelessWidget {
 
   final AuthService _auth = AuthService();
   var typeOfHelp;
+
+  void customLaunch(command) async {
+    if (await canLaunch(command)) {
+      await launch(command);
+    } else {
+      print(' No se puede obtener $command');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -230,16 +240,26 @@ class Home extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Text('Para comunicarte con la facultad de medicina UFM, '
-                                'llama al siguiente número', textAlign: TextAlign.center,),
-                            RichText(text: TextSpan(
-                            children: [
-                              WidgetSpan(child: Icon(Icons.phone)),
-                              TextSpan(
-                                text: '  2413 3235',
-                                style: TextStyle(color: Colors.black),
-                              )
-                            ]
-                          ))
+                                'llama al siguiente número\n', textAlign: TextAlign.center,),
+                            SizedBox(
+                              width: 240,
+                              height: 70,
+                              child: RaisedButton.icon(
+                                  padding: const EdgeInsets.all(2.0),
+                                  textColor: Colors.white,
+                                  //elevation: 5.0,
+                                  color: Colors.green,
+                                  shape: StadiumBorder(),
+                                  //FlatButton.icon(onPressed: () => launch("tel://+502 2413 3235"), icon: Icon(Icons.call), label: Text("Call")),
+                                  onPressed: () {
+                                    customLaunch('tel:+502 2413 3235');
+                                  },
+                                  label: Text('2413 3235', style: TextStyle(fontSize: 20),),
+                                  icon: Icon(Icons.phone)
+
+                              ),
+                            )
+                            ,
                           ],
                         )
                     )

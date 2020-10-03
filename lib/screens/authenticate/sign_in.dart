@@ -196,6 +196,7 @@ class _SignInState extends State<SignIn> {
               SizedBox(height: 5.0),
               // Google Sign In button
               GoogleSignInButton(
+
                 onPressed: () async {
                   /*if (_formKey.currentState.validate()) {
                     dynamic result = await _auth.signInWithGoogle();
