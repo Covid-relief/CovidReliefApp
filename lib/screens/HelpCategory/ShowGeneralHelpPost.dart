@@ -90,7 +90,7 @@ class _ViewPostsState extends State<ViewPosts> {
         url: link,
         textColor: Colors.white,
         bgColor: Colors.red,
-        isClosable: true,
+        isClosable: false,
         previewHeight: 150,
       );
     } else {
