@@ -7,6 +7,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:isolate';
 import 'dart:ui';
+import 'package:linkable/linkable.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:simple_url_preview/simple_url_preview.dart';
 
 //import 'package:video_player/video_player.dart';
 
@@ -52,6 +55,7 @@ class _ViewPostsState extends State<ViewPosts> {
           DATA[individualKey]['Video'],
           DATA[individualKey]['Archivo'],
           DATA[individualKey]['Dia'],
+          DATA[individualKey]['Link'],
         );
 
         postsList.add(posts);
@@ -75,6 +79,20 @@ class _ViewPostsState extends State<ViewPosts> {
       return new Text(descript,
           style: TextStyle(fontStyle: FontStyle.normal),
           textAlign: TextAlign.left);
+    } else {
+      return SizedBox();
+    }
+  }
+
+  showLink(link) {
+    if (link != null) {
+      return new SimpleUrlPreview(
+        url: link,
+        textColor: Colors.white,
+        bgColor: Colors.red,
+        isClosable: false,
+        previewHeight: 150,
+      );
     } else {
       return SizedBox();
     }
@@ -145,14 +163,15 @@ class _ViewPostsState extends State<ViewPosts> {
                       postsList[index].Titulo,
                       postsList[index].Video,
                       postsList[index].Archivo,
-                      postsList[index].Dia); //PostsUi
+                      postsList[index].Dia,
+                      postsList[index].Link);//PostsUi
                 }),
       ),
     );
   }
 
   Widget PostsUI(String Descripcion, String Fecha, String Hora, String Imagen,
-      String Titulo, String Video, String Archivo, String Dia) {
+      String Titulo, String Video, String Archivo, String Dia, String Link) {
     return new Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       //elevation: 10.0,
@@ -196,6 +215,10 @@ class _ViewPostsState extends State<ViewPosts> {
               height: 15.0,
             ),
             showImage(Imagen),
+            SizedBox(
+              height: 15.0,
+            ),
+            showLink(Link),
             SizedBox(
               height: 10.0,
             ),
