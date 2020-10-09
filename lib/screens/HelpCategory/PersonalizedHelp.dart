@@ -1,4 +1,4 @@
-import 'package:CovidRelief/screens/HelpCategory/HelpForm.dart';
+import 'package:CovidRelief/screens/PersonalizedHelp/HelpForm.dart';
 import 'package:CovidRelief/screens/authenticate/authenticate.dart';
 import 'package:CovidRelief/screens/home/home.dart';
 import 'package:CovidRelief/screens/home/user_profile.dart';
@@ -7,10 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:CovidRelief/screens/HelpCategory/ShowPdf.dart';
 import 'package:CovidRelief/screens/give_help/generalHelp.dart';
 import 'package:CovidRelief/screens/HelpCategory/ShowGeneralHelpPost.dart';
-import 'package:CovidRelief/screens/HelpCategory/GivePersonalizedHelp.dart';
-
-import '../give_help/generalHelp.dart';
-import 'HelpForm.dart';
+import 'package:CovidRelief/screens/PersonalizedHelp/GivePersonalizedHelp.dart';
+import 'package:CovidRelief/screens/PersonalizedHelp/HelpRequests.dart';
 
 class Help extends StatelessWidget {
   final AuthService _auth = AuthService();
@@ -153,10 +151,7 @@ class Help extends StatelessWidget {
                 onPressed: () async {
                   if(typeOfHelp=='quiero ayudar'){
                     Navigator.push(context, MaterialPageRoute(builder: (context) => PostHelp(typeOfHelp: typeOfHelp, categoryOfHelp: categoryOfHelp)),);
-                  }
-                  //Aquí empecé a programar
-                  else
-                  {
+                  }else{
                     Navigator.push(context, MaterialPageRoute(builder: (context) => ViewPosts(categoryOfHelp: categoryOfHelp),));
                   }
                 },
@@ -195,27 +190,6 @@ class Help extends StatelessWidget {
             Container(
               height: 160,
             ),
-            // Container(
-            //   padding: EdgeInsets.fromLTRB(50, 0, 50, 0),
-            //   child: Column(
-            //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //     children: [
-            //       Text(
-            //         'Para comunicarte con la facultad de medicina UFM, '
-            //         'llama al siguiente número',
-            //         textAlign: TextAlign.center,
-            //       ),
-            //       RichText(
-            //           text: TextSpan(children: [
-            //         WidgetSpan(child: Icon(Icons.phone)),
-            //         TextSpan(
-            //           text: '  2413 3235',
-            //           style: TextStyle(color: Colors.black),
-            //         )
-            //       ]))
-            //     ],
-            //   ),
-            // ),
           ],
         ));
   }
