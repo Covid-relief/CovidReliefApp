@@ -43,7 +43,18 @@ class UserProfile extends StatelessWidget {
               children: [
                 DrawerHeader(
                   decoration: BoxDecoration(
-                    color: Colors.cyan[700],
+                    color: Colors.redAccent[400],
+                  ),
+                  child: Text(
+                    'Covid Relief',
+                    style: TextStyle(
+                      height: 5.0,
+                      color: Colors.white,
+                      fontSize: 30,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: 'Open Sans',
+                      fontStyle: FontStyle.italic,
+                    ),
                   ),
                 ),
                 ListTile(

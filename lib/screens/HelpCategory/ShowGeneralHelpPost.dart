@@ -32,8 +32,7 @@ class _ViewPostsState extends State<ViewPosts> {
   void initState() {
     super.initState();
 
-    DatabaseReference postsRef =
-        FirebaseDatabase.instance.reference().child(categoryOfHelp);
+    DatabaseReference postsRef =  FirebaseDatabase.instance.reference().child(categoryOfHelp);
 
     postsRef
         .orderByChild('Estado')

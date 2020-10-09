@@ -4,27 +4,30 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:CovidRelief/screens/PersonalizedHelp/HelpRequests.dart';
+import 'package:CovidRelief/services/auth.dart';
+import 'package:CovidRelief/models/user.dart';
 
-class HelpForm extends StatefulWidget {
+class GivePersonalizedHelp extends StatefulWidget {
   String categoryOfHelp;
-  HelpForm({this.categoryOfHelp});
+  GivePersonalizedHelp({this.categoryOfHelp});
   
   @override
-  HelpFormState createState() {
-    return HelpFormState(categoryOfHelp:categoryOfHelp);
+  _GivePersonalizedHelpState createState() {
+    return _GivePersonalizedHelpState(categoryOfHelp:categoryOfHelp);
   }
 }
 
-class HelpFormState extends State<HelpForm>{
+class _GivePersonalizedHelpState extends State<GivePersonalizedHelp>{
   String categoryOfHelp;
-  HelpFormState({this.categoryOfHelp});
+  _GivePersonalizedHelpState({this.categoryOfHelp});
 
   String _formName;
   String _formEmail;
   String _formPhone;
-  String _formDescription;
   bool _contactMail=false;
   bool _contactMessage=false;
+  String codeHelper;
 
   final databaseReference = Firestore.instance;
 
@@ -32,7 +35,21 @@ class HelpFormState extends State<HelpForm>{
 
   @override
   Widget build(BuildContext context) {
-    // Build a Form widget using the _formKey created above.
+    // this variable allows us to get the uid that contains the info of the user
+    final user = Provider.of<User>(context);
+    String uid = user.uid;
+
+    //var myref = databaseReference.collection("darayuda").where("category", isEqualTo: categoryOfHelp).getDocuments();
+    var myref = databaseReference.collection("darayuda").where("category", isEqualTo: categoryOfHelp).snapshots();
+    
+    Future hasApplied() async {
+      var val = await myref.elementAt(0).then((QuerySnapshot querySnapshot) => {querySnapshot.documents.length});
+      if(val.toString()!='{0}'){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => HelpRequests(categoryOfHelp:categoryOfHelp)),);
+      }
+    }
+    hasApplied();
+
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: Container(
@@ -49,18 +66,17 @@ class HelpFormState extends State<HelpForm>{
             ),
           ),
         ),
-        title: Text('Solicitud de apoyo personal'),
+        title: Text('Apoyar en ' + categoryOfHelp),
         //backgroundColor: Colors.lightBlue[900],
       ),
       body: SingleChildScrollView(
-        child: _buildForm()
+        child: _buildForm(uid),
       )
     );
   }
 
-// _buildForm()
   // APP LAYER?
-  Widget _buildForm() {
+  Widget _buildForm(String uid) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
@@ -73,12 +89,10 @@ class HelpFormState extends State<HelpForm>{
         SizedBox(height: 25.0,),
         _buildPhoneField(),
         SizedBox(height: 25.0,),
-        _buildProblemField(),
-        SizedBox(height: 25.0,),
         _buildContactMail(),
         _buildContactMessage(),
         SizedBox(height: 15.0,),
-        _buildSubmitButton(),
+        _buildSubmitButton(uid),
       ],
     );
   }
@@ -87,10 +101,10 @@ class HelpFormState extends State<HelpForm>{
     return Container(
       padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
       child: Text('Te recordamos que esta es una plataforma facilitada por la Universidad '
-        'Francisco Marroquín pero de ninguna manera es responsable de los consejos e ideas aquí presentadas '
-        'y el éxito o fracaso de los mismos.',
+        'Francisco Marroquín pero de ninguna manera es responsable de las solicitudes e ideas aquí presentadas '
+        'y el éxito o fracaso de las mismas.',
         textAlign: TextAlign.center
-        ),
+      )
     );
   }
 
@@ -113,7 +127,6 @@ class HelpFormState extends State<HelpForm>{
         ),
         validator: (valname) => valname.isEmpty ? 'Por favor ingrese su nombre' : null,
         onChanged: (valname) => setState(() => _formName = valname),
-        
       ),
     );
   }
@@ -165,29 +178,7 @@ class HelpFormState extends State<HelpForm>{
     );
   }
 
-  Widget _buildProblemField() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20,0,20,0),
-      child: TextFormField(
-        decoration: InputDecoration(
-          labelText: 'Describe brevemente tu problema',
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Color(0x1F000000), width: 0.0),
-            borderRadius: BorderRadius.circular(5.0),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Color(0xFFFFEBEE), width: 1.5),
-            borderRadius: BorderRadius.circular(5.0),
-          ),
-          fillColor: Color(0xFFF5F5F5),
-          filled: true
-        ),
-        validator: (valdescription) => valdescription.isEmpty ? 'Por favor ingrese su número de teléfono' : null,
-        onChanged: (valdescription) => setState(() => _formDescription = valdescription),
-      ),
-    );
-  }
-
+// Alguno de estos debe ser true para continuar!
   Widget _buildContactMail() {
       return CheckboxListTile(
         title: Text("Contactarme por correo"),
@@ -205,7 +196,8 @@ class HelpFormState extends State<HelpForm>{
       );
   }
 
-  Widget _buildSubmitButton() {
+  Widget _buildSubmitButton(String uid) {
+
     return Container(
       height: 70,
       padding: EdgeInsets.fromLTRB(70,0,70,0),
@@ -215,26 +207,29 @@ class HelpFormState extends State<HelpForm>{
           color: Colors.blueAccent,
           shape: StadiumBorder(),
           onPressed: () {
-            print(_formName);
-            print(_formKey);
-            print(_formDescription);
-            print(_formEmail);
-            print(_formPhone);
-            _submitForm();
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);},
-          child: Text('Enviar Solicitud',style: TextStyle(color: Colors.white, fontSize: 20),),
+            _submitForm(uid);
+          Navigator.push(context, MaterialPageRoute(builder: (context) => HelpRequests(categoryOfHelp: categoryOfHelp)),);},
+          child: Text('Empezar a apoyar', textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: 20),),
         ),
     );
+
   }
 
-  void _submitForm() async {
-    DocumentReference ref = await databaseReference.collection("solicitarayuda_" + categoryOfHelp)
-        .add({
-          'email': _formEmail,
-          'description': _formDescription,
-          'name': _formName,
-          'phone': _formPhone
-        });
+  void _submitForm(String uid) async {
+    DocumentReference ref = await databaseReference.collection("darayuda")
+      .add({
+        'category': categoryOfHelp,
+        'name': _formName,
+        'email': _formEmail,
+        'contactMail':_contactMail,
+        'phone': _formPhone,
+        'contactMessage':_contactMessage,
+        'uid': uid
+      });
+      // quitar codeHelper?
+      setState(() {
+        codeHelper=ref.documentID;
+      });
     print(ref.documentID);
   }
 }
