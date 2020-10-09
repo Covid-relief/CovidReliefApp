@@ -4,24 +4,26 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'dart:math';
 
-class GivePersonalizedHelp extends StatefulWidget {
+class HelpForm extends StatefulWidget {
   String categoryOfHelp;
-  GivePersonalizedHelp({this.categoryOfHelp});
+  HelpForm({this.categoryOfHelp});
   
   @override
-  _GivePersonalizedHelpState createState() {
-    return _GivePersonalizedHelpState(categoryOfHelp:categoryOfHelp);
+  HelpFormState createState() {
+    return HelpFormState(categoryOfHelp:categoryOfHelp);
   }
 }
 
-class _GivePersonalizedHelpState extends State<GivePersonalizedHelp>{
+class HelpFormState extends State<HelpForm>{
   String categoryOfHelp;
-  _GivePersonalizedHelpState({this.categoryOfHelp});
+  HelpFormState({this.categoryOfHelp});
 
   String _formName;
   String _formEmail;
   String _formPhone;
+  String _formDescription;
   bool _contactMail=false;
   bool _contactMessage=false;
 
@@ -48,7 +50,7 @@ class _GivePersonalizedHelpState extends State<GivePersonalizedHelp>{
             ),
           ),
         ),
-        title: Text('Apoyar en ' + categoryOfHelp),
+        title: Text('Solicitud de apoyo personal'),
         //backgroundColor: Colors.lightBlue[900],
       ),
       body: SingleChildScrollView(
@@ -72,6 +74,8 @@ class _GivePersonalizedHelpState extends State<GivePersonalizedHelp>{
         SizedBox(height: 25.0,),
         _buildPhoneField(),
         SizedBox(height: 25.0,),
+        _buildProblemField(),
+        SizedBox(height: 25.0,),
         _buildContactMail(),
         _buildContactMessage(),
         SizedBox(height: 15.0,),
@@ -84,10 +88,10 @@ class _GivePersonalizedHelpState extends State<GivePersonalizedHelp>{
     return Container(
       padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
       child: Text('Te recordamos que esta es una plataforma facilitada por la Universidad '
-        'Francisco Marroquín pero de ninguna manera es responsable de las solicitudes e ideas aquí presentadas '
-        'y el éxito o fracaso de las mismas.',
+        'Francisco Marroquín pero de ninguna manera es responsable de los consejos e ideas aquí presentadas '
+        'y el éxito o fracaso de los mismos.',
         textAlign: TextAlign.center
-      )
+        ),
     );
   }
 
@@ -110,6 +114,7 @@ class _GivePersonalizedHelpState extends State<GivePersonalizedHelp>{
         ),
         validator: (valname) => valname.isEmpty ? 'Por favor ingrese su nombre' : null,
         onChanged: (valname) => setState(() => _formName = valname),
+        
       ),
     );
   }
@@ -161,6 +166,29 @@ class _GivePersonalizedHelpState extends State<GivePersonalizedHelp>{
     );
   }
 
+  Widget _buildProblemField() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20,0,20,0),
+      child: TextFormField(
+        decoration: InputDecoration(
+          labelText: 'Describe brevemente tu problema',
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Color(0x1F000000), width: 0.0),
+            borderRadius: BorderRadius.circular(5.0),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Color(0xFFFFEBEE), width: 1.5),
+            borderRadius: BorderRadius.circular(5.0),
+          ),
+          fillColor: Color(0xFFF5F5F5),
+          filled: true
+        ),
+        validator: (valdescription) => valdescription.isEmpty ? 'Por favor ingrese su número de teléfono' : null,
+        onChanged: (valdescription) => setState(() => _formDescription = valdescription),
+      ),
+    );
+  }
+
   Widget _buildContactMail() {
       return CheckboxListTile(
         title: Text("Contactarme por correo"),
@@ -190,22 +218,32 @@ class _GivePersonalizedHelpState extends State<GivePersonalizedHelp>{
           onPressed: () {
             print(_formName);
             print(_formKey);
+            print(_formDescription);
             print(_formEmail);
             print(_formPhone);
-            //_submitForm(); aun no se usara
+            _submitForm();
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);},
-          child: Text('Empezar a apoyar', textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: 20),),
+          child: Text('Enviar Solicitud',style: TextStyle(color: Colors.white, fontSize: 20),),
         ),
     );
-
   }
 
   void _submitForm() async {
-    DocumentReference ref = await databaseReference.collection("darayuda_" + categoryOfHelp)
+    
+    Random random = new Random();
+    int code = random.nextInt(99999 - 10000);
+
+    DocumentReference ref = await databaseReference.collection("solicitarayuda")
         .add({
-          'email': _formEmail,
+          'state': 'unattended',
+          'category':categoryOfHelp,
           'name': _formName,
-          'phone': _formPhone
+          'description': _formDescription,
+          'email': _formEmail,
+          'contactMail':_contactMail,
+          'phone': _formPhone,
+          'contactMessage':_contactMessage,
+          'code': code
         });
     print(ref.documentID);
   }
