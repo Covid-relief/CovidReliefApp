@@ -40,7 +40,7 @@ class _GivePersonalizedHelpState extends State<GivePersonalizedHelp>{
     String uid = user.uid;
 
     //var myref = databaseReference.collection("darayuda").where("category", isEqualTo: categoryOfHelp).getDocuments();
-    var myref = databaseReference.collection("darayuda").where("category", isEqualTo: categoryOfHelp).snapshots();
+    var myref = databaseReference.collection("darayuda").where("category", isEqualTo: categoryOfHelp).where("uid", isEqualTo: uid).snapshots();
     
     Future hasApplied() async {
       var val = await myref.elementAt(0).then((QuerySnapshot querySnapshot) => {querySnapshot.documents.length});
