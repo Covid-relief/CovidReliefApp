@@ -8,6 +8,9 @@ import 'package:CovidRelief/services/auth.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:CovidRelief/models/user.dart';
+import 'dart:async';
+import 'package:flutter/services.dart';
+import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
 
 class HelpRequests extends StatefulWidget {
   String categoryOfHelp;
@@ -26,6 +29,32 @@ class _HelpRequestsState extends State<HelpRequests>{
   _HelpRequestsState({this.categoryOfHelp});
 
   final databaseReference = Firestore.instance;
+  String _platformVersion = 'Unknown';
+  @override
+  void initState() {
+    super.initState();
+    initPlatformState();
+  }
+
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> initPlatformState() async {
+    String platformVersion;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      platformVersion = await FlutterOpenWhatsapp.platformVersion;
+    } on PlatformException {
+      platformVersion = 'Failed to get platform version.';
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    setState(() {
+      _platformVersion = platformVersion;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +178,7 @@ class _HelpRequestsState extends State<HelpRequests>{
       }
     );}
   }
-  _sendEmail(String receiver, String sub, String message, String helper, String helperNumber, String helperMail) async {
+  _sendEmail(String receiver, String sub, String message, String helper, String helperNumber, String helperMail, int code) async {
     String mess= "¡Hola!\n\nMi nombre es $helper\nMe gustaría ayudarte con tu petición de ayuda:\n\n $message\n";
     if(helperNumber!=null){
       mess+="\nMi número es $helperNumber";
@@ -157,7 +186,7 @@ class _HelpRequestsState extends State<HelpRequests>{
     if(helperMail!=null){
       mess+="\nMi correo es $helperMail";
     }
-    mess+="\n\nSaludos cordiales.";
+    mess+="\n\nTu código para evaluar esta ayuda es $code\n\nSaludos cordiales";
     final String _email = 'mailto:' +
         receiver +
         '?subject=' +
@@ -169,6 +198,25 @@ class _HelpRequestsState extends State<HelpRequests>{
     } catch (e) {
       throw e.toString();
     }
+  }
+
+  _sendWhatsapp(String phone, String cat, String message, String helper, String helperNumber, String helperMail, int code){
+    String mess= "¡Hola!\n\nMi nombre es $helper\nMe gustaría ayudarte con tu petición de ayuda en $cat:\n\n $message\n";
+    if(helperNumber!=null){
+      mess+="\nMi número es $helperNumber";
+    }
+    if(helperMail!=null){
+      mess+="\nMi correo es $helperMail";
+    }
+    mess+="\n\nTu código para evaluar esta ayuda es $code\n\nSaludos cordiales";
+
+    if(phone.substring(0)=='+'){
+      return FlutterOpenWhatsapp.sendSingleMessage(phone, mess);
+    }
+    if(phone.length > 8){
+      return FlutterOpenWhatsapp.sendSingleMessage(phone.substring(3), mess);
+    }
+    return FlutterOpenWhatsapp.sendSingleMessage('+502$phone', mess);
   }
 
   Widget pendingRequests(String category, int code, bool contactMail, bool contactMessage, String description, String email, String name, String phone, String helpGiverName, String helpGiverNumber, String helpGiverMail){
@@ -199,7 +247,7 @@ class _HelpRequestsState extends State<HelpRequests>{
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 RaisedButton(
-                  onPressed: ()=>_sendEmail(email, category, description, helpGiverName, helpGiverNumber, helpGiverMail),
+                  onPressed: ()=>_sendEmail(email, category, description, helpGiverName, helpGiverNumber, helpGiverMail, code),
                   child: Text("Enviar correo"),
                   textColor: Colors.white,
                   color: Colors.blueAccent,
@@ -207,11 +255,10 @@ class _HelpRequestsState extends State<HelpRequests>{
                 ),
                 SizedBox(width: 10,),
                 RaisedButton(
-                  onPressed: null,
+                  onPressed: ()=> _sendWhatsapp(phone, category, description, helpGiverName, helpGiverNumber, helpGiverMail, code),
                   child: Text("Enviar whatsapp"),
-                  // cambiar esto a enabled
-                  disabledTextColor: Colors.white,
-                  disabledColor: Colors.green[300],
+                  textColor: Colors.white,
+                  color: Colors.green[300],
                   shape: StadiumBorder(),
                 )
               ],
