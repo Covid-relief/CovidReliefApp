@@ -52,6 +52,12 @@
 @import flutter_facebook_login;
 #endif
 
+#if __has_include(<flutter_open_whatsapp/FlutterOpenWhatsappPlugin.h>)
+#import <flutter_open_whatsapp/FlutterOpenWhatsappPlugin.h>
+#else
+@import flutter_open_whatsapp;
+#endif
+
 #if __has_include(<flutter_plugin_pdf_viewer/FlutterPluginPdfViewerPlugin.h>)
 #import <flutter_plugin_pdf_viewer/FlutterPluginPdfViewerPlugin.h>
 #else
@@ -123,6 +129,7 @@
   [FlutterDocumentPickerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterDocumentPickerPlugin"]];
   [FlutterDownloaderPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterDownloaderPlugin"]];
   [FacebookLoginPlugin registerWithRegistrar:[registry registrarForPlugin:@"FacebookLoginPlugin"]];
+  [FlutterOpenWhatsappPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterOpenWhatsappPlugin"]];
   [FlutterPluginPdfViewerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterPluginPdfViewerPlugin"]];
   [FlutterSecureStoragePlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterSecureStoragePlugin"]];
   [FLTGoogleSignInPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTGoogleSignInPlugin"]];
