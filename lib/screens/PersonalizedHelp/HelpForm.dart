@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'dart:math';
 
 class HelpForm extends StatefulWidget {
   String categoryOfHelp;
@@ -228,12 +229,21 @@ class HelpFormState extends State<HelpForm>{
   }
 
   void _submitForm() async {
-    DocumentReference ref = await databaseReference.collection("solicitarayuda_" + categoryOfHelp)
+    
+    Random random = new Random();
+    int code = random.nextInt(99999 - 10000);
+
+    DocumentReference ref = await databaseReference.collection("solicitarayuda")
         .add({
-          'email': _formEmail,
-          'description': _formDescription,
+          'state': 'unattended',
+          'category':categoryOfHelp,
           'name': _formName,
-          'phone': _formPhone
+          'description': _formDescription,
+          'email': _formEmail,
+          'contactMail':_contactMail,
+          'phone': _formPhone,
+          'contactMessage':_contactMessage,
+          'code': code
         });
     print(ref.documentID);
   }

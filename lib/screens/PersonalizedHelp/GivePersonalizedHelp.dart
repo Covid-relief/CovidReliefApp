@@ -4,6 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:CovidRelief/screens/PersonalizedHelp/HelpRequests.dart';
+import 'package:CovidRelief/services/auth.dart';
+import 'package:CovidRelief/models/user.dart';
 
 class GivePersonalizedHelp extends StatefulWidget {
   String categoryOfHelp;
@@ -24,6 +27,7 @@ class _GivePersonalizedHelpState extends State<GivePersonalizedHelp>{
   String _formPhone;
   bool _contactMail=false;
   bool _contactMessage=false;
+  String codeHelper;
 
   final databaseReference = Firestore.instance;
 
@@ -31,7 +35,21 @@ class _GivePersonalizedHelpState extends State<GivePersonalizedHelp>{
 
   @override
   Widget build(BuildContext context) {
-    // Build a Form widget using the _formKey created above.
+    // this variable allows us to get the uid that contains the info of the user
+    final user = Provider.of<User>(context);
+    String uid = user.uid;
+
+    //var myref = databaseReference.collection("darayuda").where("category", isEqualTo: categoryOfHelp).getDocuments();
+    var myref = databaseReference.collection("darayuda").where("category", isEqualTo: categoryOfHelp).where("uid", isEqualTo: uid).snapshots();
+    
+    Future hasApplied() async {
+      var val = await myref.elementAt(0).then((QuerySnapshot querySnapshot) => {querySnapshot.documents.length});
+      if(val.toString()!='{0}'){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => HelpRequests(categoryOfHelp:categoryOfHelp)),);
+      }
+    }
+    hasApplied();
+
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: Container(
@@ -52,14 +70,13 @@ class _GivePersonalizedHelpState extends State<GivePersonalizedHelp>{
         //backgroundColor: Colors.lightBlue[900],
       ),
       body: SingleChildScrollView(
-        child: _buildForm()
+        child: _buildForm(uid),
       )
     );
   }
 
-// _buildForm()
   // APP LAYER?
-  Widget _buildForm() {
+  Widget _buildForm(String uid) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
@@ -75,7 +92,7 @@ class _GivePersonalizedHelpState extends State<GivePersonalizedHelp>{
         _buildContactMail(),
         _buildContactMessage(),
         SizedBox(height: 15.0,),
-        _buildSubmitButton(),
+        _buildSubmitButton(uid),
       ],
     );
   }
@@ -161,6 +178,7 @@ class _GivePersonalizedHelpState extends State<GivePersonalizedHelp>{
     );
   }
 
+// Alguno de estos debe ser true para continuar!
   Widget _buildContactMail() {
       return CheckboxListTile(
         title: Text("Contactarme por correo"),
@@ -178,7 +196,8 @@ class _GivePersonalizedHelpState extends State<GivePersonalizedHelp>{
       );
   }
 
-  Widget _buildSubmitButton() {
+  Widget _buildSubmitButton(String uid) {
+
     return Container(
       height: 70,
       padding: EdgeInsets.fromLTRB(70,0,70,0),
@@ -188,25 +207,29 @@ class _GivePersonalizedHelpState extends State<GivePersonalizedHelp>{
           color: Colors.blueAccent,
           shape: StadiumBorder(),
           onPressed: () {
-            print(_formName);
-            print(_formKey);
-            print(_formEmail);
-            print(_formPhone);
-            //_submitForm(); aun no se usara
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);},
+            _submitForm(uid);
+          Navigator.push(context, MaterialPageRoute(builder: (context) => HelpRequests(categoryOfHelp: categoryOfHelp)),);},
           child: Text('Empezar a apoyar', textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: 20),),
         ),
     );
 
   }
 
-  void _submitForm() async {
-    DocumentReference ref = await databaseReference.collection("darayuda_" + categoryOfHelp)
-        .add({
-          'email': _formEmail,
-          'name': _formName,
-          'phone': _formPhone
-        });
+  void _submitForm(String uid) async {
+    DocumentReference ref = await databaseReference.collection("darayuda")
+      .add({
+        'category': categoryOfHelp,
+        'name': _formName,
+        'email': _formEmail,
+        'contactMail':_contactMail,
+        'phone': _formPhone,
+        'contactMessage':_contactMessage,
+        'uid': uid
+      });
+      // quitar codeHelper?
+      setState(() {
+        codeHelper=ref.documentID;
+      });
     print(ref.documentID);
   }
 }
