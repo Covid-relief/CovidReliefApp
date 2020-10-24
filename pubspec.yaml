@@ -26,6 +26,7 @@ dependencies:
 
   flutter:
     sdk: flutter
+  #video_player:
   google_sign_in: ^4.5.1
   flutter_plugin_pdf_viewer: ^1.0.7 #dependecie to view a pdf
 
