@@ -32,11 +32,11 @@ class Help extends StatelessWidget {
     Widget showMyGuide(){
       if (typeOfHelp=='quiero ayudar'){
         return GestureDetector(
-                    child: Text("Guía para dar consejos generales",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(decoration: TextDecoration.underline, color: Colors.blue)),
-                    onTap: () async {Navigator.push(context,MaterialPageRoute(builder: (context) => PDF()),);
-                });
+          child: Text("Guía para dar consejos generales",
+              textAlign: TextAlign.center,
+              style: TextStyle(decoration: TextDecoration.underline, color: Colors.blue)),
+          onTap: () async {Navigator.push(context,MaterialPageRoute(builder: (context) => PDF()),);
+      });
       }else{
         return SizedBox();
       }
