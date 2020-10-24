@@ -25,8 +25,6 @@ class _GivePersonalizedHelpState extends State<GivePersonalizedHelp>{
   String _formName;
   String _formEmail;
   String _formPhone;
-  bool _contactMail=false;
-  bool _contactMessage=false;
   String codeHelper;
 
   final databaseReference = Firestore.instance;
@@ -89,8 +87,6 @@ class _GivePersonalizedHelpState extends State<GivePersonalizedHelp>{
         SizedBox(height: 25.0,),
         _buildPhoneField(),
         SizedBox(height: 25.0,),
-        _buildContactMail(),
-        _buildContactMessage(),
         SizedBox(height: 15.0,),
         _buildSubmitButton(uid),
       ],
@@ -178,24 +174,6 @@ class _GivePersonalizedHelpState extends State<GivePersonalizedHelp>{
     );
   }
 
-// Alguno de estos debe ser true para continuar!
-  Widget _buildContactMail() {
-      return CheckboxListTile(
-        title: Text("Contactarme por correo"),
-        value: _contactMail,
-        onChanged: (mailCont) => setState(() => _contactMail = mailCont),
-        controlAffinity: ListTileControlAffinity.leading,
-      );
-  }
-  Widget _buildContactMessage() {
-      return CheckboxListTile(
-        title: Text("Contactarme por mensaje"),
-        value: _contactMessage,
-        onChanged: (messageCont) => setState(() => _contactMessage = messageCont),
-        controlAffinity: ListTileControlAffinity.leading,
-      );
-  }
-
   Widget _buildSubmitButton(String uid) {
 
     return Container(
@@ -221,12 +199,9 @@ class _GivePersonalizedHelpState extends State<GivePersonalizedHelp>{
         'category': categoryOfHelp,
         'name': _formName,
         'email': _formEmail,
-        'contactMail':_contactMail,
         'phone': _formPhone,
-        'contactMessage':_contactMessage,
         'uid': uid
       });
-      // quitar codeHelper?
       setState(() {
         codeHelper=ref.documentID;
       });
