@@ -11,6 +11,7 @@ import 'package:CovidRelief/models/user.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
+import 'package:intl/intl.dart';
 
 class HelpRequests extends StatefulWidget {
   String categoryOfHelp;
@@ -65,7 +66,7 @@ class _HelpRequestsState extends State<HelpRequests>{
       builder: (context, snapshot) {
         DocumentSnapshot helpGiver = snapshot.data.documents[0];
         return Scaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.red[50],
             appBar: AppBar(
               flexibleSpace: Container(
                     decoration: new BoxDecoration(
@@ -149,15 +150,18 @@ class _HelpRequestsState extends State<HelpRequests>{
                 ],
               ),
             ),
-            // agregar momento de carga
+
             body: StreamBuilder(
-              stream: Firestore.instance.collection('solicitarayuda').where("state", isEqualTo: "unattended").where("category", isEqualTo: categoryOfHelp).snapshots(),
+              stream: Firestore.instance.collection('solicitarayuda').where("lastInteraction", isGreaterThanOrEqualTo: DateTime.now().subtract(new Duration(days: 10))).where("category", isEqualTo: categoryOfHelp).snapshots(),
               builder: (context, snapshot) {
-                return ListView.builder(
+                return snapshot.data.documents.length == 0
+                ? Padding(padding: EdgeInsets.symmetric(vertical: 100.0, horizontal:100), child: Text("No hay solicitudes", style: TextStyle(fontSize: 20.0, color: Colors.grey)),)
+                : ListView.builder(
                   itemCount: snapshot.data.documents.length,
                   itemBuilder: (context, index) {
                     DocumentSnapshot myPost = snapshot.data.documents[index];
                     return pendingRequests(
+                      myPost,
                       myPost['category'], 
                       myPost['code'],
                       myPost['contactMail'], 
@@ -166,6 +170,7 @@ class _HelpRequestsState extends State<HelpRequests>{
                       myPost['email'],
                       myPost['name'], 
                       myPost['phone'],
+                      myPost['lastInteraction'],
                       helpGiver['name'],
                       helpGiver['phone'],
                       helpGiver['email'],
@@ -178,7 +183,15 @@ class _HelpRequestsState extends State<HelpRequests>{
       }
     );}
   }
-  _sendEmail(String receiver, String sub, String message, String helper, String helperNumber, String helperMail, int code) async {
+
+  // cambia fecha de interaccion
+  _updateData(Timestamp lastInteraction, DocumentSnapshot _currentDocument) async {
+    await Firestore.instance.collection('solicitarayuda').document(_currentDocument.documentID).updateData({'lastInteraction': DateTime.now()});
+  }
+
+  _sendEmail(DocumentSnapshot myPost, String receiver, String sub, String message, String helper, String helperNumber, String helperMail, int code, Timestamp lastInteraction) async {
+    _updateData(lastInteraction, myPost);
+    
     String mess= "¡Hola!\n\nMi nombre es $helper\nMe gustaría ayudarte con tu petición de ayuda:\n\n $message\n";
     if(helperNumber!=null){
       mess+="\nMi número es $helperNumber";
@@ -200,7 +213,9 @@ class _HelpRequestsState extends State<HelpRequests>{
     }
   }
 
-  _sendWhatsapp(String phone, String cat, String message, String helper, String helperNumber, String helperMail, int code){
+  _sendWhatsapp(DocumentSnapshot myPost, String phone, String cat, String message, String helper, String helperNumber, String helperMail, int code, Timestamp lastInteraction){
+    _updateData(lastInteraction, myPost);
+    
     String mess= "¡Hola!\n\nMi nombre es $helper\nMe gustaría ayudarte con tu petición de ayuda en $cat:\n\n $message\n";
     if(helperNumber!=null){
       mess+="\nMi número es $helperNumber";
@@ -210,17 +225,13 @@ class _HelpRequestsState extends State<HelpRequests>{
     }
     mess+="\n\nTu código para evaluar esta ayuda es $code\n\nSaludos cordiales";
 
-    if(phone.substring(0)=='+'){
-      return FlutterOpenWhatsapp.sendSingleMessage(phone, mess);
-    }
-    if(phone.length > 8){
-      return FlutterOpenWhatsapp.sendSingleMessage(phone.substring(3), mess);
-    }
-    return FlutterOpenWhatsapp.sendSingleMessage('+502$phone', mess);
+    return FlutterOpenWhatsapp.sendSingleMessage(phone, mess);
   }
 
-  Widget pendingRequests(String category, int code, bool contactMail, bool contactMessage, String description, String email, String name, String phone, String helpGiverName, String helpGiverNumber, String helpGiverMail){
-    // marcar caso como atendido
+  Widget pendingRequests(DocumentSnapshot myPost, String category, int code, bool contactMail, bool contactMessage, String description, String email, String name, String phone, Timestamp lastInteraction, String helpGiverName, String helpGiverNumber, String helpGiverMail){
+    var formatDate = new DateFormat('d MMM yyyy');
+    String fecha = formatDate.format(lastInteraction.toDate());
+
     return new Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       margin: EdgeInsets.all(15.0),
@@ -229,10 +240,20 @@ class _HelpRequestsState extends State<HelpRequests>{
         child: new Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
+            Row(children: <Widget>[
+              Text(
+                fecha,
+                style: TextStyle(
+                  fontStyle: FontStyle.italic,
+                  color: Colors.grey
+                ),
+                textAlign: TextAlign.left,
+              ),
+            ],),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                 Flexible(
+                Flexible(
                   child: Text(
                     description,
                     overflow: TextOverflow.ellipsis,
@@ -247,7 +268,7 @@ class _HelpRequestsState extends State<HelpRequests>{
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 RaisedButton(
-                  onPressed: ()=>_sendEmail(email, category, description, helpGiverName, helpGiverNumber, helpGiverMail, code),
+                  onPressed: ()=>_sendEmail(myPost, email, category, description, helpGiverName, helpGiverNumber, helpGiverMail, code, lastInteraction),
                   child: Text("Enviar correo"),
                   textColor: Colors.white,
                   color: Colors.blueAccent,
@@ -255,7 +276,7 @@ class _HelpRequestsState extends State<HelpRequests>{
                 ),
                 SizedBox(width: 10,),
                 RaisedButton(
-                  onPressed: ()=> _sendWhatsapp(phone, category, description, helpGiverName, helpGiverNumber, helpGiverMail, code),
+                  onPressed: ()=> _sendWhatsapp(myPost, phone, category, description, helpGiverName, helpGiverNumber, helpGiverMail, code, lastInteraction),
                   child: Text("Enviar whatsapp"),
                   textColor: Colors.white,
                   color: Colors.green[300],

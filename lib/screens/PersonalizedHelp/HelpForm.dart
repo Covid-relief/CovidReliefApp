@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:math';
+import 'package:intl/intl.dart';
 
 class HelpForm extends StatefulWidget {
   String categoryOfHelp;
@@ -24,13 +25,32 @@ class HelpFormState extends State<HelpForm>{
   String _formEmail;
   String _formPhone;
   String _formDescription;
-  bool _contactMail=false;
-  bool _contactMessage=false;
 
   final databaseReference = Firestore.instance;
 
   final _formKey = GlobalKey<FormState>();
 
+  // popup para avisar que el post estara solo 10 dias arriba y se actualizara con interacciones
+  openPopup(){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Aviso'),
+          content: Text('Tu solicitud se publicará anónimamente durante 10 días en el tablero de solicitudes. '+
+                        'Si tu solicitud tiene interacciones y se mantiene activa se extenderá el tiempo de publicación para mantenerla activa'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Aceptar'),
+                onPressed: () {
+                  _submitForm();
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
+                },
+              ),
+            ],
+        );
+      });
+  }
   @override
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
@@ -75,9 +95,6 @@ class HelpFormState extends State<HelpForm>{
         _buildPhoneField(),
         SizedBox(height: 25.0,),
         _buildProblemField(),
-        SizedBox(height: 25.0,),
-        _buildContactMail(),
-        _buildContactMessage(),
         SizedBox(height: 15.0,),
         _buildSubmitButton(),
       ],
@@ -189,23 +206,6 @@ class HelpFormState extends State<HelpForm>{
     );
   }
 
-  Widget _buildContactMail() {
-      return CheckboxListTile(
-        title: Text("Contactarme por correo"),
-        value: _contactMail,
-        onChanged: (mailCont) => setState(() => _contactMail = mailCont),
-        controlAffinity: ListTileControlAffinity.leading,
-      );
-  }
-  Widget _buildContactMessage() {
-      return CheckboxListTile(
-        title: Text("Contactarme por mensaje"),
-        value: _contactMessage,
-        onChanged: (messageCont) => setState(() => _contactMessage = messageCont),
-        controlAffinity: ListTileControlAffinity.leading,
-      );
-  }
-
   Widget _buildSubmitButton() {
     return Container(
       height: 70,
@@ -215,14 +215,7 @@ class HelpFormState extends State<HelpForm>{
           padding: const EdgeInsets.symmetric(horizontal: 35),
           color: Colors.blueAccent,
           shape: StadiumBorder(),
-          onPressed: () {
-            print(_formName);
-            print(_formKey);
-            print(_formDescription);
-            print(_formEmail);
-            print(_formPhone);
-            _submitForm();
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);},
+          onPressed: () async {openPopup();},
           child: Text('Enviar Solicitud',style: TextStyle(color: Colors.white, fontSize: 20),),
         ),
     );
@@ -240,10 +233,9 @@ class HelpFormState extends State<HelpForm>{
           'name': _formName,
           'description': _formDescription,
           'email': _formEmail,
-          'contactMail':_contactMail,
           'phone': _formPhone,
-          'contactMessage':_contactMessage,
-          'code': code
+          'code': code,
+          'lastInteraction': DateTime.now()
         });
     print(ref.documentID);
   }
