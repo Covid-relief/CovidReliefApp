@@ -150,7 +150,7 @@ class _ViewPostsState extends State<ViewPosts> {
       ),
       body: new Container(
         child: postsList.length == 0
-            ? Padding(padding: EdgeInsets.symmetric(vertical: 100.0, horizontal:100), child: Text("No hay publicaciones", style: TextStyle(fontSize: 20.0, color: Colors.grey)),)
+            ? CircularProgressIndicator()
             : new ListView.builder(
                 itemCount: postsList.length,
                 itemBuilder: (_, index) {
