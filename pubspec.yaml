@@ -29,6 +29,7 @@ dependencies:
   #video_player:
   google_sign_in: ^4.5.1
   flutter_plugin_pdf_viewer: ^1.0.7 #dependecie to view a pdf
+  chewie: ^0.9.7 # for watch videos
 
   linkable: ^1.0.4 # dependencies for links and calls
   url_launcher: ^5.4.10
