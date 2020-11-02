@@ -10,8 +10,9 @@ import 'dart:ui';
 import 'package:linkable/linkable.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:simple_url_preview/simple_url_preview.dart';
-
-//import 'package:video_player/video_player.dart';
+import 'dart:async';
+import 'package:video_player/video_player.dart';
+import 'chewie_list_item.dart';
 
 class ViewPosts extends StatefulWidget {
   String categoryOfHelp;
@@ -25,14 +26,14 @@ class ViewPosts extends StatefulWidget {
 class _ViewPostsState extends State<ViewPosts> {
   String categoryOfHelp;
   _ViewPostsState({this.categoryOfHelp});
-
   List<Posts> postsList = [];
 
   @override
   void initState() {
     super.initState();
 
-    DatabaseReference postsRef =  FirebaseDatabase.instance.reference().child(categoryOfHelp);
+    DatabaseReference postsRef =
+        FirebaseDatabase.instance.reference().child(categoryOfHelp);
 
     postsRef
         .orderByChild('Estado')
@@ -68,6 +69,20 @@ class _ViewPostsState extends State<ViewPosts> {
   showImage(img) {
     if (img != null) {
       return new Image.network(img, fit: BoxFit.cover);
+    } else {
+      return SizedBox();
+    }
+  }
+
+  //Error acá
+  showVideo(video) {
+    if (video != null) {
+      return new ChewieListItem(
+        videoPlayerController: VideoPlayerController.network(
+          video,
+        ),
+        looping: false,
+      );
     } else {
       return SizedBox();
     }
@@ -135,22 +150,18 @@ class _ViewPostsState extends State<ViewPosts> {
         flexibleSpace: Container(
           decoration: new BoxDecoration(
             gradient: new LinearGradient(
-              colors: [
-                const Color(0xFFFF5252),
-                const Color(0xFFFF1744)
-              ],
-              begin: const FractionalOffset(0.0, 0.0),
-              end: const FractionalOffset(0.5, 0.0),
-              stops: [0.0, 0.5],
-              tileMode: TileMode.clamp
-            ),
+                colors: [const Color(0xFFFF5252), const Color(0xFFFF1744)],
+                begin: const FractionalOffset(0.0, 0.0),
+                end: const FractionalOffset(0.5, 0.0),
+                stops: [0.0, 0.5],
+                tileMode: TileMode.clamp),
           ),
         ),
         title: Text('Ayuda general de ' + categoryOfHelp),
       ),
       body: new Container(
         child: postsList.length == 0
-            ? Padding(padding: EdgeInsets.symmetric(vertical: 100.0, horizontal:100), child: Text("No hay publicaciones", style: TextStyle(fontSize: 20.0, color: Colors.grey)),)
+            ? CircularProgressIndicator()
             : new ListView.builder(
                 itemCount: postsList.length,
                 itemBuilder: (_, index) {
@@ -163,7 +174,7 @@ class _ViewPostsState extends State<ViewPosts> {
                       postsList[index].Video,
                       postsList[index].Archivo,
                       postsList[index].Dia,
-                      postsList[index].Link);//PostsUi
+                      postsList[index].Link); //PostsUi
                 }),
       ),
     );
@@ -214,6 +225,10 @@ class _ViewPostsState extends State<ViewPosts> {
               height: 15.0,
             ),
             showImage(Imagen),
+            SizedBox(
+              height: 15.0,
+            ),
+            showVideo(Video),
             SizedBox(
               height: 15.0,
             ),
