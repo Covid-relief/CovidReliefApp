@@ -51,6 +51,8 @@ dependencies:
   permission_handler: ^5.0.1
   flutter_downloader: ^1.4.4
   flutter_open_whatsapp: ^0.1.2
+  smooth_star_rating: ^1.1.1
+  firebase_analytics: ^5.0.16
 
   intl: ^0.15.7
   image_picker: 

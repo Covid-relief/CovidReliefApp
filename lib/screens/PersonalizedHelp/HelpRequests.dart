@@ -65,120 +65,123 @@ class _HelpRequestsState extends State<HelpRequests>{
       stream: Firestore.instance.collection("darayuda").where("category", isEqualTo: categoryOfHelp).where("uid", isEqualTo: uid).snapshots(),
       builder: (context, snapshot) {
         DocumentSnapshot helpGiver = snapshot.data.documents[0];
-        return Scaffold(
-          backgroundColor: Colors.red[50],
-            appBar: AppBar(
-              flexibleSpace: Container(
-                    decoration: new BoxDecoration(
-                      gradient: new LinearGradient(
-                        colors: [
-                          const Color(0xFFFF5252),
-                          const Color(0xFFFF1744)
-                        ],
-                        begin: const FractionalOffset(0.0, 0.0),
-                        end: const FractionalOffset(0.5, 0.0),
-                        stops: [0.0, 0.5],
-                        tileMode: TileMode.clamp
-                      ),
-                    ),
-                  ),
-              title: Text(
-                'Covid Relief',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w900,
-                    fontStyle: FontStyle.italic,
-                    fontFamily: 'Open Sans',
-                    fontSize: 25),
-              ),
-            ),
-            drawer: Drawer(
-              child: ListView(
-                children: [
-                  DrawerHeader(
-                      decoration: BoxDecoration(
-                        color: Colors.redAccent[400],
-                      ),
-                      child: Text(
-                        'Covid Relief', 
-                        style: TextStyle(
-                          height: 5.0,
-                          color: Colors.white,
-                          fontSize: 30,
-                          fontWeight: FontWeight.w700,
-                          fontFamily: 'Open Sans',
-                          fontStyle: FontStyle.italic,
+        return WillPopScope(
+          onWillPop: () => Navigator.push(context, MaterialPageRoute(builder: (context) => Home())),
+          child: Scaffold(
+            backgroundColor: Colors.red[50],
+              appBar: AppBar(
+                flexibleSpace: Container(
+                      decoration: new BoxDecoration(
+                        gradient: new LinearGradient(
+                          colors: [
+                            const Color(0xFFFF5252),
+                            const Color(0xFFFF1744)
+                          ],
+                          begin: const FractionalOffset(0.0, 0.0),
+                          end: const FractionalOffset(0.5, 0.0),
+                          stops: [0.0, 0.5],
+                          tileMode: TileMode.clamp
                         ),
                       ),
                     ),
-                  ListTile(
-                    leading: Icon(Icons.account_circle),
-                    title: Text(
-                      'Inicio',
-                    ),
-                    onTap: () async {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Home()),
-                      );
-                    },
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.account_circle),
-                    title: Text(
-                      'Perfil',
-                    ),
-                    onTap: () async {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => UserProfile()),
-                      );
-                    },
-                  ),
-
-                  FlatButton.icon(
-                    icon: Icon(Icons.person),
-                    label: Text('Cerrar Sesión'),
-                    onPressed: () async {
-                      await _auth.signOut();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Authenticate()),
-                      );
-                    },
-                  ),
-                ],
+                title: Text(
+                  'Solicitudes de ' + categoryOfHelp,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w900,
+                      fontStyle: FontStyle.italic,
+                      fontFamily: 'Open Sans',
+                      fontSize: 20),
+                ),
               ),
-            ),
+              drawer: Drawer(
+                child: ListView(
+                  children: [
+                    DrawerHeader(
+                        decoration: BoxDecoration(
+                          color: Colors.redAccent[400],
+                        ),
+                        child: Text(
+                          'Covid Relief', 
+                          style: TextStyle(
+                            height: 5.0,
+                            color: Colors.white,
+                            fontSize: 30,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Open Sans',
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ),
+                    ListTile(
+                      leading: Icon(Icons.account_circle),
+                      title: Text(
+                        'Inicio',
+                      ),
+                      onTap: () async {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Home()),
+                        );
+                      },
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.account_circle),
+                      title: Text(
+                        'Perfil',
+                      ),
+                      onTap: () async {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => UserProfile()),
+                        );
+                      },
+                    ),
 
-            body: StreamBuilder(
-              stream: Firestore.instance.collection('solicitarayuda').where("lastInteraction", isGreaterThanOrEqualTo: DateTime.now().subtract(new Duration(days: 10))).where("category", isEqualTo: categoryOfHelp).snapshots(),
-              builder: (context, snapshot) {
-                return snapshot.data.documents.length == 0
-                ? Padding(padding: EdgeInsets.symmetric(vertical: 100.0, horizontal:100), child: Text("No hay solicitudes", style: TextStyle(fontSize: 20.0, color: Colors.grey)),)
-                : ListView.builder(
-                  itemCount: snapshot.data.documents.length,
-                  itemBuilder: (context, index) {
-                    DocumentSnapshot myPost = snapshot.data.documents[index];
-                    return pendingRequests(
-                      myPost,
-                      myPost['category'], 
-                      myPost['code'],
-                      myPost['contactMail'], 
-                      myPost['contactMessage'],
-                      myPost['description'], 
-                      myPost['email'],
-                      myPost['name'], 
-                      myPost['phone'],
-                      myPost['lastInteraction'],
-                      helpGiver['name'],
-                      helpGiver['phone'],
-                      helpGiver['email'],
-                    );
-                  }
-                );
-              },
-            )
+                    FlatButton.icon(
+                      icon: Icon(Icons.person),
+                      label: Text('Cerrar Sesión'),
+                      onPressed: () async {
+                        await _auth.signOut();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Authenticate()),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+
+              body: StreamBuilder(
+                stream: Firestore.instance.collection('solicitarayuda').where("lastInteraction", isGreaterThanOrEqualTo: DateTime.now().subtract(new Duration(days: 10))).where("category", isEqualTo: categoryOfHelp).snapshots(),
+                builder: (context, snapshot) {
+                  return snapshot.data.documents.length == 0
+                  ? Padding(padding: EdgeInsets.symmetric(vertical: 100.0, horizontal:100), child: Text("No hay solicitudes", style: TextStyle(fontSize: 20.0, color: Colors.grey)),)
+                  : ListView.builder(
+                    itemCount: snapshot.data.documents.length,
+                    itemBuilder: (context, index) {
+                      DocumentSnapshot myPost = snapshot.data.documents[index];
+                      return pendingRequests(
+                        myPost,
+                        myPost['category'], 
+                        myPost['code'],
+                        myPost['contactMail'], 
+                        myPost['contactMessage'],
+                        myPost['description'], 
+                        myPost['email'],
+                        myPost['name'], 
+                        myPost['phone'],
+                        myPost['lastInteraction'],
+                        helpGiver['name'],
+                        helpGiver['phone'],
+                        helpGiver['email'],
+                      );
+                    }
+                  );
+                },
+              )
+          ),
         );
       }
     );}
@@ -225,7 +228,13 @@ class _HelpRequestsState extends State<HelpRequests>{
     }
     mess+="\n\nTu código para evaluar esta ayuda es $code\n\nSaludos cordiales";
 
-    return FlutterOpenWhatsapp.sendSingleMessage(phone, mess);
+    if(phone.substring(0)=='+'){
+      return FlutterOpenWhatsapp.sendSingleMessage(phone, mess);
+    }
+    if(phone.length > 8){
+      return FlutterOpenWhatsapp.sendSingleMessage(phone.substring(3), mess);
+    }
+    return FlutterOpenWhatsapp.sendSingleMessage('+502$phone', mess);
   }
 
   Widget pendingRequests(DocumentSnapshot myPost, String category, int code, bool contactMail, bool contactMessage, String description, String email, String name, String phone, Timestamp lastInteraction, String helpGiverName, String helpGiverNumber, String helpGiverMail){
