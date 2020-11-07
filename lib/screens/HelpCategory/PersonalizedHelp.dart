@@ -3,12 +3,14 @@ import 'package:CovidRelief/screens/authenticate/authenticate.dart';
 import 'package:CovidRelief/screens/home/home.dart';
 import 'package:CovidRelief/screens/home/user_profile.dart';
 import 'package:CovidRelief/services/auth.dart';
+import 'package:CovidRelief/shared/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:CovidRelief/screens/HelpCategory/ShowPdf.dart';
 import 'package:CovidRelief/screens/give_help/generalHelp.dart';
 import 'package:CovidRelief/screens/HelpCategory/ShowGeneralHelpPost.dart';
 import 'package:CovidRelief/screens/PersonalizedHelp/GivePersonalizedHelp.dart';
 import 'package:CovidRelief/screens/PersonalizedHelp/HelpRequests.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class Help extends StatelessWidget {
   final AuthService _auth = AuthService();
@@ -25,6 +27,8 @@ class Help extends StatelessWidget {
     }
   }
 
+  var rating = 3.0;
+
   @override
   // State<StatefulWidget> createState() {
   Widget build(BuildContext context) {
@@ -37,6 +41,80 @@ class Help extends StatelessWidget {
               style: TextStyle(decoration: TextDecoration.underline, color: Colors.blue)),
           onTap: () async {Navigator.push(context,MaterialPageRoute(builder: (context) => PDF()),);
       });
+      }else{
+        return SizedBox();
+      }
+    }
+
+    starsEval(String code){
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Calificar ayuda personalizada recibida'),
+            content: Stack(
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    SmoothStarRating(
+                    rating: rating,
+                    size: 30,
+                    starCount: 5
+                  ),
+                  ],
+                ),
+              ],),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Enviar'),
+                  onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => Home()),);},
+                ),
+              ],
+          );
+      });
+    }
+
+    openEval(){ 
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Calificar ayuda personalizada recibida'),
+            content: Stack(
+              children: <Widget>[
+                TextField(
+                  decoration: InputDecoration(
+                    icon: Icon(Icons.code),
+                    labelText: 'Ingresa tu código de ayuda recibida',
+                  ),
+                onChanged: null,
+                ),
+              ],),
+              actions: <Widget>[ // checar si el codigo existe
+                FlatButton(
+                  child: Text('Evaluar'),
+                  onPressed: () {starsEval("code");},
+                ),
+              ],
+          );
+      });
+    }
+
+    Widget evalHelp(){
+      if(typeOfHelp!='quiero ayudar'){
+        return Row(children: <Widget>[
+          FlatButton.icon(
+          color: Colors.yellow[600],
+          icon: Icon(Icons.star_half),
+          label: Text('Evaluar ayuda recibida'),
+          onPressed: () => openEval(),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18.0),
+          ),
+          ),
+        ],
+        mainAxisAlignment: MainAxisAlignment.end,
+        );
       }else{
         return SizedBox();
       }
@@ -188,8 +266,9 @@ class Help extends StatelessWidget {
                       textAlign: TextAlign.center)),
             ),
             Container(
-              height: 160,
+              height: 200,
             ),
+            evalHelp(),
           ],
         ));
   }
