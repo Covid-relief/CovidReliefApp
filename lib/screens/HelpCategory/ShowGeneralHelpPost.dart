@@ -12,6 +12,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:simple_url_preview/simple_url_preview.dart';
 import 'dart:async';
 import 'package:video_player/video_player.dart';
+import 'chewie_list_item.dart';
 
 class ViewPosts extends StatefulWidget {
   String categoryOfHelp;
@@ -76,63 +77,11 @@ class _ViewPostsState extends State<ViewPosts> {
   //Error acá
   showVideo(video) {
     if (video != null) {
-      VideoPlayerController _controller;
-      Future<void> _initializeVideoPlayerFuture;
-      _controller = VideoPlayerController.network(
-        video,
-      );
-      _initializeVideoPlayerFuture = _controller.initialize();
-
-      _controller.setLooping(true);
-
-      void dispose() {
-        // Ensure disposing of the VideoPlayerController to free up resources.
-        _controller.dispose();
-
-        super.dispose();
-      }
-
-      return Row(
-        children: <Widget>[
-          FutureBuilder(
-            future: _initializeVideoPlayerFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                // If the VideoPlayerController has finished initialization, use
-                // the data it provides to limit the aspect ratio of the video.
-                return AspectRatio(
-                  aspectRatio: _controller.value.aspectRatio,
-                  // Use the VideoPlayer widget to display the video.
-                  child: VideoPlayer(_controller),
-                );
-              } else {
-                // If the VideoPlayerController is still initializing, show a
-                // loading spinner.
-                return Center(child: CircularProgressIndicator());
-              }
-            },
-          ),
-          FloatingActionButton(
-
-            onPressed: () {
-              // Wrap the play or pause in a call to `setState`. This ensures the
-              // correct icon is shown.
-              setState(() {
-                // If the video is playing, pause it.
-                if (_controller.value.isPlaying) {
-                  _controller.pause();
-                } else {
-                  // If the video is paused, play it.
-                  _controller.play();
-                }
-              });
-            },
-            // Display the correct icon depending on the state of the player.
-            child: Icon(
-              _controller.value.isPlaying ? Icons.pause : Icons.play_arrow, 
-            ),
-          ),
-        ],
+      return new ChewieListItem(
+        videoPlayerController: VideoPlayerController.network(
+          video,
+        ),
+        looping: false,
       );
     } else {
       return SizedBox();
