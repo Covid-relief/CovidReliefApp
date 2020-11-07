@@ -10,6 +10,8 @@ import 'package:CovidRelief/screens/home/user_profile.dart';
 import 'package:CovidRelief/screens/HelpCategory/HelpCategories.dart';
 import 'package:linkable/linkable.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
 
 class Home extends StatelessWidget {
   final AuthService _auth = AuthService();
@@ -44,14 +46,21 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // void _showSettingsPanel(){
-    //   showModalBottomSheet(context: context, builder: (context){
-    //     return Container(
-    //       padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 60.0),
-    //       child:  UserDataForm(),
-    //     );
-    //   });
-    // }
+    final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage: $message");
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print("onLaunch: $message");
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print("onResume: $message");
+      },
+    );
+    _firebaseMessaging.requestNotificationPermissions(
+      const IosNotificationSettings(sound: true, badge:true, alert:true),
+    );
     return StreamProvider<List<Perfiles>>.value(
       value: DatabaseService().perfiles,
       //child: Container(
