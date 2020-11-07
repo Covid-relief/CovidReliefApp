@@ -12,8 +12,13 @@ import 'package:linkable/linkable.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
+class Home extends StatefulWidget {
+  @override
+  _Home createState() => _Home();
+}
+class _Home extends State<Home>{
+  bool newNotifs=false;
 
-class Home extends StatelessWidget {
   final AuthService _auth = AuthService();
   var typeOfHelp;
 
@@ -44,17 +49,40 @@ class Home extends StatelessWidget {
     }
   }
 
+  Future getNotifs()async{
+    setState((){
+      newNotifs = true;
+    });
+  }
+
+  Widget myNotif(myNotif){
+    if(myNotif){
+      return RaisedButton(
+        textColor: Colors.white,
+        color: Colors.red,
+        shape: StadiumBorder(),
+        onPressed: () => null,
+        child: Text("Nuevos posts", textAlign: TextAlign.end),
+      );      
+    }else{
+      return Container();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
+        getNotifs();
         print("onMessage: $message");
       },
       onLaunch: (Map<String, dynamic> message) async {
+        getNotifs();
         print("onLaunch: $message");
       },
       onResume: (Map<String, dynamic> message) async {
+        getNotifs();
         print("onResume: $message");
       },
     );
@@ -206,34 +234,37 @@ class Home extends StatelessWidget {
               Container(
                 height: 15,
               ),
-              Container(
-                height: 70,
-                padding: EdgeInsets.fromLTRB(70, 0, 70, 0),
-                child: RaisedButton(
-                  padding: const EdgeInsets.all(2.0),
-                  textColor: Colors.white,
-                  //elevation: 5.0,
-                  color: Colors.blueAccent,
-                  shape: StadiumBorder(),
-                  onPressed: () {
-                    typeOfHelp = 'necesito ayuda';
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              Category(typeOfHelp: typeOfHelp)),
-                    );
-                  },
-                  child: new Text(
-                    "Necesito ayuda",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontFamily: 'Open Sans',
+              Stack(children: <Widget>[
+                Container(
+                  height: 70,
+                  padding: EdgeInsets.fromLTRB(70, 0, 70, 0),
+                  child: RaisedButton(
+                    padding: EdgeInsets.fromLTRB(41, 0, 41, 0), //const EdgeInsets.all(2.0),
+                    textColor: Colors.white,
+                    color: Colors.blueAccent,
+                    shape: StadiumBorder(),
+                    onPressed: () {
+                      typeOfHelp = 'necesito ayuda';
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute( builder: (context) => Category(typeOfHelp: typeOfHelp)), );
+                    },
+                    child: new Text(
+                      "Necesito ayuda",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontFamily: 'Open Sans',
+                      ),
                     ),
                   ),
                 ),
-              ),
+                Positioned(
+                  child: myNotif(newNotifs),
+                  right: 20,
+                  top:0
+                ),
+              ],),
               Container(
                 height: 40,
               ),
