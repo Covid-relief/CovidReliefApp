@@ -56,16 +56,20 @@ class _Help extends State<Help>{
     }
 
     starsEval(String code){
-      print('El codigo ingresado es: '+code);
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return StreamBuilder(
-            stream: Firestore.instance.collection('solicitarayuda').where("code", isEqualTo: code).where("category", isEqualTo: categoryOfHelp).snapshots(),
+            stream: Firestore.instance.collection('solicitarayuda').where("category", isEqualTo: categoryOfHelp).where("code", isEqualTo: int.parse(code)).snapshots(),
             builder: (context, snapshot){
-              print('inside builder');
+              int codeExists;
+              try{
+                codeExists =  snapshot.data.documents.length;
+              }catch(e){
+                codeExists = -1;
+              }
               // si no existe el codigo se abre una ventana de error
-              if(!snapshot.hasData){
+              if(codeExists==-1 || codeExists==0){
                 return AlertDialog(
                   title: Text('Código no válido'),
                   content: Text('Por favor ingresa un codigo válido'),
