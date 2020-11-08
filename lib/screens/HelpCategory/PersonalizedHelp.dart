@@ -55,6 +55,10 @@ class _Help extends State<Help>{
       }
     }
 
+    changeRating(DocumentSnapshot registro, double newVal) async {
+      await Firestore.instance.collection('solicitarayuda').document(registro.documentID).updateData({'rating': newVal.toString()});
+    }
+
     starsEval(String code){
       showDialog(
         context: context,
@@ -63,8 +67,10 @@ class _Help extends State<Help>{
             stream: Firestore.instance.collection('solicitarayuda').where("category", isEqualTo: categoryOfHelp).where("code", isEqualTo: int.parse(code)).snapshots(),
             builder: (context, snapshot){
               int codeExists;
+              DocumentSnapshot myRequest;
               try{
                 codeExists =  snapshot.data.documents.length;
+                myRequest = snapshot.data.documents[0];
               }catch(e){
                 codeExists = -1;
               }
@@ -90,7 +96,11 @@ class _Help extends State<Help>{
                           SmoothStarRating(
                           rating: 3.0,
                           size: 30,
-                          starCount: 5
+                          starCount: 5,
+                          allowHalfRating: false,
+                          onRated : (value) {
+                            changeRating(myRequest, value);
+                          },
                         ),
                         ],
                       ),
