@@ -52,6 +52,12 @@
 @import flutter_facebook_login;
 #endif
 
+#if __has_include(<flutter_open_whatsapp/FlutterOpenWhatsappPlugin.h>)
+#import <flutter_open_whatsapp/FlutterOpenWhatsappPlugin.h>
+#else
+@import flutter_open_whatsapp;
+#endif
+
 #if __has_include(<flutter_plugin_pdf_viewer/FlutterPluginPdfViewerPlugin.h>)
 #import <flutter_plugin_pdf_viewer/FlutterPluginPdfViewerPlugin.h>
 #else
@@ -100,10 +106,22 @@
 @import sqflite;
 #endif
 
+#if __has_include(<url_launcher/FLTURLLauncherPlugin.h>)
+#import <url_launcher/FLTURLLauncherPlugin.h>
+#else
+@import url_launcher;
+#endif
+
 #if __has_include(<video_player/FLTVideoPlayerPlugin.h>)
 #import <video_player/FLTVideoPlayerPlugin.h>
 #else
 @import video_player;
+#endif
+
+#if __has_include(<wakelock/WakelockPlugin.h>)
+#import <wakelock/WakelockPlugin.h>
+#else
+@import wakelock;
 #endif
 
 @implementation GeneratedPluginRegistrant
@@ -117,6 +135,7 @@
   [FlutterDocumentPickerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterDocumentPickerPlugin"]];
   [FlutterDownloaderPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterDownloaderPlugin"]];
   [FacebookLoginPlugin registerWithRegistrar:[registry registrarForPlugin:@"FacebookLoginPlugin"]];
+  [FlutterOpenWhatsappPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterOpenWhatsappPlugin"]];
   [FlutterPluginPdfViewerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterPluginPdfViewerPlugin"]];
   [FlutterSecureStoragePlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterSecureStoragePlugin"]];
   [FLTGoogleSignInPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTGoogleSignInPlugin"]];
@@ -125,7 +144,9 @@
   [FLTPathProviderPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTPathProviderPlugin"]];
   [PermissionHandlerPlugin registerWithRegistrar:[registry registrarForPlugin:@"PermissionHandlerPlugin"]];
   [SqflitePlugin registerWithRegistrar:[registry registrarForPlugin:@"SqflitePlugin"]];
+  [FLTURLLauncherPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTURLLauncherPlugin"]];
   [FLTVideoPlayerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTVideoPlayerPlugin"]];
+  [WakelockPlugin registerWithRegistrar:[registry registrarForPlugin:@"WakelockPlugin"]];
 }
 
 @end

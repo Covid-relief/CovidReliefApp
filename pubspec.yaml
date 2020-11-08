@@ -22,11 +22,18 @@ environment:
 
 dependencies:
   flutter_launcher_icons: ^0.7.5
+  #url_launcher: ^5.0.2
 
   flutter:
     sdk: flutter
+  #video_player:
   google_sign_in: ^4.5.1
   flutter_plugin_pdf_viewer: ^1.0.7 #dependecie to view a pdf
+  chewie: ^0.9.7 # for watch videos
+
+  linkable: ^1.0.4 # dependencies for links and calls
+  url_launcher: ^5.4.10
+  simple_url_preview: ^0.1.2
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -44,7 +51,10 @@ dependencies:
   path_provider: ^1.6.18
   permission_handler: ^5.0.1
   flutter_downloader: ^1.4.4
-
+  flutter_open_whatsapp: ^0.1.2
+  smooth_star_rating: ^1.1.1
+  firebase_analytics: ^5.0.16
+  firebase_messaging: ^6.0.16
   intl: ^0.15.7
   image_picker: 
   firebase_database: 
@@ -78,7 +88,13 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
-
+  fonts:
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/Montserrat-Regular.ttf
+          weight: 100
+        - asset: assets/fonts/Montserrat-Bold.ttf
+          weight: 700
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
