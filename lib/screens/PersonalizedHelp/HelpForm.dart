@@ -235,7 +235,8 @@ class HelpFormState extends State<HelpForm>{
           'email': _formEmail,
           'phone': _formPhone,
           'code': code,
-          'lastInteraction': DateTime.now()
+          'lastInteraction': DateTime.now(),
+          'rating' : -1
         });
     print(ref.documentID);
   }

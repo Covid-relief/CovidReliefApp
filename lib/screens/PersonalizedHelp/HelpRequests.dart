@@ -166,8 +166,6 @@ class _HelpRequestsState extends State<HelpRequests>{
                         myPost,
                         myPost['category'], 
                         myPost['code'],
-                        myPost['contactMail'], 
-                        myPost['contactMessage'],
                         myPost['description'], 
                         myPost['email'],
                         myPost['name'], 
@@ -237,7 +235,7 @@ class _HelpRequestsState extends State<HelpRequests>{
     return FlutterOpenWhatsapp.sendSingleMessage('+502$phone', mess);
   }
 
-  Widget pendingRequests(DocumentSnapshot myPost, String category, int code, bool contactMail, bool contactMessage, String description, String email, String name, String phone, Timestamp lastInteraction, String helpGiverName, String helpGiverNumber, String helpGiverMail){
+  Widget pendingRequests(DocumentSnapshot myPost, String category, int code, String description, String email, String name, String phone, Timestamp lastInteraction, String helpGiverName, String helpGiverNumber, String helpGiverMail){
     var formatDate = new DateFormat('d MMM yyyy');
     String fecha = formatDate.format(lastInteraction.toDate());
 
