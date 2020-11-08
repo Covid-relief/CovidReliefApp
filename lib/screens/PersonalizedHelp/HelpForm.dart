@@ -37,8 +37,8 @@ class HelpFormState extends State<HelpForm>{
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Aviso'),
-          content: Text('Tu solicitud se publicará anónimamente durante 10 días en el tablero de solicitudes. '+
-                        'Si tu solicitud tiene interacciones y se mantiene activa se extenderá el tiempo de publicación para mantenerla activa'),
+          content: Text('Tu solicitud se publicará anónimamente durante 10 días en el tablero de ayuda personalizada. '+
+                        'Si tu solicitud tiene interacciones se extenderá el tiempo de publicación para mantenerla activa'),
             actions: <Widget>[
               FlatButton(
                 child: Text('Aceptar'),
