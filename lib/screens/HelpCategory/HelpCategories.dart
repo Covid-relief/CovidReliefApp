@@ -3,12 +3,13 @@ import 'package:CovidRelief/screens/HelpCategory/PersonalizedHelp.dart';
 import 'package:CovidRelief/screens/authenticate/authenticate.dart';
 import 'package:CovidRelief/screens/home/home.dart';
 import 'package:CovidRelief/screens/home/settings_form.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 import 'package:CovidRelief/services/auth.dart';
 import 'package:CovidRelief/services/database.dart';
 import 'package:provider/provider.dart';
 import 'package:CovidRelief/screens/home/user_profile.dart';
-
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 class Category extends StatelessWidget {
   final AuthService _auth = AuthService();
@@ -17,9 +18,18 @@ class Category extends StatelessWidget {
   Category({this.typeOfHelp});
   var categoryOfHelp;
 
+  static FirebaseAnalytics analytics = FirebaseAnalytics();
+  static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
+
   @override
  // State<StatefulWidget> createState() {
     Widget build(BuildContext context) {
+
+      Future<void> _sendAnalyticsEvent(String categoryClicked) async {
+        await analytics.logEvent(
+          name: 'click_'+categoryClicked
+        );
+      }
 
       return Scaffold(
             backgroundColor: Colors.white,
@@ -79,12 +89,6 @@ class Category extends StatelessWidget {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfile()),);
                   },
                 ),
-                //FlatButton.icon(
-                //  icon : Icon(Icons.settings),
-                // label: Text("Configuración"),
-                // onPressed:() => _showSettingsPanel(),
-                // ),
-
                 FlatButton.icon(
                   icon: Icon(Icons.person),
                   label: Text('Cerrar Sesión'),
@@ -120,6 +124,7 @@ class Category extends StatelessWidget {
                     shape: StadiumBorder(),
                     onPressed:() async {
                       categoryOfHelp='business';
+                      _sendAnalyticsEvent(categoryOfHelp);
                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Help(typeOfHelp:typeOfHelp, categoryOfHelp:categoryOfHelp)),);
                     },
                     child: new Text("Business", style: TextStyle(fontSize: 20)),
@@ -140,6 +145,7 @@ class Category extends StatelessWidget {
                     shape: StadiumBorder(),
                     onPressed:() {
                       categoryOfHelp='tecnología';
+                      _sendAnalyticsEvent(categoryOfHelp);
                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Help(typeOfHelp:typeOfHelp, categoryOfHelp:categoryOfHelp)),);
                     },
                     child: new Text("Tecnología", style: TextStyle(fontSize: 20)),
@@ -160,6 +166,7 @@ class Category extends StatelessWidget {
                     shape: StadiumBorder(),
                     onPressed:() async {
                       categoryOfHelp='medicina';
+                      _sendAnalyticsEvent(categoryOfHelp);
                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Help(typeOfHelp:typeOfHelp, categoryOfHelp:categoryOfHelp)),);
                     },
                     child: new Text("Medicina", style: TextStyle(fontSize: 20)),
@@ -180,6 +187,7 @@ class Category extends StatelessWidget {
                     shape: StadiumBorder(),
                     onPressed:() async {
                       categoryOfHelp='psicología';
+                      _sendAnalyticsEvent(categoryOfHelp);
                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Help(typeOfHelp:typeOfHelp, categoryOfHelp:categoryOfHelp)),);
                     },
                     child: new Text("Psicología", style: TextStyle(fontSize: 20)),
@@ -188,33 +196,8 @@ class Category extends StatelessWidget {
                 Container(
                   height: 100,
                 ),
-                // Container(
-                //     padding: EdgeInsets.fromLTRB(50,0,50,0),
-                //     child:
-                //     Column(
-                //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                //       children: [
-                //         Text('Para comunicarte con la facultad de medicina UFM, '
-                //             'llama al siguiente número', textAlign: TextAlign.center,),
-                //         RichText(text: TextSpan(
-                //             children: [
-                //               WidgetSpan(child: Icon(Icons.phone)),
-                //               TextSpan(
-                //                 text: '  2413 3235',
-                //                 style: TextStyle(color: Colors.black),
-                //               )
-                //             ]
-                //         ))
-                //       ],
-                //     )
-                // )
               ],
             )
-          // personal data from settings_form.dart
-          //HAY QUE DESARROLLAR EL HOME
-          // redirect to user profile
-          //UserProfile(), //UserList(),
-
       );
     }
   }

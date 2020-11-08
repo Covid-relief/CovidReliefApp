@@ -78,7 +78,7 @@ class _Help extends State<Help>{
               if(codeExists==-1 || codeExists==0){
                 return AlertDialog(
                   title: Text('Código no válido'),
-                  content: Text('Por favor ingresa un codigo válido'),
+                  content: Text('Por favor ingresa un código válido'),
                   actions: <Widget>[
                     FlatButton(
                       child: Text('Aceptar'),
@@ -313,7 +313,7 @@ class _Help extends State<Help>{
                       textAlign: TextAlign.center)),
             ),
             Container(
-              height: 200,
+              height: 170,
             ),
             evalHelp(),
           ],
