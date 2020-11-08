@@ -4,6 +4,7 @@ import 'package:CovidRelief/screens/home/home.dart';
 import 'package:CovidRelief/screens/home/user_profile.dart';
 import 'package:CovidRelief/services/auth.dart';
 import 'package:CovidRelief/shared/constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:CovidRelief/screens/HelpCategory/ShowPdf.dart';
 import 'package:CovidRelief/screens/give_help/generalHelp.dart';
@@ -12,12 +13,20 @@ import 'package:CovidRelief/screens/PersonalizedHelp/GivePersonalizedHelp.dart';
 import 'package:CovidRelief/screens/PersonalizedHelp/HelpRequests.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
-class Help extends StatelessWidget {
+class Help extends StatefulWidget {
+  String typeOfHelp;
+  String categoryOfHelp;
+  Help({this.typeOfHelp, this.categoryOfHelp});
+
+@override
+  _Help createState() =>_Help(typeOfHelp:typeOfHelp, categoryOfHelp:categoryOfHelp);
+}
+class _Help extends State<Help>{
   final AuthService _auth = AuthService();
 
   String typeOfHelp;
   String categoryOfHelp;
-  Help({this.typeOfHelp, this.categoryOfHelp});
+  _Help({this.typeOfHelp, this.categoryOfHelp});
 
   String tituloPantalla(){
     if(typeOfHelp=='quiero ayudar'){
@@ -27,7 +36,7 @@ class Help extends StatelessWidget {
     }
   }
 
-  var rating = 3.0;
+  String myRatingCode;
 
   @override
   // State<StatefulWidget> createState() {
@@ -47,29 +56,50 @@ class Help extends StatelessWidget {
     }
 
     starsEval(String code){
+      print('El codigo ingresado es: '+code);
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Calificar ayuda personalizada recibida'),
-            content: Stack(
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    SmoothStarRating(
-                    rating: rating,
-                    size: 30,
-                    starCount: 5
-                  ),
+          return StreamBuilder(
+            stream: Firestore.instance.collection('solicitarayuda').where("code", isEqualTo: code).where("category", isEqualTo: categoryOfHelp).snapshots(),
+            builder: (context, snapshot){
+              print('inside builder');
+              // si no existe el codigo se abre una ventana de error
+              if(!snapshot.hasData){
+                return AlertDialog(
+                  title: Text('Código no válido'),
+                  content: Text('Por favor ingresa un codigo válido'),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text('Aceptar'),
+                      onPressed: () {Navigator.pop(context);},
+                    ),
                   ],
-                ),
-              ],),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text('Enviar'),
-                  onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => Home()),);},
-                ),
-              ],
+                );
+              }else{
+                return AlertDialog(
+                  title: Text('Calificar ayuda personalizada recibida'),
+                  content: Stack(
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          SmoothStarRating(
+                          rating: 3.0,
+                          size: 30,
+                          starCount: 5
+                        ),
+                        ],
+                      ),
+                    ],),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text('Enviar'),
+                      onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => Home()),);},
+                    ),
+                  ],
+                );
+              }
+            },
           );
       });
     }
@@ -82,18 +112,21 @@ class Help extends StatelessWidget {
             title: Text('Calificar ayuda personalizada recibida'),
             content: Stack(
               children: <Widget>[
-                TextField(
-                  decoration: InputDecoration(
-                    icon: Icon(Icons.code),
-                    labelText: 'Ingresa tu código de ayuda recibida',
-                  ),
-                onChanged: null,
-                ),
-              ],),
-              actions: <Widget>[ // checar si el codigo existe
+                Form(
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      icon: Icon(Icons.code),
+                      labelText: 'Ingresa tu código de ayuda recibida',
+                    ),
+                    validator: (val) => val.isEmpty ? 'Ingrese un código de ayuda' : null,
+                    onChanged: (val) {setState(() => myRatingCode = val);},
+                  ),)
+              ],
+              ),
+              actions: <Widget>[
                 FlatButton(
                   child: Text('Evaluar'),
-                  onPressed: () {starsEval("code");},
+                  onPressed: () {starsEval(myRatingCode);},
                 ),
               ],
           );
