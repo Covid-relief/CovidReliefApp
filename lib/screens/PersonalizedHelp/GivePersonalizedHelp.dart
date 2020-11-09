@@ -75,21 +75,24 @@ class _GivePersonalizedHelpState extends State<GivePersonalizedHelp>{
 
   // APP LAYER?
   Widget _buildForm(String uid) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: <Widget>[
-        SizedBox(height: 30.0,),
-        _buildDisclaimer(),
-        SizedBox(height: 30.0,),
-        _buildNameField(),
-        SizedBox(height: 25.0,),
-        _buildEmailField(),
-        SizedBox(height: 25.0,),
-        _buildPhoneField(),
-        SizedBox(height: 25.0,),
-        SizedBox(height: 15.0,),
-        _buildSubmitButton(uid),
-      ],
+    return Form(
+      key: _formKey,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          SizedBox(height: 30.0,),
+          _buildDisclaimer(),
+          SizedBox(height: 30.0,),
+          _buildNameField(),
+          SizedBox(height: 25.0,),
+          _buildEmailField(),
+          SizedBox(height: 25.0,),
+          _buildPhoneField(),
+          SizedBox(height: 25.0,),
+          SizedBox(height: 15.0,),
+          _buildSubmitButton(uid),
+        ],
+      )
     );
   }
 
@@ -185,8 +188,11 @@ class _GivePersonalizedHelpState extends State<GivePersonalizedHelp>{
           color: Colors.blueAccent,
           shape: StadiumBorder(),
           onPressed: () {
-            _submitForm(uid);
-          Navigator.push(context, MaterialPageRoute(builder: (context) => HelpRequests(categoryOfHelp: categoryOfHelp)),);},
+            if(_formKey.currentState.validate()){
+              _submitForm(uid);
+              Navigator.push(context, MaterialPageRoute(builder: (context) => HelpRequests(categoryOfHelp: categoryOfHelp)),);
+            }
+          },
           child: Text('Empezar a apoyar', textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: 20),),
         ),
     );

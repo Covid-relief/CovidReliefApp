@@ -5,6 +5,8 @@ import 'package:CovidRelief/screens/home/user_profile.dart';
 import 'package:CovidRelief/services/auth.dart';
 import 'package:CovidRelief/shared/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 import 'package:CovidRelief/screens/HelpCategory/ShowPdf.dart';
 import 'package:CovidRelief/screens/give_help/generalHelp.dart';
@@ -38,6 +40,9 @@ class _Help extends State<Help>{
 
   String myRatingCode;
 
+  static FirebaseAnalytics analytics = FirebaseAnalytics();
+  static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
+
   @override
   // State<StatefulWidget> createState() {
   Widget build(BuildContext context) {
@@ -57,6 +62,18 @@ class _Help extends State<Help>{
 
     changeRating(DocumentSnapshot registro, double newVal) async {
       await Firestore.instance.collection('solicitarayuda').document(registro.documentID).updateData({'rating': newVal.toString()});
+    }
+
+    Future<void> _sendAnalyticsEventStars() async {
+      await analytics.logEvent(
+        name: 'five_star_eval'
+      );
+    }
+
+    Future<void> _sendAnalyticsEventTypeOfHelp(String category, String type, String detail) async {
+      await analytics.logEvent(
+        name: 'event_'+type.replaceAll(' ', '')+'_'+category+'_'+detail
+      );
     }
 
     starsEval(String code){
@@ -99,6 +116,9 @@ class _Help extends State<Help>{
                           starCount: 5,
                           allowHalfRating: false,
                           onRated : (value) {
+                            if(value==5.0){
+                              _sendAnalyticsEventStars();
+                            }
                             changeRating(myRequest, value);
                           },
                         ),
@@ -118,6 +138,14 @@ class _Help extends State<Help>{
       });
     }
 
+    Future<void> _sendAnalyticsEvent() async {
+      await analytics.logEvent(
+        name: 'eval_personalized_help'
+      );
+    }
+
+    final _formKey = GlobalKey<FormState>();
+
     openEval(){ 
       showDialog(
         context: context,
@@ -127,6 +155,7 @@ class _Help extends State<Help>{
             content: Stack(
               children: <Widget>[
                 Form(
+                  key: _formKey,
                   child: TextFormField(
                     decoration: InputDecoration(
                       icon: Icon(Icons.code),
@@ -140,7 +169,12 @@ class _Help extends State<Help>{
               actions: <Widget>[
                 FlatButton(
                   child: Text('Evaluar'),
-                  onPressed: () {starsEval(myRatingCode);},
+                  onPressed: () {
+                    if(_formKey.currentState.validate()){
+                      _sendAnalyticsEvent();
+                      starsEval(myRatingCode);
+                    }
+                  },
                 ),
               ],
           );
@@ -269,11 +303,11 @@ class _Help extends State<Help>{
               padding: EdgeInsets.fromLTRB(70, 0, 70, 0),
               child: RaisedButton(
                 padding: const EdgeInsets.all(2.0),
-                //elevation: 5.0,
                 textColor: Colors.white,
                 shape: StadiumBorder(),
                 color: Colors.blueAccent,
                 onPressed: () async {
+                  _sendAnalyticsEventTypeOfHelp(categoryOfHelp, typeOfHelp, 'general');
                   if(typeOfHelp=='quiero ayudar'){
                     Navigator.push(context, MaterialPageRoute(builder: (context) => PostHelp(typeOfHelp: typeOfHelp, categoryOfHelp: categoryOfHelp)),);
                   }else{
@@ -302,6 +336,7 @@ class _Help extends State<Help>{
                   color: Colors.blueAccent,
                   shape: StadiumBorder(),
                   onPressed: () async {
+                    _sendAnalyticsEventTypeOfHelp(categoryOfHelp, typeOfHelp, 'personal');
                     if(typeOfHelp!='quiero ayudar'){
                       Navigator.push(context,MaterialPageRoute(builder: (context) => HelpForm(categoryOfHelp:categoryOfHelp)),);
                     }else{

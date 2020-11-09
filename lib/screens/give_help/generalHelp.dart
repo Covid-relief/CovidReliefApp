@@ -221,9 +221,9 @@ class _PostHelpState extends State<PostHelp> {
                       child: Column(
                         children: <Widget>[
                           MaterialButton(
-                            onPressed: () => pickFile(),
-                            color: styleArchivo(archivo),
-                            textColor: Colors.white,
+                            onPressed: null, //() => pickFile(),
+                            disabledColor: Colors.grey, //styleArchivo(archivo),
+                            disabledTextColor: Colors.white,
                             child: Icon(
                               Icons.archive,
                               size: 24,
@@ -232,7 +232,9 @@ class _PostHelpState extends State<PostHelp> {
                           ),
                           SizedBox(height: 5.0),
                           Container(
-                            child: Text('Documento')
+                            child: Text('Documento',
+                              style: TextStyle(color: Colors.grey),
+                            )
                         ),
                         ],
                       )
