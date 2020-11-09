@@ -16,8 +16,9 @@ class Home extends StatefulWidget {
   @override
   _Home createState() => _Home();
 }
-class _Home extends State<Home>{
-  bool newNotifs=false;
+
+class _Home extends State<Home> {
+  bool newNotifs = false;
 
   final AuthService _auth = AuthService();
   var typeOfHelp;
@@ -49,22 +50,22 @@ class _Home extends State<Home>{
     }
   }
 
-  Future getNotifs()async{
-    setState((){
+  Future getNotifs() async {
+    setState(() {
       newNotifs = true;
     });
   }
 
-  Widget myNotif(myNotif){
-    if(myNotif){
+  Widget myNotif(myNotif) {
+    if (myNotif) {
       return RaisedButton(
         textColor: Colors.white,
         color: Colors.red,
         shape: StadiumBorder(),
         onPressed: () => null,
         child: Text("Nuevos posts", textAlign: TextAlign.end),
-      );      
-    }else{
+      );
+    } else {
       return Container();
     }
   }
@@ -87,7 +88,7 @@ class _Home extends State<Home>{
       },
     );
     _firebaseMessaging.requestNotificationPermissions(
-      const IosNotificationSettings(sound: true, badge:true, alert:true),
+      const IosNotificationSettings(sound: true, badge: true, alert: true),
     );
     return StreamProvider<List<Perfiles>>.value(
       value: DatabaseService().perfiles,
@@ -207,7 +208,7 @@ class _Home extends State<Home>{
               ),
               Container(
                 height: 70,
-                padding: EdgeInsets.fromLTRB(70, 0, 70, 0),
+                padding: EdgeInsets.fromLTRB(80, 0, 80, 0),
                 child: RaisedButton(
                   padding: const EdgeInsets.all(2.0),
                   textColor: Colors.white,
@@ -234,37 +235,39 @@ class _Home extends State<Home>{
               Container(
                 height: 15,
               ),
-              Stack(children: <Widget>[
-                Container(
-                  height: 70,
-                  padding: EdgeInsets.fromLTRB(70, 0, 70, 0),
-                  child: RaisedButton(
-                    padding: EdgeInsets.fromLTRB(41, 0, 41, 0), //const EdgeInsets.all(2.0),
-                    textColor: Colors.white,
-                    color: Colors.blueAccent,
-                    shape: StadiumBorder(),
-                    onPressed: () {
-                      typeOfHelp = 'necesito ayuda';
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute( builder: (context) => Category(typeOfHelp: typeOfHelp)), );
-                    },
-                    child: new Text(
-                      "Necesito ayuda",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontFamily: 'Open Sans',
+              Stack(
+                children: <Widget>[
+                  Container(
+                    height: 70,
+                    padding: EdgeInsets.fromLTRB(80, 0, 80, 0),
+                    child: RaisedButton(
+                      padding: EdgeInsets.fromLTRB(
+                          41, 0, 41, 0), //const EdgeInsets.all(2.0),
+                      textColor: Colors.white,
+                      color: Colors.blueAccent,
+                      shape: StadiumBorder(),
+                      onPressed: () {
+                        typeOfHelp = 'necesito ayuda';
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  Category(typeOfHelp: typeOfHelp)),
+                        );
+                      },
+                      child: new Text(
+                        "Necesito ayuda",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontFamily: 'Open Sans',
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Positioned(
-                  child: myNotif(newNotifs),
-                  right: 20,
-                  top:0
-                ),
-              ],),
+                  Positioned(child: myNotif(newNotifs), right: 20, top: 0),
+                ],
+              ),
               Container(
                 height: 40,
               ),
