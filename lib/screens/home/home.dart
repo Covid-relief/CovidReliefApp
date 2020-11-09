@@ -241,8 +241,7 @@ class _Home extends State<Home> {
                     height: 70,
                     padding: EdgeInsets.fromLTRB(80, 0, 80, 0),
                     child: RaisedButton(
-                      padding: EdgeInsets.fromLTRB(
-                          41, 0, 41, 0), //const EdgeInsets.all(2.0),
+                      padding: EdgeInsets.fromLTRB(41, 0, 41, 0), //const EdgeInsets.all(2.0),
                       textColor: Colors.white,
                       color: Colors.blueAccent,
                       shape: StadiumBorder(),

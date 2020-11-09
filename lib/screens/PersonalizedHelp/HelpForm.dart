@@ -82,22 +82,25 @@ class HelpFormState extends State<HelpForm>{
 // _buildForm()
   // APP LAYER?
   Widget _buildForm() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: <Widget>[
-        SizedBox(height: 30.0,),
-        _buildDisclaimer(),
-        SizedBox(height: 30.0,),
-        _buildNameField(),
-        SizedBox(height: 25.0,),
-        _buildEmailField(),
-        SizedBox(height: 25.0,),
-        _buildPhoneField(),
-        SizedBox(height: 25.0,),
-        _buildProblemField(),
-        SizedBox(height: 15.0,),
-        _buildSubmitButton(),
-      ],
+    return Form(
+      key: _formKey,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          SizedBox(height: 30.0,),
+          _buildDisclaimer(),
+          SizedBox(height: 30.0,),
+          _buildNameField(),
+          SizedBox(height: 25.0,),
+          _buildEmailField(),
+          SizedBox(height: 25.0,),
+          _buildPhoneField(),
+          SizedBox(height: 25.0,),
+          _buildProblemField(),
+          SizedBox(height: 15.0,),
+          _buildSubmitButton(),
+        ],
+      )
     );
   }
 
@@ -200,7 +203,7 @@ class HelpFormState extends State<HelpForm>{
           fillColor: Color(0xFFF5F5F5),
           filled: true
         ),
-        validator: (valdescription) => valdescription.isEmpty ? 'Por favor ingrese su número de teléfono' : null,
+        validator: (valdescription) => valdescription.isEmpty ? 'Por favor ingrese su problema' : null,
         onChanged: (valdescription) => setState(() => _formDescription = valdescription),
       ),
     );
@@ -215,7 +218,11 @@ class HelpFormState extends State<HelpForm>{
           padding: const EdgeInsets.symmetric(horizontal: 35),
           color: Colors.blueAccent,
           shape: StadiumBorder(),
-          onPressed: () async {openPopup();},
+          onPressed: () async {
+            if (_formKey.currentState.validate()) {
+              openPopup();
+            }            
+          },
           child: Text('Enviar Solicitud',style: TextStyle(color: Colors.white, fontSize: 20),),
         ),
     );

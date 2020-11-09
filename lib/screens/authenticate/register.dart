@@ -163,11 +163,12 @@ class _RegisterState extends State<Register> {
               ),
               SizedBox(height: 5.0),
               GoogleSignInButton(
-                onPressed: () async {
+                onPressed: null /*() async {
                   _auth.signInWithGoogle();
-                },
+                },*/
               ),
               FacebookSignInButton(
+                onPressed: null,
               ),
               Text(
                 error,
