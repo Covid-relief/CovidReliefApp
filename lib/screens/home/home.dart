@@ -256,6 +256,7 @@ class _Home extends State<Home> {
                       },
                       child: new Text(
                         "Necesito ayuda",
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 20,
