@@ -1,5 +1,6 @@
 import 'package:CovidRelief/screens/home/user_profile.dart';
 import 'package:CovidRelief/services/database.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:CovidRelief/shared/constants.dart';
 import 'package:CovidRelief/models/user.dart';
@@ -254,6 +255,8 @@ class _UserDataFormState extends State<UserDataForm> {
                             _currentState ?? 'state',
                             _currenType ?? userData.type,
                           );
+                          FirebaseMessaging firebaseMess = new FirebaseMessaging();
+                          firebaseMess.subscribeToTopic("publicaciones");
                           // redirect to profile page
                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
                         }

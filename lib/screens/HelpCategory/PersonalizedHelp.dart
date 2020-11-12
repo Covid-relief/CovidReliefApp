@@ -4,6 +4,9 @@ import 'package:CovidRelief/screens/home/home.dart';
 import 'package:CovidRelief/screens/home/user_profile.dart';
 import 'package:CovidRelief/services/auth.dart';
 import 'package:CovidRelief/shared/constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 import 'package:CovidRelief/screens/HelpCategory/ShowPdf.dart';
 import 'package:CovidRelief/screens/give_help/generalHelp.dart';
@@ -12,12 +15,20 @@ import 'package:CovidRelief/screens/PersonalizedHelp/GivePersonalizedHelp.dart';
 import 'package:CovidRelief/screens/PersonalizedHelp/HelpRequests.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
-class Help extends StatelessWidget {
+class Help extends StatefulWidget {
+  String typeOfHelp;
+  String categoryOfHelp;
+  Help({this.typeOfHelp, this.categoryOfHelp});
+
+@override
+  _Help createState() =>_Help(typeOfHelp:typeOfHelp, categoryOfHelp:categoryOfHelp);
+}
+class _Help extends State<Help>{
   final AuthService _auth = AuthService();
 
   String typeOfHelp;
   String categoryOfHelp;
-  Help({this.typeOfHelp, this.categoryOfHelp});
+  _Help({this.typeOfHelp, this.categoryOfHelp});
 
   String tituloPantalla(){
     if(typeOfHelp=='quiero ayudar'){
@@ -27,7 +38,10 @@ class Help extends StatelessWidget {
     }
   }
 
-  var rating = 3.0;
+  String myRatingCode;
+
+  static FirebaseAnalytics analytics = FirebaseAnalytics();
+  static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
 
   @override
   // State<StatefulWidget> createState() {
@@ -46,33 +60,91 @@ class Help extends StatelessWidget {
       }
     }
 
+    changeRating(DocumentSnapshot registro, double newVal) async {
+      await Firestore.instance.collection('solicitarayuda').document(registro.documentID).updateData({'rating': newVal.toString()});
+    }
+
+    Future<void> _sendAnalyticsEventStars() async {
+      await analytics.logEvent(
+        name: 'five_star_eval'
+      );
+    }
+
+    Future<void> _sendAnalyticsEventTypeOfHelp(String category, String type, String detail) async {
+      await analytics.logEvent(
+        name: 'event_'+type.replaceAll(' ', '')+'_'+category+'_'+detail
+      );
+    }
+
     starsEval(String code){
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Calificar ayuda personalizada recibida'),
-            content: Stack(
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    SmoothStarRating(
-                    rating: rating,
-                    size: 30,
-                    starCount: 5
-                  ),
+          return StreamBuilder(
+            stream: Firestore.instance.collection('solicitarayuda').where("category", isEqualTo: categoryOfHelp).where("code", isEqualTo: int.parse(code)).snapshots(),
+            builder: (context, snapshot){
+              int codeExists;
+              DocumentSnapshot myRequest;
+              try{
+                codeExists =  snapshot.data.documents.length;
+                myRequest = snapshot.data.documents[0];
+              }catch(e){
+                codeExists = -1;
+              }
+              // si no existe el codigo se abre una ventana de error
+              if(codeExists==-1 || codeExists==0){
+                return AlertDialog(
+                  title: Text('Código no válido'),
+                  content: Text('Por favor ingresa un código válido'),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text('Aceptar'),
+                      onPressed: () {Navigator.pop(context);},
+                    ),
                   ],
-                ),
-              ],),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text('Enviar'),
-                  onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => Home()),);},
-                ),
-              ],
+                );
+              }else{
+                return AlertDialog(
+                  title: Text('Calificar ayuda personalizada recibida'),
+                  content: Stack(
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          SmoothStarRating(
+                          rating: 3.0,
+                          size: 30,
+                          starCount: 5,
+                          allowHalfRating: false,
+                          onRated : (value) {
+                            if(value==5.0){
+                              _sendAnalyticsEventStars();
+                            }
+                            changeRating(myRequest, value);
+                          },
+                        ),
+                        ],
+                      ),
+                    ],),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text('Enviar'),
+                      onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => Home()),);},
+                    ),
+                  ],
+                );
+              }
+            },
           );
       });
     }
+
+    Future<void> _sendAnalyticsEvent() async {
+      await analytics.logEvent(
+        name: 'eval_personalized_help'
+      );
+    }
+
+    final _formKey = GlobalKey<FormState>();
 
     openEval(){ 
       showDialog(
@@ -82,18 +154,27 @@ class Help extends StatelessWidget {
             title: Text('Calificar ayuda personalizada recibida'),
             content: Stack(
               children: <Widget>[
-                TextField(
-                  decoration: InputDecoration(
-                    icon: Icon(Icons.code),
-                    labelText: 'Ingresa tu código de ayuda recibida',
-                  ),
-                onChanged: null,
-                ),
-              ],),
-              actions: <Widget>[ // checar si el codigo existe
+                Form(
+                  key: _formKey,
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      icon: Icon(Icons.code),
+                      labelText: 'Ingresa tu código de ayuda recibida',
+                    ),
+                    validator: (val) => val.isEmpty ? 'Ingrese un código de ayuda' : null,
+                    onChanged: (val) {setState(() => myRatingCode = val);},
+                  ),)
+              ],
+              ),
+              actions: <Widget>[
                 FlatButton(
                   child: Text('Evaluar'),
-                  onPressed: () {starsEval("code");},
+                  onPressed: () {
+                    if(_formKey.currentState.validate()){
+                      _sendAnalyticsEvent();
+                      starsEval(myRatingCode);
+                    }
+                  },
                 ),
               ],
           );
@@ -222,11 +303,11 @@ class Help extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(70, 0, 70, 0),
               child: RaisedButton(
                 padding: const EdgeInsets.all(2.0),
-                //elevation: 5.0,
                 textColor: Colors.white,
                 shape: StadiumBorder(),
                 color: Colors.blueAccent,
                 onPressed: () async {
+                  _sendAnalyticsEventTypeOfHelp(categoryOfHelp, typeOfHelp, 'general');
                   if(typeOfHelp=='quiero ayudar'){
                     Navigator.push(context, MaterialPageRoute(builder: (context) => PostHelp(typeOfHelp: typeOfHelp, categoryOfHelp: categoryOfHelp)),);
                   }else{
@@ -255,6 +336,7 @@ class Help extends StatelessWidget {
                   color: Colors.blueAccent,
                   shape: StadiumBorder(),
                   onPressed: () async {
+                    _sendAnalyticsEventTypeOfHelp(categoryOfHelp, typeOfHelp, 'personal');
                     if(typeOfHelp!='quiero ayudar'){
                       Navigator.push(context,MaterialPageRoute(builder: (context) => HelpForm(categoryOfHelp:categoryOfHelp)),);
                     }else{
@@ -266,7 +348,7 @@ class Help extends StatelessWidget {
                       textAlign: TextAlign.center)),
             ),
             Container(
-              height: 200,
+              height: 170,
             ),
             evalHelp(),
           ],

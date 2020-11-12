@@ -39,8 +39,7 @@ class _SignInState extends State<SignIn> {
   }
 
   bool rememberMe = false;
-  final storage =
-      new FlutterSecureStorage(); // function to store password in KeyStore
+  final storage = new FlutterSecureStorage(); // function to store password in KeyStore
 
   final AuthService _auth = AuthService();
   final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -196,23 +195,22 @@ class _SignInState extends State<SignIn> {
               SizedBox(height: 5.0),
               // Google Sign In button
               GoogleSignInButton(
-
-                onPressed: () async {
-                  /*if (_formKey.currentState.validate()) {
+                onPressed: null /*() async {
+                  if (_formKey.currentState.validate()) {
                     dynamic result = await _auth.signInWithGoogle();
                     if (result == null) {
                       setState(() {
                         error = 'No es posible Iniciar Sesión';
                       });
                     }
-                  }*/
+                  }
                   _auth.signInWithGoogle();
-                },
+                },*/
               ),
               // Facebook login button
               FacebookSignInButton(
                 // calls function
-                onPressed: _loginWithFacebook,
+                onPressed: null //_loginWithFacebook,
               ),
               SizedBox(height: 12.0),
               Text(

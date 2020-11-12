@@ -58,7 +58,7 @@ uploadFiles(titulo, descripcion, categoria, keywords, video, archivo, link, user
     var fileName = (completePath.split('/').last).split('.').last;
     var ext =  fileName.substring(0, fileName.length-1);
 
-    final StorageUploadTask uploadArc = myPost.child(timeKey.toString() + 'arc.' +ext).putFile(archivo);
+    final StorageUploadTask uploadArc = myPost.child(timeKey.toString() +"arc."+ ext).putFile(archivo);
     var arcUrl = await (await uploadArc.onComplete).ref.getDownloadURL();
     arc = arcUrl.toString();
 

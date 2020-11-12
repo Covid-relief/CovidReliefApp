@@ -35,8 +35,29 @@ class UserProfile extends StatelessWidget {
 
         return Scaffold(
           appBar: AppBar(
-            title: Text('Perfil'),
-            backgroundColor: Colors.cyan[700],
+            flexibleSpace: Container(
+              decoration: new BoxDecoration(
+                gradient: new LinearGradient(
+                  colors: [
+                    const Color(0xFFFF5252),
+                    const Color(0xFFFF1744)
+                  ],
+                  begin: const FractionalOffset(0.0, 0.0),
+                  end: const FractionalOffset(0.5, 0.0),
+                  stops: [0.0, 0.5],
+                  tileMode: TileMode.clamp
+                ),
+              ),
+            ),
+            title: Text('Perfil',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w800,
+                fontStyle: FontStyle.italic,
+                fontFamily: 'Montserrat',
+                fontSize: 25
+              ),
+              ),
           ),
           drawer: Drawer(
             child: ListView(
@@ -91,7 +112,7 @@ class UserProfile extends StatelessWidget {
                   // Circle for profile picture
                     CircleAvatar(
                       radius: 50.0,
-                      backgroundColor: Colors.lightBlue[900]
+                      backgroundColor: Colors.blue[300]
                     ),
                     SizedBox(height: 20.0),
                     // Diplay name
