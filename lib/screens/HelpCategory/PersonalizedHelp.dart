@@ -1,22 +1,34 @@
-import 'package:CovidRelief/screens/HelpCategory/HelpForm.dart';
+import 'package:CovidRelief/screens/PersonalizedHelp/HelpForm.dart';
 import 'package:CovidRelief/screens/authenticate/authenticate.dart';
 import 'package:CovidRelief/screens/home/home.dart';
 import 'package:CovidRelief/screens/home/user_profile.dart';
 import 'package:CovidRelief/services/auth.dart';
+import 'package:CovidRelief/shared/constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 import 'package:CovidRelief/screens/HelpCategory/ShowPdf.dart';
 import 'package:CovidRelief/screens/give_help/generalHelp.dart';
 import 'package:CovidRelief/screens/HelpCategory/ShowGeneralHelpPost.dart';
+import 'package:CovidRelief/screens/PersonalizedHelp/GivePersonalizedHelp.dart';
+import 'package:CovidRelief/screens/PersonalizedHelp/HelpRequests.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 
-import '../give_help/generalHelp.dart';
-import 'HelpForm.dart';
+class Help extends StatefulWidget {
+  String typeOfHelp;
+  String categoryOfHelp;
+  Help({this.typeOfHelp, this.categoryOfHelp});
 
-class Help extends StatelessWidget {
+@override
+  _Help createState() =>_Help(typeOfHelp:typeOfHelp, categoryOfHelp:categoryOfHelp);
+}
+class _Help extends State<Help>{
   final AuthService _auth = AuthService();
 
   String typeOfHelp;
   String categoryOfHelp;
-  Help({this.typeOfHelp, this.categoryOfHelp});
+  _Help({this.typeOfHelp, this.categoryOfHelp});
 
   String tituloPantalla(){
     if(typeOfHelp=='quiero ayudar'){
@@ -26,6 +38,11 @@ class Help extends StatelessWidget {
     }
   }
 
+  String myRatingCode;
+
+  static FirebaseAnalytics analytics = FirebaseAnalytics();
+  static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
+
   @override
   // State<StatefulWidget> createState() {
   Widget build(BuildContext context) {
@@ -33,11 +50,152 @@ class Help extends StatelessWidget {
     Widget showMyGuide(){
       if (typeOfHelp=='quiero ayudar'){
         return GestureDetector(
-                    child: Text("Guía para dar consejos generales",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(decoration: TextDecoration.underline, color: Colors.blue)),
-                    onTap: () async {Navigator.push(context,MaterialPageRoute(builder: (context) => PDF()),);
-                });
+          child: Text("Guía para dar consejos generales",
+              textAlign: TextAlign.center,
+              style: TextStyle(decoration: TextDecoration.underline, color: Colors.blue)),
+          onTap: () async {Navigator.push(context,MaterialPageRoute(builder: (context) => PDF()),);
+      });
+      }else{
+        return SizedBox();
+      }
+    }
+
+    changeRating(DocumentSnapshot registro, double newVal) async {
+      await Firestore.instance.collection('solicitarayuda').document(registro.documentID).updateData({'rating': newVal.toString()});
+    }
+
+    Future<void> _sendAnalyticsEventStars() async {
+      await analytics.logEvent(
+        name: 'five_star_eval'
+      );
+    }
+
+    Future<void> _sendAnalyticsEventTypeOfHelp(String category, String type, String detail) async {
+      await analytics.logEvent(
+        name: 'event_'+type.replaceAll(' ', '')+'_'+category+'_'+detail
+      );
+    }
+
+    starsEval(String code){
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return StreamBuilder(
+            stream: Firestore.instance.collection('solicitarayuda').where("category", isEqualTo: categoryOfHelp).where("code", isEqualTo: int.parse(code)).snapshots(),
+            builder: (context, snapshot){
+              int codeExists;
+              DocumentSnapshot myRequest;
+              try{
+                codeExists =  snapshot.data.documents.length;
+                myRequest = snapshot.data.documents[0];
+              }catch(e){
+                codeExists = -1;
+              }
+              // si no existe el codigo se abre una ventana de error
+              if(codeExists==-1 || codeExists==0){
+                return AlertDialog(
+                  title: Text('Código no válido'),
+                  content: Text('Por favor ingresa un código válido'),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text('Aceptar'),
+                      onPressed: () {Navigator.pop(context);},
+                    ),
+                  ],
+                );
+              }else{
+                return AlertDialog(
+                  title: Text('Calificar ayuda personalizada recibida'),
+                  content: Stack(
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          SmoothStarRating(
+                          rating: 3.0,
+                          size: 30,
+                          starCount: 5,
+                          allowHalfRating: false,
+                          onRated : (value) {
+                            if(value==5.0){
+                              _sendAnalyticsEventStars();
+                            }
+                            changeRating(myRequest, value);
+                          },
+                        ),
+                        ],
+                      ),
+                    ],),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text('Enviar'),
+                      onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => Home()),);},
+                    ),
+                  ],
+                );
+              }
+            },
+          );
+      });
+    }
+
+    Future<void> _sendAnalyticsEvent() async {
+      await analytics.logEvent(
+        name: 'eval_personalized_help'
+      );
+    }
+
+    final _formKey = GlobalKey<FormState>();
+
+    openEval(){ 
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Calificar ayuda personalizada recibida'),
+            content: Stack(
+              children: <Widget>[
+                Form(
+                  key: _formKey,
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      icon: Icon(Icons.code),
+                      labelText: 'Ingresa tu código de ayuda recibida',
+                    ),
+                    validator: (val) => val.isEmpty ? 'Ingrese un código de ayuda' : null,
+                    onChanged: (val) {setState(() => myRatingCode = val);},
+                  ),)
+              ],
+              ),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Evaluar'),
+                  onPressed: () {
+                    if(_formKey.currentState.validate()){
+                      _sendAnalyticsEvent();
+                      starsEval(myRatingCode);
+                    }
+                  },
+                ),
+              ],
+          );
+      });
+    }
+
+    Widget evalHelp(){
+      if(typeOfHelp!='quiero ayudar'){
+        return Row(children: <Widget>[
+          FlatButton.icon(
+          color: Colors.yellow[600],
+          icon: Icon(Icons.star_half),
+          label: Text('Evaluar ayuda recibida'),
+          onPressed: () => openEval(),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18.0),
+          ),
+          ),
+        ],
+        mainAxisAlignment: MainAxisAlignment.end,
+        );
       }else{
         return SizedBox();
       }
@@ -46,6 +204,20 @@ class Help extends StatelessWidget {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
+          flexibleSpace: Container(
+                decoration: new BoxDecoration(
+                  gradient: new LinearGradient(
+                    colors: [
+                      const Color(0xFFFF5252),
+                      const Color(0xFFFF1744)
+                    ],
+                    begin: const FractionalOffset(0.0, 0.0),
+                    end: const FractionalOffset(0.5, 0.0),
+                    stops: [0.0, 0.5],
+                    tileMode: TileMode.clamp
+                  ),
+                ),
+              ),
           title: Text(
             'Covid Relief',
             style: TextStyle(
@@ -55,24 +227,34 @@ class Help extends StatelessWidget {
                 fontFamily: 'Open Sans',
                 fontSize: 25),
           ),
-          backgroundColor: Colors.lightBlue[900],
-          elevation: 0.0,
+          //backgroundColor: Colors.lightBlue[900],
         ),
         drawer: Drawer(
           child: ListView(
             children: [
               DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Colors.lightBlue[900],
+                  decoration: BoxDecoration(
+                    color: Colors.redAccent[400],
+                  ),
+                  child: Text(
+                    'Covid Relief', 
+                    style: TextStyle(
+                      height: 5.0,
+                      color: Colors.white,
+                      fontSize: 30,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: 'Open Sans',
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
                 ),
-              ),
               ListTile(
                 leading: Icon(Icons.account_circle),
                 title: Text(
                   'Inicio',
                 ),
                 onTap: () async {
-                  Navigator.pushReplacement(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => Home()),
                   );
@@ -84,7 +266,7 @@ class Help extends StatelessWidget {
                   'Perfil',
                 ),
                 onTap: () async {
-                  Navigator.pushReplacement(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => UserProfile()),
                   );
@@ -96,7 +278,7 @@ class Help extends StatelessWidget {
                 label: Text('Cerrar Sesión'),
                 onPressed: () async {
                   await _auth.signOut();
-                  Navigator.pushReplacement(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => Authenticate()),
                   );
@@ -108,6 +290,7 @@ class Help extends StatelessWidget {
         body: ListView(
           padding: const EdgeInsets.all(15),
           children: <Widget>[
+            Container(height: 50),
             Container(
               height: 90,
               child: new Center(child: Text(tituloPantalla(), style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold))),
@@ -116,71 +299,58 @@ class Help extends StatelessWidget {
               height: 20,
             ),
             Container(
-              height: 120,
-              padding: EdgeInsets.fromLTRB(70, 0, 70, 5),
+              height: 70,
+              padding: EdgeInsets.fromLTRB(70, 0, 70, 0),
               child: RaisedButton(
-                padding: const EdgeInsets.all(0.0),
+                padding: const EdgeInsets.all(2.0),
                 textColor: Colors.white,
-                color: Colors.teal[200],
+                shape: StadiumBorder(),
+                color: Colors.blueAccent,
                 onPressed: () async {
+                  _sendAnalyticsEventTypeOfHelp(categoryOfHelp, typeOfHelp, 'general');
                   if(typeOfHelp=='quiero ayudar'){
                     Navigator.push(context, MaterialPageRoute(builder: (context) => PostHelp(typeOfHelp: typeOfHelp, categoryOfHelp: categoryOfHelp)),);
-                  }
-                  //Aquí empecé a programar
-                  else
-                  {
+                  }else{
                     Navigator.push(context, MaterialPageRoute(builder: (context) => ViewPosts(categoryOfHelp: categoryOfHelp),));
                   }
                 },
                 child: Text("Tips y consejos generales",
-                    style: TextStyle(fontSize: 20),
+                    style: TextStyle(fontSize: 19),
                     textAlign: TextAlign.center),
               ),
             ),
+            Container(
+              height: 15.0,
+            ),
             showMyGuide(),
             Container(
-              height: 20,
+              height: 35,
             ),
             Container(
-              height: 120,
+              height: 70,
               padding: EdgeInsets.fromLTRB(70, 0, 70, 0),
               child: RaisedButton(
-                  padding: const EdgeInsets.all(0.0),
+                  padding: const EdgeInsets.all(2.0),
                   textColor: Colors.white,
-                  color: Colors.teal[200],
+                  //elevation: 5.0,
+                  color: Colors.blueAccent,
+                  shape: StadiumBorder(),
                   onPressed: () async {
+                    _sendAnalyticsEventTypeOfHelp(categoryOfHelp, typeOfHelp, 'personal');
                     if(typeOfHelp!='quiero ayudar'){
-                      Navigator.push(context,MaterialPageRoute(builder: (context) => HelpForm()),);
+                      Navigator.push(context,MaterialPageRoute(builder: (context) => HelpForm(categoryOfHelp:categoryOfHelp)),);
+                    }else{
+                      Navigator.push(context,MaterialPageRoute(builder: (context) => GivePersonalizedHelp(categoryOfHelp:categoryOfHelp)),);
                     }
                   },
                   child: Text("Apoyo personalizado y contacto personal",
-                      style: TextStyle(fontSize: 20),
+                      style: TextStyle(fontSize: 17),
                       textAlign: TextAlign.center)),
             ),
             Container(
-              height: 90,
+              height: 170,
             ),
-            Container(
-              padding: EdgeInsets.fromLTRB(50, 0, 50, 0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text(
-                    'Para comunicarte con la facultad de medicina UFM, '
-                    'llama al siguiente número',
-                    textAlign: TextAlign.center,
-                  ),
-                  RichText(
-                      text: TextSpan(children: [
-                    WidgetSpan(child: Icon(Icons.phone)),
-                    TextSpan(
-                      text: '  2413 3235',
-                      style: TextStyle(color: Colors.black),
-                    )
-                  ]))
-                ],
-              ),
-            ),
+            evalHelp(),
           ],
         ));
   }

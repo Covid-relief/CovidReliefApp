@@ -216,24 +216,64 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Contact Trace'),
-        backgroundColor: Colors.cyan[700],
-        /*
-              actions: <Widget> [
+        //backgroundColor: Colors.cyan[700],
+        flexibleSpace: Container(
+          decoration: new BoxDecoration(
+            gradient: new LinearGradient(
+              colors: [
+                const Color(0xFFFF5252),
+                const Color(0xFFFF1744)
+              ],
+              begin: const FractionalOffset(0.0, 0.0),
+              end: const FractionalOffset(0.5, 0.0),
+              stops: [0.0, 0.5],
+              tileMode: TileMode.clamp
+            ),
+          ),
+        ),
+      ),
+          drawer: Drawer(
+            child: ListView(
+              children: [
+                DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Colors.redAccent[400],
+                  ),
+                  child: Text(
+                    'Covid Relief', 
+                    style: TextStyle(
+                      height: 5.0,
+                      color: Colors.white,
+                      fontSize: 30,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: 'Open Sans',
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ),
+                ListTile(
+                  leading: Icon(Icons.home),
+                  title: Text('Inicio',),
+                  onTap: () async {
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.account_circle),
+                  title: Text('Perfil',),
+                  onTap: () async {
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserProfile()),);
+                  },
+                ),
                 FlatButton.icon(
-                  icon : Icon(Icons.settings),
-                  label: Text("Configuración"),
-                  onPressed:() {},
+                  icon: Icon(Icons.person),
+                  label: Text('Cerrar Sesión'),
+                  onPressed: () async {
+                    await _auth.signOut();
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Authenticate()),);
+                  },
                 ),
               ],
-              */
-      ),
-      drawer: Drawer(
-        child: ListView(
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.cyan[700],
-              ),
             ),
             ListTile(
               leading: Icon(Icons.home),
@@ -287,17 +327,17 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
                 height: 100.0,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Colors.blue[700],
+                  color: Colors.blue[600],
                   borderRadius: BorderRadius.circular(20.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black,
-                      blurRadius: 4.0,
-                      spreadRadius: 0.0,
-                      offset:
-                          Offset(2.0, 2.0), // shadow direction: bottom right
-                    )
-                  ],
+                  // boxShadow: [
+                  //   BoxShadow(
+                  //     color: Colors.black,
+                  //     blurRadius: 4.0,
+                  //     spreadRadius: 0.0,
+                  //     offset:
+                  //         Offset(2.0, 2.0), // shadow direction: bottom right
+                  //   )
+                  // ],
                 ),
                 child: Row(
                   children: <Widget>[

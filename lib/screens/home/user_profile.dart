@@ -35,38 +35,61 @@ class UserProfile extends StatelessWidget {
 
         return Scaffold(
           appBar: AppBar(
-            title: Text('Perfil'),
-            backgroundColor: Colors.cyan[700],
-              /*
-              actions: <Widget> [
-                FlatButton.icon(
-                  icon : Icon(Icons.settings),
-                  label: Text("Configuración"),
-                  onPressed:() {},
+            flexibleSpace: Container(
+              decoration: new BoxDecoration(
+                gradient: new LinearGradient(
+                  colors: [
+                    const Color(0xFFFF5252),
+                    const Color(0xFFFF1744)
+                  ],
+                  begin: const FractionalOffset(0.0, 0.0),
+                  end: const FractionalOffset(0.5, 0.0),
+                  stops: [0.0, 0.5],
+                  tileMode: TileMode.clamp
                 ),
-              ],
-              */
+              ),
+            ),
+            title: Text('Perfil',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w800,
+                fontStyle: FontStyle.italic,
+                fontFamily: 'Montserrat',
+                fontSize: 25
+              ),
+              ),
           ),
           drawer: Drawer(
             child: ListView(
               children: [
                 DrawerHeader(
                   decoration: BoxDecoration(
-                    color: Colors.cyan[700],
+                    color: Colors.redAccent[400],
+                  ),
+                  child: Text(
+                    'Covid Relief',
+                    style: TextStyle(
+                      height: 5.0,
+                      color: Colors.white,
+                      fontSize: 30,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: 'Open Sans',
+                      fontStyle: FontStyle.italic,
+                    ),
                   ),
                 ),
                 ListTile(
                   leading: Icon(Icons.home),
                   title: Text('Inicio',),
                   onTap: () async {
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => Home()),);
                   },
                 ),
                 ListTile(
                   leading: Icon(Icons.track_changes),
                   title: Text('Contact Trace',),
                   onTap: () async {
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => NearbyInterface()),);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => NearbyInterface()),);
                   },
                 ),
                 FlatButton.icon(
@@ -89,7 +112,7 @@ class UserProfile extends StatelessWidget {
                   // Circle for profile picture
                     CircleAvatar(
                       radius: 50.0,
-                      backgroundColor: Colors.lightBlue[900]
+                      backgroundColor: Colors.blue[300]
                     ),
                     SizedBox(height: 20.0),
                     // Diplay name
@@ -118,11 +141,11 @@ class UserProfile extends StatelessWidget {
                       Column(
                         children: <Widget>[
                           Padding(
-                            padding: EdgeInsets.fromLTRB(20, 10, 70, 0),
+                            padding: EdgeInsets.fromLTRB(50, 10, 50, 0),
                             child: Text(userData['phone']),
                           ),
                           Padding(
-                            padding: EdgeInsets.fromLTRB(20, 10, 70, 0),
+                            padding: EdgeInsets.fromLTRB(45, 10, 40, 0),
                             child: Text(
                               'Teléfono',
                               style: TextStyle(
@@ -135,12 +158,12 @@ class UserProfile extends StatelessWidget {
                       Column(
                         children: <Widget>[
                           Padding(
-                            padding: EdgeInsets.fromLTRB(70, 10, 20, 0),
+                            padding: EdgeInsets.fromLTRB(60, 10, 30, 0),
                             child:Text(
-                              userData['birthday'].substring(8, 10) + ' / ' + userData['birthday'].substring(5, 7) + ' / ' + userData['birthday'].substring(0, 4)),
+                              userData['birthday'].substring(8, 10) + '/' + userData['birthday'].substring(5, 7) + '/' + userData['birthday'].substring(0, 4)),
                           ),
                           Padding(
-                            padding: EdgeInsets.fromLTRB(70, 10, 20, 0),
+                            padding: EdgeInsets.fromLTRB(55, 10, 30, 0),
                             child: Text(
                               'Fecha de nacimiento',
                               style: TextStyle(
@@ -159,11 +182,11 @@ class UserProfile extends StatelessWidget {
                       Column(
                         children: <Widget>[
                           Padding(
-                            padding: EdgeInsets.fromLTRB(20, 20, 70, 0),
+                            padding: EdgeInsets.fromLTRB(20, 25, 50, 0),
                             child: Text(userData['type']),
                           ),
                           Padding(
-                            padding: EdgeInsets.fromLTRB(20, 10, 70, 0),
+                            padding: EdgeInsets.fromLTRB(20, 10, 50, 0),
                             child: Text(
                               'Tipo de perfil',
                               style: TextStyle(
@@ -176,11 +199,11 @@ class UserProfile extends StatelessWidget {
                       Column(
                         children: <Widget>[
                           Padding(
-                            padding: EdgeInsets.fromLTRB(70, 20, 20, 0),
+                            padding: EdgeInsets.fromLTRB(40, 25, 20, 0),
                             child: Text(userData['gender']),
                           ),
                           Padding(
-                            padding: EdgeInsets.fromLTRB(70, 10, 20, 0),
+                            padding: EdgeInsets.fromLTRB(40, 10, 20, 0),
                             child: Text(
                               'Género',
                               style: TextStyle(

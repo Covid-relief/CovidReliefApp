@@ -1,5 +1,6 @@
 import 'package:CovidRelief/screens/home/user_profile.dart';
 import 'package:CovidRelief/services/database.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:CovidRelief/shared/constants.dart';
 import 'package:CovidRelief/models/user.dart';
@@ -71,30 +72,30 @@ class _UserDataFormState extends State<UserDataForm> {
     // this variable allows us to get the uid that contains the info of the user
     final user = Provider.of<User>(context);
     return Scaffold(
-      backgroundColor: Colors.teal[50],
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: new BoxDecoration(
+            gradient: new LinearGradient(
+              colors: [
+                const Color(0xFFFF5252),
+                const Color(0xFFFF1744)
+              ],
+              begin: const FractionalOffset(0.0, 0.0),
+              end: const FractionalOffset(0.5, 0.0),
+              stops: [0.0, 0.5],
+              tileMode: TileMode.clamp
+            ),
+          ),
+        ),
         title: Text('Registrarse',
           style: TextStyle(
               color: Colors.white,
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.w800,
               fontStyle: FontStyle.italic,
-              fontFamily: 'Open Sans',
+              fontFamily: 'Montserrat',
               fontSize: 25),),
-        backgroundColor: Colors.cyan[700],
-        actions: <Widget>[
-          FlatButton.icon(
-            icon: Icon(Icons.person),
-            label: Text('Inicio',
-              style: TextStyle(
-                fontWeight: FontWeight.w700,
-                fontFamily: 'Open Sans',
-              ),
-            ),
-            onPressed: ()  {
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
-            },
-          ),
-        ],
+        //backgroundColor: Colors.cyan[700],
       ),
       body: StreamBuilder<UserData>(
         stream: DatabaseService(uid: user.uid).userData,
@@ -104,156 +105,165 @@ class _UserDataFormState extends State<UserDataForm> {
           return Form(
             key: _formKey,
             child: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  // this sizebox helps us to keep distance between elements
-                  SizedBox(height: 30.0),
-                  // input text for name
-                  Container(
-                    width: 350.0,
-                    padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
-                    child: TextFormField(
-                      decoration: textInputDecoration.copyWith(hintText: 'Nombres y apellidos'),
-                      validator: (valname) => valname.isEmpty ? 'Por favor ingrese su nombre' : null,
-                      onChanged: (valname) => setState(() => _currentName = valname),
-                    ),
-                  ),
-
-                  SizedBox(height: 20.0),
-
-                  // Date picker for birthday
-                  Container(
-                  margin: EdgeInsets.fromLTRB(40, 0, 0, 0),
-                  child: FlatButton(
-                    color: Colors.white,
-                    // padding is the spacing inside the element
-                    padding: paddingdate(),
-                    child: Text(
-                    '${selectedDate()}',
-                      style: TextStyle(
-                        color: styleDate(),
-                        fontWeight: FontWeight.w400,
-                        fontSize: 15
+              child: Center(
+                child: Column(
+                  children: <Widget>[
+                    // this sizebox helps us to keep distance between elements
+                    SizedBox(height: 30.0),
+                    // input text for name
+                    Container(
+                      width: 350.0,
+                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      child: TextFormField(
+                        decoration: textInputDecoration.copyWith(hintText: 'Nombres y apellidos'),
+                        validator: (valname) => valname.isEmpty ? 'Por favor ingrese su nombre' : null,
+                        onChanged: (valname) => setState(() => _currentName = valname),
                       ),
                     ),
-                    onPressed: () {
-                      // shows calendar to pick a date
-                      showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now().subtract(Duration(days: 6570)),
-                        firstDate: DateTime(1920, 1, 1),
-                        lastDate: DateTime.now().subtract(Duration(days: 6570)),
-                      ).then((date){
-                        // change variable value (current date in DB) to selected
-                        setState((){
-                          _currentBirthday = date;
+
+                    SizedBox(height: 20.0),
+
+                    // Date picker for birthday
+                    Container(
+                    margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                    child: FlatButton(
+                      color: Color(0xFFF5F5F5),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                      // padding is the spacing inside the element
+                      padding: paddingdate(),
+                      child: Text(
+                      '${selectedDate()}',
+                        style: TextStyle(
+                          color: styleDate(),
+                          fontWeight: FontWeight.w400,
+                          fontSize: 15
+                        ),
+                      ),
+                      onPressed: () {
+                        // shows calendar to pick a date
+                        showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now().subtract(Duration(days: 6570)),
+                          firstDate: DateTime(1920, 1, 1),
+                          lastDate: DateTime.now().subtract(Duration(days: 6570)),
+                        ).then((date){
+                          // change variable value (current date in DB) to selected
+                          setState((){
+                            _currentBirthday = date;
+                          });
                         });
-                      });
-                    },
-                  ),),
+                      },
+                    ),),
 
-                  SizedBox(height: 20.0),
+                    SizedBox(height: 20.0),
 
-                  // dropdown for country
-                  Container(
-                    padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
-                    width: 350.0,
-                    child: DropdownButtonFormField(
-                      hint: Text('País'),
-                      decoration: textInputDecoration,
-                      validator: (valcountry) => valcountry.isEmpty ? 'Por favor ingresa tu país' : null,
-                      items: country.map((countries){
-                        return DropdownMenuItem(
-                          value: countries,
-                          child: Text('$countries '),
-                        );
-                      }).toList(),
-                      onChanged: (valcountry) => setState(() => _currentCountry = valcountry),
+                    // dropdown for country
+                    Container(
+                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      width: 350.0,
+                      child: DropdownButtonFormField(
+                        hint: Text('País'),
+                        decoration: textInputDecoration,
+                        validator: (valcountry) => valcountry.isEmpty ? 'Por favor ingresa tu país' : null,
+                        items: country.map((countries){
+                          return DropdownMenuItem(
+                            value: countries,
+                            child: Text('$countries '),
+                          );
+                        }).toList(),
+                        onChanged: (valcountry) => setState(() => _currentCountry = valcountry),
+                      ),
                     ),
-                  ),
 
-                  SizedBox(height: 20.0),
+                    SizedBox(height: 20.0),
 
-                  // text for phone number
-                  Container(
-                    padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
-                    width: 350.0,
-                    child: TextFormField(
-                      decoration: textInputDecoration.copyWith(hintText: 'Numero de teléfono'),
-                      validator: (valphone) => valphone.isEmpty ? 'Por favor ingresa tu número de teléfono' : null,
-                      onChanged: (valphone) => setState(() => _currentPhone = valphone),
+                    // text for phone number
+                    Container(
+                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      width: 350.0,
+                      child: TextFormField(
+                        decoration: textInputDecoration.copyWith(hintText: 'Numero de teléfono'),
+                        validator: (valphone) => valphone.isEmpty ? 'Por favor ingresa tu número de teléfono' : null,
+                        onChanged: (valphone) => setState(() => _currentPhone = valphone),
+                      ),
                     ),
-                  ),
-                  
-                  SizedBox(height: 20.0),
+                    
+                    SizedBox(height: 20.0),
 
-                  // dropdown for gender
-                  Container(
-                    padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
-                    width: 350.0,
-                    child: DropdownButtonFormField(
-                      hint: Text('Género'),
-                      decoration: textInputDecoration,
-                      validator: (valgenders) => valgenders.isEmpty ? 'Por favor ingresa tu género' : null,
-                      items: gender.map((genders){
-                        return DropdownMenuItem(
-                          value: genders,
-                          child: Text('$genders '),
-                        );
-                      }).toList(),
-                      onChanged: (valgenders) => setState(() => _currentgender = valgenders),
+                    // dropdown for gender
+                    Container(
+                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      width: 350.0,
+                      child: DropdownButtonFormField(
+                        hint: Text('Género'),
+                        decoration: textInputDecoration,
+                        validator: (valgenders) => valgenders.isEmpty ? 'Por favor ingresa tu género' : null,
+                        items: gender.map((genders){
+                          return DropdownMenuItem(
+                            value: genders,
+                            child: Text('$genders '),
+                          );
+                        }).toList(),
+                        onChanged: (valgenders) => setState(() => _currentgender = valgenders),
+                      ),
                     ),
-                  ),
-                  
-                  SizedBox(height: 20.0),
+                    
+                    SizedBox(height: 20.0),
 
-                  // dropdown for type of profile
-                  Container(
-                    padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
-                    width: 350.0,
-                    child: DropdownButtonFormField(
-                      hint: Text('Tipo de perfil'),
-                      decoration: textInputDecoration,
-                      validator: (valtypes) => valtypes.isEmpty ? 'Por favor ingresa el tipo de perfil' : null,
-                      items: type.map((types){
-                        return DropdownMenuItem(
-                          value: types,
-                          child: Text('$types '),
-                        );
-                      }).toList(),
-                      onChanged: (valtypes) => setState(() => _currenType = valtypes),
+                    // dropdown for type of profile
+                    Container(
+                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      width: 350.0,
+                      child: DropdownButtonFormField(
+                        hint: Text('Tipo de perfil'),
+                        decoration: textInputDecoration,
+                        validator: (valtypes) => valtypes.isEmpty ? 'Por favor ingresa el tipo de perfil' : null,
+                        items: type.map((types){
+                          return DropdownMenuItem(
+                            value: types,
+                            child: Text('$types '),
+                          );
+                        }).toList(),
+                        onChanged: (valtypes) => setState(() => _currenType = valtypes),
+                      ),
                     ),
-                  ),
-                  
-                  SizedBox(height: 20.0),
-                  
-                  // Update the DB
-                  RaisedButton(
-                    color: Colors.blue[200],
-                    child: Text( 
-                      'Enviar',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    onPressed: () async{
-                      // update the data in the DB
-                      if(_formKey.currentState.validate()){
-                        await DatabaseService(uid: user.uid).updateUserData(
-                          // if there's no new data, remain with the same as before
-                          _currentBirthday.toString() ?? userData.birthday, 
-                          _currentCountry ?? userData.country,
-                          _currentCreation ?? 'hoy',
-                          _currentgender ?? userData.gender,
-                          _currentName ?? userData.name, 
-                          _currentPhone ?? userData.phone,
-                          _currentState ?? 'activo',
-                          _currenType ?? userData.type,
-                        );
-                        // redirect to profile page
-                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
-                      }
-                    } // onPressed
-                  )
-                ],
+                    
+                    SizedBox(height: 20.0),
+                    
+                    // Update the DB
+                    RaisedButton(
+                      color: Colors.blue[200],
+                      child: Text( 
+                        'Enviar',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+                      hoverColor: Colors.blueAccent,
+                      onPressed: () async{
+                        // update the data in the DB
+                        if(_formKey.currentState.validate()){
+                          await DatabaseService(uid: user.uid).updateUserData(
+                            // if there's no new data, remain with the same as before
+                            _currentBirthday.toString() ?? userData.birthday, 
+                            _currentCountry ?? userData.country,
+                            _currentCreation ?? 'creation',
+                            _currentgender ?? userData.gender,
+                            _currentName ?? userData.name, 
+                            _currentPhone ?? userData.phone,
+                            _currentState ?? 'state',
+                            _currenType ?? userData.type,
+                          );
+                          FirebaseMessaging firebaseMess = new FirebaseMessaging();
+                          firebaseMess.subscribeToTopic("publicaciones");
+                          // redirect to profile page
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
+                        }
+                      } // onPressed
+                    )
+                  ],
+                ),
               ),
             ),
           );

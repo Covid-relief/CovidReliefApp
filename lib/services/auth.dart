@@ -44,7 +44,6 @@ class AuthService {
   }
 
   //metodo para registrarse
-
   Future registerEmailandPassword(String email, String password) async {
     try {
       AuthResult result = await _auth.createUserWithEmailAndPassword(
@@ -52,14 +51,14 @@ class AuthService {
       FirebaseUser user = result.user;
       // creamos un nuevo documento para el usuario con el uid
       await DatabaseService(uid: user.uid).updateUserData(
-          '4/01/2000',
-          'Guatemala',
-          '08/07/2020',
-          'Masculino',
-          "Boris Rendon",
-          "132",
-          "Active",
-          "Busca ayuda");
+          'birthday',
+          'country',
+          'creation',
+          'gender',
+          "name",
+          "phone",
+          "state",
+          "type");
       return _userFromFirebaseUser(user);
     } catch (error) {
       print(error.toString());
