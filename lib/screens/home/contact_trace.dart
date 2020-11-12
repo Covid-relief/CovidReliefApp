@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +14,7 @@ import 'package:crypto/crypto.dart';
 import 'dart:async';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:connectivity/connectivity.dart';
 import 'dart:convert';
 
 import 'components/contact_card.dart';
@@ -34,6 +37,8 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
   List<dynamic> contactTraces = [];
   List<dynamic> contactTimes = [];
   List<dynamic> contactLocations = [];
+  List<Map<String, dynamic>> contacts;
+  // List<String> contacts = List<String>();
 
   void addContactsToList() async {
     await getCurrentUser();
@@ -91,10 +96,49 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
   }
 
   void discovery() async {
+    final Future<Database> database = openDatabase(
+      // Set the path to the database. Note: Using the `join` function from the
+      // `path` package is best practice to ensure the path is correctly
+      // constructed for each platform.
+      join(await getDatabasesPath(), 'contacts.db'),
+      // When the database is first created, create a table to store dogs.
+      onCreate: (db, version) {
+        // Run the CREATE TABLE statement on the database.
+        return db.execute(
+          //TODO if contacts null create
+          "CREATE TABLE contacts(id INTEGER PRIMARY KEY, contact TEXT)",
+        );
+      },
+      // Set the version. This executes the onCreate function and provides a
+      // path to perform database upgrades and downgrades.
+      version: 1,
+    );
+
+    Future<void> saveContact(Map contact) async {
+      // Get a reference to the database.
+      final Database db = await database;
+
+      // Insert the Dog into the correct table. You might also specify the
+      // `conflictAlgorithm` to use in case the same dog is inserted twice.
+      //
+      // In this case, replace any previous data.
+      await db.insert(
+        'contacts',
+        contact,
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
+
     try {
       bool a = await Nearby().startDiscovery(loggedInUser.email, strategy,
           onEndpointFound: (id, name, serviceId) async {
         print('I saw id:$id with name:$name'); // the name here is an email
+
+        var timestamp = DateTime.now();
+        var contact = '{"key":$name, "timestamp":"$timestamp"}';
+        // var contact = {'key': name, 'timestamp': DateTime.now()};
+        // contacts.add({'contact': contact});
+        await saveContact({'contact': contact});
 
         var docRef =
             _firestore.collection('users').document(loggedInUser.email);
@@ -113,6 +157,18 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
       print('DISCOVERING: ${a.toString()}');
     } catch (e) {
       print(e);
+    }
+  }
+
+  void checkWifiAndParse() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.wifi) {
+      final Future<Database> db =
+          openDatabase(join(await getDatabasesPath(), 'contacts.db'));
+
+      final List<Map<String, dynamic>> maps = await db.query('contacts');
+    } else {
+      print("Error: Connected to internet but not to WiFi");
     }
   }
 
@@ -159,9 +215,9 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-            title: Text('Contact Trace'),
-            backgroundColor: Colors.cyan[700],
-              /*
+        title: Text('Contact Trace'),
+        backgroundColor: Colors.cyan[700],
+        /*
               actions: <Widget> [
                 FlatButton.icon(
                   icon : Icon(Icons.settings),
@@ -170,40 +226,53 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
                 ),
               ],
               */
-          ),
-          drawer: Drawer(
-            child: ListView(
-              children: [
-                DrawerHeader(
-                  decoration: BoxDecoration(
-                    color: Colors.cyan[700],
-                  ),
-                ),
-                ListTile(
-                  leading: Icon(Icons.home),
-                  title: Text('Inicio',),
-                  onTap: () async {
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
-                  },
-                ),
-                ListTile(
-                  leading: Icon(Icons.account_circle),
-                  title: Text('Perfil',),
-                  onTap: () async {
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserProfile()),);
-                  },
-                ),
-                FlatButton.icon(
-                  icon: Icon(Icons.person),
-                  label: Text('Cerrar Sesión'),
-                  onPressed: () async {
-                    await _auth.signOut();
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Authenticate()),);
-                  },
-                ),
-              ],
+      ),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.cyan[700],
+              ),
             ),
-          ),
+            ListTile(
+              leading: Icon(Icons.home),
+              title: Text(
+                'Inicio',
+              ),
+              onTap: () async {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => Home()),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.account_circle),
+              title: Text(
+                'Perfil',
+              ),
+              onTap: () async {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => UserProfile()),
+                );
+              },
+            ),
+            FlatButton.icon(
+              icon: Icon(Icons.person),
+              label: Text('Cerrar Sesión'),
+              onPressed: () async {
+                await _auth.signOut();
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => Authenticate()),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
       body: Column(
         children: <Widget>[
           Expanded(
@@ -298,7 +367,8 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
                     imagePath: 'images/profile1.jpg',
                     //email: contactTraces[index]+"*****",
                     //email: "********"+contactTraces[index].substring((contactTraces[index].length/2).toInt(),contactTraces[index].length),
-                    email: "${sha1.convert(utf8.encode(contactTraces[index]))}", // data being hashed
+                    email:
+                        "${sha1.convert(utf8.encode(contactTraces[index]))}", // data being hashed
                     infection: 'Not-Infected',
                     contactUsername: contactTraces[index],
                     contactTime: contactTimes[index],
