@@ -10,6 +10,12 @@
 @import cloud_firestore;
 #endif
 
+#if __has_include(<connectivity/FLTConnectivityPlugin.h>)
+#import <connectivity/FLTConnectivityPlugin.h>
+#else
+@import connectivity;
+#endif
+
 #if __has_include(<file_picker/FilePickerPlugin.h>)
 #import <file_picker/FilePickerPlugin.h>
 #else
@@ -20,11 +26,6 @@
 #import <firebase_analytics/FLTFirebaseAnalyticsPlugin.h>
 #else
 @import firebase_analytics;
-
-#if __has_include(<connectivity/FLTConnectivityPlugin.h>)
-#import <connectivity/FLTConnectivityPlugin.h>
-#else
-@import connectivity;
 #endif
 
 #if __has_include(<firebase_auth/FLTFirebaseAuthPlugin.h>)
@@ -151,6 +152,7 @@
 
 + (void)registerWithRegistry:(NSObject<FlutterPluginRegistry>*)registry {
   [FLTCloudFirestorePlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTCloudFirestorePlugin"]];
+  [FLTConnectivityPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTConnectivityPlugin"]];
   [FilePickerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FilePickerPlugin"]];
   [FLTFirebaseAnalyticsPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseAnalyticsPlugin"]];
   [FLTFirebaseAuthPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseAuthPlugin"]];

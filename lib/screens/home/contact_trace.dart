@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:CovidRelief/models/trace.dart';
+import 'package:CovidRelief/services/litedatabase.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +11,7 @@ import 'package:CovidRelief/screens/home/home.dart';
 import 'package:CovidRelief/services/auth.dart';
 import 'package:CovidRelief/screens/authenticate/authenticate.dart';
 import 'package:CovidRelief/screens/home/user_profile.dart';
+import 'package:http/http.dart';
 
 import 'package:crypto/crypto.dart';
 import 'dart:async';
@@ -39,6 +42,27 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
   List<dynamic> contactLocations = [];
   List<Map<String, dynamic>> contacts;
   // List<String> contacts = List<String>();
+  DBProvider db= DBProvider(); //create SQLite database
+
+  _makePostRequest() async {
+    // set up POST request arguments
+    String url = 'https://jsonplaceholder.typicode.com/posts';
+    Map<String, String> headers = {"Content-type": "application/json"};
+    String json = '{"title": "Hello", "body": "body text", "userId": 1}';
+    // make POST request
+    Response response = await post(url, headers: headers, body: json);
+    // check the status code for the result
+    int statusCode = response.statusCode;
+    // this API passes back the id of the new item added to the body
+    String body = response.body;
+    // {
+    //   "title": "Hello",
+    //   "body": "body text",
+    //   "userId": 1,
+    //   "id": 101
+    // }
+  }
+
 
   void addContactsToList() async {
     await getCurrentUser();
@@ -57,7 +81,6 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
         String currLocation = doc.data.containsKey('contact location')
             ? doc.data['contact location']
             : null;
-
         if (!contactTraces.contains(currUsername)) {
           contactTraces.add(currUsername);
           contactTimes.add(currTime);
@@ -96,7 +119,7 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
   }
 
   void discovery() async {
-    final Future<Database> database = openDatabase(
+/*    final Future<Database> database = openDatabase(
       // Set the path to the database. Note: Using the `join` function from the
       // `path` package is best practice to ensure the path is correctly
       // constructed for each platform.
@@ -112,9 +135,9 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
       // Set the version. This executes the onCreate function and provides a
       // path to perform database upgrades and downgrades.
       version: 1,
-    );
+    );*/
 
-    Future<void> saveContact(Map contact) async {
+    /*Future<void> saveContact(Map contact) async {
       // Get a reference to the database.
       final Database db = await database;
 
@@ -127,18 +150,20 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
         contact,
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
-    }
+    }*/
 
     try {
       bool a = await Nearby().startDiscovery(loggedInUser.email, strategy,
           onEndpointFound: (id, name, serviceId) async {
         print('I saw id:$id with name:$name'); // the name here is an email
-
         var timestamp = DateTime.now();
         var contact = '{"key":$name, "timestamp":"$timestamp"}';
         // var contact = {'key': name, 'timestamp': DateTime.now()};
         // contacts.add({'contact': contact});
-        await saveContact({'contact': contact});
+        // await saveContact({'contact': contact});
+
+        var newTrace= Trace(id: id, userid: name,contactTime: timestamp);
+        db.addTrace(newTrace); //ADDING TRACE TO SQLite
 
         var docRef =
             _firestore.collection('users').document(loggedInUser.email);
@@ -147,7 +172,7 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
         //  also get the current time & location and add it to the database
         docRef.collection('met_with').document(name).setData({
           //'name': await getUsernameOfEmail(email: name),
-          'username': name,
+          'username': await getUsernameOfEmail(),
           'contact time': DateTime.now(),
           'contact location': (await location.getLocation()).toString(),
         });
@@ -160,7 +185,7 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
     }
   }
 
-  void checkWifiAndParse() async {
+  /*void checkWifiAndParse() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.wifi) {
       final Future<Database> db =
@@ -170,7 +195,7 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
     } else {
       print("Error: Connected to internet but not to WiFi");
     }
-  }
+  }*/
 
   void getPermissions() {
     Nearby().askLocationAndExternalStoragePermission();
@@ -193,7 +218,8 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
     try {
       final user = await _auth.currentUser();
       if (user != null) {
-        await _firestore.collection('users').document(user.email).setData({
+        await _firestore.collection('users').document(user.email).setData(
+            {
           'username': user.email,
         });
         loggedInUser = user;
@@ -273,153 +299,166 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Authenticate()),);
                   },
                 ),
+                ListTile(
+                  leading: Icon(Icons.home),
+                  title: Text(
+                    'Inicio',
+                  ),
+                  onTap: () async {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => Home()),
+                    );
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.account_circle),
+                  title: Text(
+                    'Perfil',
+                  ),
+                  onTap: () async {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => UserProfile()),
+                    );
+                  },
+                ),
+                FlatButton.icon(
+                  icon: Icon(Icons.person),
+                  label: Text('Cerrar Sesión'),
+                  onPressed: () async {
+                    await _auth.signOut();
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => Authenticate()),
+                    );
+                  },
+                ),
               ],
             ),
-            ListTile(
-              leading: Icon(Icons.home),
-              title: Text(
-                'Inicio',
-              ),
-              onTap: () async {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => Home()),
-                );
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.account_circle),
-              title: Text(
-                'Perfil',
-              ),
-              onTap: () async {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => UserProfile()),
-                );
-              },
-            ),
-            FlatButton.icon(
-              icon: Icon(Icons.person),
-              label: Text('Cerrar Sesión'),
-              onPressed: () async {
-                await _auth.signOut();
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => Authenticate()),
-                );
-              },
-            ),
-          ],
-        ),
       ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(
-                left: 25.0,
-                right: 25.0,
-                bottom: 10.0,
-                top: 30.0,
-              ),
-              child: Container(
-                height: 100.0,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.blue[600],
-                  borderRadius: BorderRadius.circular(20.0),
-                  // boxShadow: [
-                  //   BoxShadow(
-                  //     color: Colors.black,
-                  //     blurRadius: 4.0,
-                  //     spreadRadius: 0.0,
-                  //     offset:
-                  //         Offset(2.0, 2.0), // shadow direction: bottom right
-                  //   )
-                  // ],
-                ),
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Image(
-                        image: AssetImage('images/corona.png'),
+      body: FutureBuilder(
+        future: db.initDB(),
+        builder: (BuildContext context,snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return Column(
+              children: <Widget>[
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      left: 25.0,
+                      right: 25.0,
+                      bottom: 10.0,
+                      top: 30.0,
+                    ),
+                    child: Container(
+                      height: 100.0,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Colors.blue[600],
+                        borderRadius: BorderRadius.circular(20.0),
+                        // boxShadow: [
+                        //   BoxShadow(
+                        //     color: Colors.black,
+                        //     blurRadius: 4.0,
+                        //     spreadRadius: 0.0,
+                        //     offset:
+                        //         Offset(2.0, 2.0), // shadow direction: bottom right
+                        //   )
+                        // ],
+                      ),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Image(
+                              image: AssetImage('images/corona.png'),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: Text(
+                              'Your Contact Traces',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontSize: 21.0,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          )
+                        ],
                       ),
                     ),
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        'Your Contact Traces',
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          fontSize: 21.0,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    )
-                  ],
+                  ),
                 ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(bottom: 30.0),
-            child: RaisedButton(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0)),
-              elevation: 5.0,
-              color: Colors.blue[300],
-              onPressed: () async {
-                try {
-                  bool a = await Nearby().startAdvertising(
-                    loggedInUser.email,
-                    strategy,
-                    onConnectionInitiated: null,
-                    onConnectionResult: (id, status) {
-                      print(status);
-                    },
-                    onDisconnected: (id) {
-                      print('Disconnected $id');
-                    },
-                  );
+                Padding(
+                  padding: EdgeInsets.only(bottom: 30.0),
+                  child: RaisedButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0)),
+                    elevation: 5.0,
+                    color: Colors.blue[300],
+                    onPressed: () async {
+                      try {
+                        bool a = await Nearby().startAdvertising(
+                          loggedInUser.email,
+                          strategy,
+                          onConnectionInitiated: null,
+                          onConnectionResult: (id, status) {
+                            print(status);
+                          },
+                          onDisconnected: (id) {
+                            print('Disconnected $id');
+                          },
+                        );
 
-                  print('ADVERTISING ${a.toString()}');
-                } catch (e) {
-                  print(e);
-                }
+                        print('ADVERTISING ${a.toString()}');
 
-                discovery();
-              },
-              child: Text(
-                'Start Tracing',
-                style: kButtonTextStyle,
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 2,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25.0),
-              child: ListView.builder(
-                itemBuilder: (context, index) {
-                  return ContactCard(
-                    imagePath: 'images/profile1.jpg',
-                    //email: contactTraces[index]+"*****",
-                    //email: "********"+contactTraces[index].substring((contactTraces[index].length/2).toInt(),contactTraces[index].length),
-                    email:
-                        "${sha1.convert(utf8.encode(contactTraces[index]))}", // data being hashed
-                    infection: 'Not-Infected',
-                    contactUsername: contactTraces[index],
-                    contactTime: contactTimes[index],
-                    contactLocation: contactLocations[index],
-                  );
-                },
-                itemCount: contactTraces.length,
-              ),
-            ),
-          ),
-        ],
+                        _makePostRequest(); //POST
+                      } catch (e) {
+                        print(e);
+                      }
+
+                      discovery();
+                    },
+                    child: Text(
+                      'Start Tracing',
+                      style: kButtonTextStyle,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 25.0),
+                    child: ListView.builder(
+                      itemBuilder: (context, index) {
+                        return ContactCard(
+                          imagePath: 'images/profile1.jpg',
+                          //email: contactTraces[index]+"*****",
+                          //email: "********"+contactTraces[index].substring((contactTraces[index].length/2).toInt(),contactTraces[index].length),
+                          email:
+                          "${sha1.convert(utf8.encode(contactTraces[index]))}",
+                          // data being hashed
+                          infection: 'Not-Infected',
+                          contactUsername: contactTraces[index],
+                          contactTime: contactTimes[index],
+                          contactLocation: contactLocations[index],
+                        );
+                      },
+                      itemCount: contactTraces.length,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }
+          else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
       ),
     );
   }
