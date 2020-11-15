@@ -1,10 +1,12 @@
 import 'dart:convert';
 
 class Trace {
-  var userid;
+  int id;
+  String userid;
   var contactTime;
 
   Trace({
+    this.id,
     this.userid,
     this.contactTime,
   });
@@ -19,6 +21,7 @@ class Trace {
   Trace.fromMap(Map<String, dynamic> map){
         userid = map['contact'];
         contactTime =map['time'];
+        id=map['id'];
   }
 
 }

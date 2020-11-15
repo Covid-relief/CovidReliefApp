@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:CovidRelief/models/trace.dart';
 import 'package:CovidRelief/services/litedatabase.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -26,6 +24,7 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
   Firestore _firestore = Firestore.instance;
   final Strategy strategy = Strategy.P2P_STAR;
   FirebaseUser loggedInUser;
+  final FirebaseAuth auth = FirebaseAuth.instance;
 
   String testText = '';
   final _auth = FirebaseAuth.instance;
@@ -50,18 +49,18 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
     // }
   }
 
+
   void discovery() async {
+
     try {
       bool a = await Nearby().startDiscovery(loggedInUser.uid, strategy,
           onEndpointFound: (id, name, serviceId) async {
         print('I saw id:$id with name:$name'); // the name here is an uid
-        var timestamp = DateTime.now();
-        var newTrace= Trace(userid: name,contactTime: timestamp);
-
 
         //  When I discover someone I will see their uid and add that uid to the database of my contacts
         //  also get the current time and add it to the database
-        db.addTrace(newTrace, name); //ADDING TRACE TO SQLite
+        var newTrace= Trace(userid: await getUsernameOfUID(uid: name),contactTime: DateTime.now());
+        db.addTrace(newTrace); //ADDING TRACE TO SQLite
 
           }, onEndpointLost: (id) {
         print(id);
@@ -71,6 +70,7 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
       print(e);
     }
   }
+
 
   /*void checkWifiAndParse() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
@@ -104,11 +104,12 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
   //Save the current user uid
   Future<void> getCurrentUser() async {
     try {
-      final user = await _auth.currentUser();
+      FirebaseUser user = await _auth.currentUser();
+      final uid = user.uid;
       if (user != null) {
-        await _firestore.collection('users').document(user.uid).setData(
+        await _firestore.collection('users').document(uid).setData(
             {
-          'username': user.uid,
+          'username': uid,
         });
         loggedInUser = user;
       }
@@ -121,6 +122,7 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
   void initState() {
     super.initState();
     getPermissions();
+    getCurrentUser();
   }
 
   @override
@@ -185,41 +187,6 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Authenticate()),);
                   },
                 ),
-                ListTile(
-                  leading: Icon(Icons.home),
-                  title: Text(
-                    'Inicio',
-                  ),
-                  onTap: () async {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => Home()),
-                    );
-                  },
-                ),
-                ListTile(
-                  leading: Icon(Icons.account_circle),
-                  title: Text(
-                    'Perfil',
-                  ),
-                  onTap: () async {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => UserProfile()),
-                    );
-                  },
-                ),
-                FlatButton.icon(
-                  icon: Icon(Icons.person),
-                  label: Text('Cerrar Sesión'),
-                  onPressed: () async {
-                    await _auth.signOut();
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => Authenticate()),
-                    );
-                  },
-                ),
               ],
             ),
       ),
@@ -232,10 +199,10 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
                 Expanded(
                   child: Padding(
                     padding: EdgeInsets.only(
-                      left: 25.0,
+                      left: 15.0,
                       right: 25.0,
                       bottom: 10.0,
-                      top: 30.0,
+                      top: 15.0,
                     ),
                     child: Container(
                       height: 100.0,
@@ -271,6 +238,9 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
+                          ),
+                          Expanded(
+                            child: _showList(context),
                           )
                         ],
                       ),
@@ -300,11 +270,10 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
 
                         print('ADVERTISING ${a.toString()}');
 
-                        _makePostRequest(); //POST
+                        //_makePostRequest(); //POST
                       } catch (e) {
                         print(e);
                       }
-
                       discovery();
                     },
                     child: Text(
@@ -340,8 +309,26 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
       ),
     );
   }
+
+  _showList (BuildContext context) {
+    return FutureBuilder(
+      future: db.getAllTraces(),
+      initialData: List<Trace>(),
+      builder: (BuildContext context, AsyncSnapshot<List<Trace>> snapshot){
+        if (snapshot.hasData){
+          return ListView(
+            children: <Widget>[
+              for (Trace trace in snapshot.data) ListTile(title: Text(trace.userid))
+            ],
+          );
+        } else {
+          return Center(
+            child: Text('No current traces'),
+          );
+        }
+      },
+    );
+
+  }
 }
 
-// TODO: Take mobile number instead of email
-
-// TODO: Delete contacts older than 14 days from database
