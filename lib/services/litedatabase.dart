@@ -21,12 +21,19 @@ class DBProvider {
     String path = join(documentsDirectory.path, "contacts.db");
     return await openDatabase(path, version: 1, onOpen: (db) {
     }, onCreate: (Database db, int version) async {
-        await db.execute("CREATE TABLE traces(id INTEGER PRIMARY KEY, contact TEXT, time DATETIME);",); //Traces table
+        await db.execute("CREATE TABLE traces(id INTEGER PRIMARY KEY, contact TEXT, time DATETIME);"); //Traces table
     });
   }
 
-  addTrace(Trace trace) async {
-   _database.insert('traces', trace.toMap());
+  addTrace(Trace trace, String uid) async {
+    var queryResult = await _database.rawQuery('SELECT * FROM traces WHERE contact=?',[uid]);
+    if (queryResult.isNotEmpty){
+      await _database.delete('traces', where: "contact = ?", whereArgs: [uid]);
+      _database.insert('traces', trace.toMap());
+    }
+    else {
+      _database.insert('traces', trace.toMap());
+    }
   }
   
   Future<List<Trace>> getAllTraces() async {
