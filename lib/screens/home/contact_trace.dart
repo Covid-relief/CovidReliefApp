@@ -239,22 +239,23 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
                               ),
                             ),
                           ),
-                          Expanded(
-                            child: _showList(context),
-                          )
                         ],
                       ),
                     ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 30.0),
+                Expanded(child:_showList(context),),
+                Container(
+                  height: 70,
+                  padding: EdgeInsets.fromLTRB(80, 0, 80, 0),
                   child: RaisedButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0)),
-                    elevation: 5.0,
+                    padding: const EdgeInsets.all(2.0),
+                    shape: StadiumBorder(),
+                    //elevation: 5.0,
                     color: Colors.blue[300],
                     onPressed: () async {
+                      /*var newTrace= Trace(userid: )
+                      db.addTrace(trace)*/
                       try {
                         bool a = await Nearby().startAdvertising(
                           loggedInUser.uid,
@@ -278,22 +279,35 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
                     },
                     child: Text(
                       'Empezar a rastrear contactos',
-                      style: kButtonTextStyle,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontFamily: 'Open Sans',
+                      ),
                     ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 30.0),
+                Container(
+                  height: 15,
+                ),
+                Container(
+                  height: 70,
+                  padding: EdgeInsets.fromLTRB(80, 0, 80, 0),
                   child: RaisedButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0)),
-                    elevation: 5.0,
+                    shape:  StadiumBorder(),
+                    //elevation: 5.0,
                     color: Colors.blue[300],
                     onPressed: () async {
                     },
                     child: Text(
                       'Comunica tu positivo a COVID-19',
-                      style: kButtonTextStyle,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontFamily: 'Open Sans',
+                      ),
                     ),
                   ),
                 ),
@@ -313,19 +327,17 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
   _showList (BuildContext context) {
     return FutureBuilder(
       future: db.getAllTraces(),
-      initialData: List<Trace>(),
-      builder: (BuildContext context, AsyncSnapshot<List<Trace>> snapshot){
-        if (snapshot.hasData){
-          return ListView(
-            children: <Widget>[
-              for (Trace trace in snapshot.data) ListTile(title: Text(trace.userid))
-            ],
-          );
-        } else {
-          return Center(
-            child: Text('No current traces'),
-          );
+      builder: ( context, snapshot){
+        if (!snapshot.hasData){
+          return Center(child: CircularProgressIndicator());
         }
+
+        return ListView.builder(
+        itemCount: snapshot.data.length,
+        itemBuilder: (context, index){
+        return Text (snapshot.data[index].userid);
+        },
+        );
       },
     );
 
