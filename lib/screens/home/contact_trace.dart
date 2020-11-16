@@ -154,24 +154,40 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-            title: Text('Contact Trace'),
-            backgroundColor: Colors.cyan[700],
-              /*
-              actions: <Widget> [
-                FlatButton.icon(
-                  icon : Icon(Icons.settings),
-                  label: Text("Configuración"),
-                  onPressed:() {},
-                ),
+        title: Text('Contact Trace'),
+        //backgroundColor: Colors.cyan[700],
+        flexibleSpace: Container(
+          decoration: new BoxDecoration(
+            gradient: new LinearGradient(
+              colors: [
+                const Color(0xFFFF5252),
+                const Color(0xFFFF1744)
               ],
-              */
+              begin: const FractionalOffset(0.0, 0.0),
+              end: const FractionalOffset(0.5, 0.0),
+              stops: [0.0, 0.5],
+              tileMode: TileMode.clamp
+            ),
           ),
+        ),
+      ),
           drawer: Drawer(
             child: ListView(
               children: [
                 DrawerHeader(
                   decoration: BoxDecoration(
-                    color: Colors.cyan[700],
+                    color: Colors.redAccent[400],
+                  ),
+                  child: Text(
+                    'Covid Relief', 
+                    style: TextStyle(
+                      height: 5.0,
+                      color: Colors.white,
+                      fontSize: 30,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: 'Open Sans',
+                      fontStyle: FontStyle.italic,
+                    ),
                   ),
                 ),
                 ListTile(
@@ -213,17 +229,17 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
                 height: 100.0,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Colors.blue[700],
+                  color: Colors.blue[600],
                   borderRadius: BorderRadius.circular(20.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black,
-                      blurRadius: 4.0,
-                      spreadRadius: 0.0,
-                      offset:
-                          Offset(2.0, 2.0), // shadow direction: bottom right
-                    )
-                  ],
+                  // boxShadow: [
+                  //   BoxShadow(
+                  //     color: Colors.black,
+                  //     blurRadius: 4.0,
+                  //     spreadRadius: 0.0,
+                  //     offset:
+                  //         Offset(2.0, 2.0), // shadow direction: bottom right
+                  //   )
+                  // ],
                 ),
                 child: Row(
                   children: <Widget>[
@@ -291,7 +307,8 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
                 itemBuilder: (context, index) {
                   return ContactCard(
                     imagePath: 'images/profile1.jpg',
-                    email: contactTraces[index],
+                    //email: contactTraces[index]+"*****",
+                    email: "********"+contactTraces[index].substring((contactTraces[index].length/2).toInt(),contactTraces[index].length),
                     infection: 'Not-Infected',
                     contactUsername: contactTraces[index],
                     contactTime: contactTimes[index],
