@@ -1,13 +1,13 @@
 import 'package:CovidRelief/models/profile.dart';
-import 'package:CovidRelief/screens/authenticate/authenticate.dart';
-import 'package:CovidRelief/screens/home/contact_trace.dart';
-import 'package:CovidRelief/screens/home/settings_form.dart';
+import 'package:CovidRelief/boundedContexts/authenticate/authenticate.dart';
+import 'package:CovidRelief/boundedContexts/home/contact_trace.dart';
+import 'package:CovidRelief/boundedContexts/home/settings_form.dart';
 import 'package:flutter/material.dart';
 import 'package:CovidRelief/services/auth.dart';
 import 'package:CovidRelief/services/database.dart';
 import 'package:provider/provider.dart';
-import 'package:CovidRelief/screens/home/user_profile.dart';
-import 'package:CovidRelief/screens/HelpCategory/HelpCategories.dart';
+import 'package:CovidRelief/boundedContexts/home/user_profile.dart';
+import 'package:CovidRelief/boundedContexts/HelpCategory/HelpCategories.dart';
 import 'package:linkable/linkable.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -256,6 +256,7 @@ class _Home extends State<Home> {
                       },
                       child: new Text(
                         "Necesito ayuda",
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 20,

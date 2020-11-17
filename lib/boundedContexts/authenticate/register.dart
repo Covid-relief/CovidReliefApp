@@ -1,4 +1,4 @@
-import 'package:CovidRelief/screens/home/settings_form.dart';
+import 'package:CovidRelief/boundedContexts/home/settings_form.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:CovidRelief/services/auth.dart';

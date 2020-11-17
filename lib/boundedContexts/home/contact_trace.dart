@@ -3,10 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:nearby_connections/nearby_connections.dart';
-import 'package:CovidRelief/screens/home/home.dart';
+import 'package:CovidRelief/boundedContexts/home/home.dart';
 import 'package:CovidRelief/services/auth.dart';
-import 'package:CovidRelief/screens/authenticate/authenticate.dart';
-import 'package:CovidRelief/screens/home/user_profile.dart';
+import 'package:CovidRelief/boundedContexts/authenticate/authenticate.dart';
+import 'package:CovidRelief/boundedContexts/home/user_profile.dart';
 
 
 import 'components/contact_card.dart';
