@@ -1,9 +1,9 @@
 import 'package:CovidRelief/models/profile.dart';
-import 'package:CovidRelief/screens/authenticate/authenticate.dart';
-import 'package:CovidRelief/screens/home/settings_form.dart';
-import 'package:CovidRelief/screens/home/home.dart';
-import 'package:CovidRelief/screens/home/contact_trace.dart';
-import 'package:CovidRelief/screens/home/settings_form.dart';
+import 'package:CovidRelief/boundedContexts/authenticate/authenticate.dart';
+import 'package:CovidRelief/boundedContexts/home/settings_form.dart';
+import 'package:CovidRelief/boundedContexts/home/home.dart';
+import 'package:CovidRelief/boundedContexts/home/contact_trace.dart';
+import 'package:CovidRelief/boundedContexts/home/settings_form.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:CovidRelief/services/auth.dart';

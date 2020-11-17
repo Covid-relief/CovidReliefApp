@@ -1,14 +1,14 @@
 import 'package:CovidRelief/models/profile.dart';
-import 'package:CovidRelief/screens/HelpCategory/PersonalizedHelp.dart';
-import 'package:CovidRelief/screens/authenticate/authenticate.dart';
-import 'package:CovidRelief/screens/home/home.dart';
-import 'package:CovidRelief/screens/home/settings_form.dart';
+import 'package:CovidRelief/boundedContexts/HelpCategory/TypeOfHelp.dart';
+import 'package:CovidRelief/boundedContexts/authenticate/authenticate.dart';
+import 'package:CovidRelief/boundedContexts/home/home.dart';
+import 'package:CovidRelief/boundedContexts/home/settings_form.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 import 'package:CovidRelief/services/auth.dart';
 import 'package:CovidRelief/services/database.dart';
 import 'package:provider/provider.dart';
-import 'package:CovidRelief/screens/home/user_profile.dart';
+import 'package:CovidRelief/boundedContexts/home/user_profile.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
 class Category extends StatelessWidget {

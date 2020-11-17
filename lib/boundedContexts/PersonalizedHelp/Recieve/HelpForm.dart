@@ -1,4 +1,4 @@
-import 'package:CovidRelief/screens/home/home.dart';
+import 'package:CovidRelief/boundedContexts/home/home.dart';
 import 'package:CovidRelief/services/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
