@@ -1,18 +1,18 @@
-import 'package:CovidRelief/screens/PersonalizedHelp/HelpForm.dart';
-import 'package:CovidRelief/screens/authenticate/authenticate.dart';
-import 'package:CovidRelief/screens/home/home.dart';
-import 'package:CovidRelief/screens/home/user_profile.dart';
+import 'package:CovidRelief/boundedContexts/PersonalizedHelp/Recieve/HelpForm.dart';
+import 'package:CovidRelief/boundedContexts/authenticate/authenticate.dart';
+import 'package:CovidRelief/boundedContexts/home/home.dart';
+import 'package:CovidRelief/boundedContexts/home/user_profile.dart';
 import 'package:CovidRelief/services/auth.dart';
 import 'package:CovidRelief/shared/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
-import 'package:CovidRelief/screens/HelpCategory/ShowPdf.dart';
-import 'package:CovidRelief/screens/give_help/generalHelp.dart';
-import 'package:CovidRelief/screens/HelpCategory/ShowGeneralHelpPost.dart';
-import 'package:CovidRelief/screens/PersonalizedHelp/GivePersonalizedHelp.dart';
-import 'package:CovidRelief/screens/PersonalizedHelp/HelpRequests.dart';
+import 'package:CovidRelief/boundedContexts/GeneralHelp/Recieve/ShowPdf.dart';
+import 'package:CovidRelief/boundedContexts/GeneralHelp/Give/generalHelp.dart';
+import 'package:CovidRelief/boundedContexts/GeneralHelp/Recieve/ShowGeneralHelpPost.dart';
+import 'package:CovidRelief/boundedContexts/PersonalizedHelp/Give/GivePersonalizedHelp.dart';
+import 'package:CovidRelief/boundedContexts/PersonalizedHelp/Give/HelpRequests.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class Help extends StatefulWidget {

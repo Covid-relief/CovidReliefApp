@@ -1,12 +1,12 @@
-import 'package:CovidRelief/screens/home/user_profile.dart';
+import 'package:CovidRelief/boundedContexts/home/user_profile.dart';
 import 'package:CovidRelief/services/database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:CovidRelief/shared/constants.dart';
 import 'package:CovidRelief/models/user.dart';
 import 'package:provider/provider.dart';
-import 'package:CovidRelief/screens/authenticate/authenticate.dart';
-import 'package:CovidRelief/screens/home/home.dart';
+import 'package:CovidRelief/boundedContexts/authenticate/authenticate.dart';
+import 'package:CovidRelief/boundedContexts/home/home.dart';
 
 import 'package:google_sign_in/google_sign_in.dart';
 

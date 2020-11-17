@@ -1,9 +1,9 @@
-import 'package:CovidRelief/screens/authenticate/authenticate.dart';
+import 'package:CovidRelief/boundedContexts/authenticate/authenticate.dart';
 import 'package:flutter/material.dart';
-import 'package:CovidRelief/screens/home/home.dart';
+import 'package:CovidRelief/boundedContexts/home/home.dart';
 import 'package:CovidRelief/models/user.dart';
 import 'package:provider/provider.dart';
-import 'package:CovidRelief/screens/home/settings_form.dart';
+import 'package:CovidRelief/boundedContexts/home/settings_form.dart';
 
 
 

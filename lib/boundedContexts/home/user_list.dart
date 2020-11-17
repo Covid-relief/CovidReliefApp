@@ -2,7 +2,7 @@ import 'package:CovidRelief/models/profile.dart';
 import 'package:CovidRelief/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:CovidRelief/screens/home/user_tile.dart';
+import 'package:CovidRelief/boundedContexts/home/user_tile.dart';
 
 
 class UserList extends StatefulWidget {

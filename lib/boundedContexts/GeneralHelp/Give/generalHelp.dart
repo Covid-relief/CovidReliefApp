@@ -1,10 +1,10 @@
-import 'package:CovidRelief/screens/authenticate/authenticate.dart';
-import 'package:CovidRelief/screens/home/home.dart';
-import 'package:CovidRelief/screens/home/user_profile.dart';
+import 'package:CovidRelief/boundedContexts/authenticate/authenticate.dart';
+import 'package:CovidRelief/boundedContexts/home/home.dart';
+import 'package:CovidRelief/boundedContexts/home/user_profile.dart';
 import 'package:CovidRelief/services/auth.dart';
 import 'package:CovidRelief/shared/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:CovidRelief/screens/give_help/uploadFiles.dart';
+import 'package:CovidRelief/boundedContexts/GeneralHelp/Give/uploadFiles.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';

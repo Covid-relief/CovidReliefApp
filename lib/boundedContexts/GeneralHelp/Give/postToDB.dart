@@ -3,7 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:CovidRelief/screens/home/home.dart';
+import 'package:CovidRelief/boundedContexts/home/home.dart';
 
 /**
  * Aqui recibimos los files para enviarlos a la realtime database

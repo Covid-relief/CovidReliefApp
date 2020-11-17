@@ -1,5 +1,5 @@
 import 'package:CovidRelief/models/user.dart';
-import 'package:CovidRelief/screens/wrapper.dart';
+import 'package:CovidRelief/boundedContexts/wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:CovidRelief/services/auth.dart';
 import 'package:provider/provider.dart';

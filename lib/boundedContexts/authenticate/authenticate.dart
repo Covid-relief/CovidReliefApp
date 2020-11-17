@@ -1,6 +1,6 @@
-import 'package:CovidRelief/screens/authenticate/register.dart';
+import 'package:CovidRelief/boundedContexts/authenticate/register.dart';
 import 'package:flutter/material.dart';
-import 'package:CovidRelief/screens/authenticate/sign_in.dart';
+import 'package:CovidRelief/boundedContexts/authenticate/sign_in.dart';
 
 
 class Authenticate extends StatefulWidget {

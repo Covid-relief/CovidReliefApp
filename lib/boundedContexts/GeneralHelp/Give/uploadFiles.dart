@@ -5,7 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:CovidRelief/services/database.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:CovidRelief/screens/give_help/postToDB.dart';
+import 'package:CovidRelief/boundedContexts/GeneralHelp/Give/postToDB.dart';
 import 'package:video_player/video_player.dart';
 
 /**
