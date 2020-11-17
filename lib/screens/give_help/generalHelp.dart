@@ -11,7 +11,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:video_player/video_player.dart';
-import 'package:flutter_document_picker/flutter_document_picker.dart';
+import 'package:file_picker/file_picker.dart';
+
 
 
 class PostHelp extends StatefulWidget {
@@ -69,22 +70,15 @@ class _PostHelpState extends State<PostHelp> {
   }
 
   // set file
-  Future pickFile() async{
-    // types: pdf, csv, docx, doc, xslx, xsl, ppt, pub, txt
-    final params = FlutterDocumentPickerParams(     
-      //allowedFileExtensions: ['pdf', 'csv', 'docx', 'doc', 'xslx', 'xsl', 'ppt', 'pub', 'txt'],
-      allowedMimeTypes: ['application/*'],
-      //allowedMimeTypes: ['application/pdf', 'text/csv', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 
-      //  'application/msword', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel',
-      //  'application/vnd.ms-powerpoint', 'application/x-mspublisher', 'text/plain'],
-    );
+  Future pickFile() async {
+    FilePickerResult result = await FilePicker.platform.pickFiles();
 
-    final myFile = await FlutterDocumentPicker.openDocument(params: params);
-    var newFile = new File(myFile).writeAsString(myFile);
-    File data = await newFile;
+
+      File file = File(result.files.single.path);
+
 
     setState(() {
-      archivo = data; 
+      archivo = file;
     });
   }
 
@@ -221,7 +215,7 @@ class _PostHelpState extends State<PostHelp> {
                       child: Column(
                         children: <Widget>[
                           MaterialButton(
-                            onPressed: null, //() => pickFile(),
+                            onPressed: () => pickFile(),
                             disabledColor: Colors.grey, //styleArchivo(archivo),
                             disabledTextColor: Colors.white,
                             child: Icon(
