@@ -1,12 +1,14 @@
-import 'package:CovidRelief/screens/home/user_profile.dart';
+import 'package:CovidRelief/models/signup.dart';
 import 'package:CovidRelief/services/database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:CovidRelief/shared/constants.dart';
 import 'package:CovidRelief/models/user.dart';
 import 'package:provider/provider.dart';
-import 'package:CovidRelief/screens/authenticate/authenticate.dart';
 import 'package:CovidRelief/screens/home/home.dart';
+import 'package:http/http.dart';
+import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -33,7 +35,40 @@ class _UserDataFormState extends State<UserDataForm> {
   String _currentPhone; // text
   String _currentState; // not displaying in the app
   String _currenType; // dropbox ya
-  
+
+  String _uid;
+  String _email;
+
+  FirebaseAuth auth = FirebaseAuth.instance;
+  dynamic user;
+
+  void getCurrentUserInfo() async {
+    user = await auth.currentUser();
+    _uid = await user.uid;
+    _email= await user.email;
+  }
+
+  _makePostRequest() async {
+    // set up POST request arguments
+    String url = 'http://ec2-18-216-89-33.us-east-2.compute.amazonaws.com/sign-up';
+    Map<String, String> headers = {"Content-type": "application/json"};
+
+    Signup signup= new Signup(userUid: _uid, userEmail: _email);
+
+    Map<String, dynamic> map = signup.toJson();
+
+    String json = jsonEncode(map); // convert map to String
+
+    Response response = await post(url, headers: headers, body: json);
+    // check the status code for the result
+    int statusCode = response.statusCode;
+    print(statusCode);
+
+    String body = response.body;
+    print(body);
+  }
+
+
   // display birthday date when selected (if not, display 'Fecha de nacimiento' text)
   String selectedDate () {
     String message;
@@ -243,6 +278,8 @@ class _UserDataFormState extends State<UserDataForm> {
                       hoverColor: Colors.blueAccent,
                       onPressed: () async{
                         // update the data in the DB
+                        getCurrentUserInfo();
+                        // _email
                         if(_formKey.currentState.validate()){
                           await DatabaseService(uid: user.uid).updateUserData(
                             // if there's no new data, remain with the same as before
@@ -257,6 +294,7 @@ class _UserDataFormState extends State<UserDataForm> {
                           );
                           FirebaseMessaging firebaseMess = new FirebaseMessaging();
                           firebaseMess.subscribeToTopic("publicaciones");
+                          _makePostRequest();
                           // redirect to profile page
                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
                         }

@@ -1,3 +1,4 @@
+import 'package:CovidRelief/models/signup.dart';
 import 'package:CovidRelief/models/trace.dart';
 import 'package:CovidRelief/services/litedatabase.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -30,11 +31,14 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
   final _auth = FirebaseAuth.instance;
   DBProvider db= DBProvider(); //create SQLite database
 
+
+  bool _hasBeenPressed = false;
+
   _makePostRequest() async {
     // set up POST request arguments
     String url = 'https://jsonplaceholder.typicode.com/posts';
     Map<String, String> headers = {"Content-type": "application/json"};
-    String json = '{"title": "Hello", "body": "body text", "userId": 1}';
+    String json = '{"user":"lindseydelaroca@ufm.edu","key":"10c8dde1b7417b76de55465169fd4fa3","day":"2020-11-16","contacts": [{"key":"98191d4ef294b24de30b55cef2d62726", "timestamp":"2020-10-23T16:19:12"},{"key":"45ee479816aba875127e1c2a84d341fd", "timestamp":"2020-10-22T15:24:52"},{"key":"3c3775565679380036998edb4cbb4c8a", "timestamp":"2020-10-21T13:24:12"},{"key":"e992ca593dca3fdff71c01c10bb23c0a", "timestamp":"2020-10-21T13:24:12"}]} ';
     // make POST request
     Response response = await post(url, headers: headers, body: json);
     // check the status code for the result
@@ -194,124 +198,129 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
         future: db.initDB(),
         builder: (BuildContext context,snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            return Column(
-              children: <Widget>[
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      left: 15.0,
-                      right: 25.0,
-                      bottom: 10.0,
-                      top: 15.0,
+            return Padding(
+              padding: const EdgeInsets.all(15),
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    height: 30,
+                  ),
+                  Container(
+                    height: 160,
+                    padding: EdgeInsets.fromLTRB(25, 0, 25, 0),
+                    decoration: BoxDecoration(
+                      color: Colors.blue[600],
+                      borderRadius: BorderRadius.circular(20.0),
+                      // boxShadow: [
+                      //   BoxShadow(
+                      //     color: Colors.black,
+                      //     blurRadius: 4.0,
+                      //     spreadRadius: 0.0,
+                      //     offset:
+                      //         Offset(2.0, 2.0), // shadow direction: bottom right
+                      //   )
+                      // ],
                     ),
-                    child: Container(
-                      height: 100.0,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.blue[600],
-                        borderRadius: BorderRadius.circular(20.0),
-                        // boxShadow: [
-                        //   BoxShadow(
-                        //     color: Colors.black,
-                        //     blurRadius: 4.0,
-                        //     spreadRadius: 0.0,
-                        //     offset:
-                        //         Offset(2.0, 2.0), // shadow direction: bottom right
-                        //   )
-                        // ],
-                      ),
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: Image(
-                              image: AssetImage('images/corona.png'),
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Image(
+                            image: AssetImage('images/corona.png'),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: Text(
+                            'Ayuda a detener la propagación de COVID-19',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: 19.0,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
-                          Expanded(
-                            flex: 2,
-                            child: Text(
-                              'Tus trazas de contactos',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                fontSize: 19.0,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
-                ),
-                Expanded(child:_showList(context),),
-                Container(
-                  height: 70,
-                  padding: EdgeInsets.fromLTRB(80, 0, 80, 0),
-                  child: RaisedButton(
-                    padding: const EdgeInsets.all(2.0),
-                    shape: StadiumBorder(),
-                    //elevation: 5.0,
-                    color: Colors.blue[300],
-                    onPressed: () async {
-                      /*var newTrace= Trace(userid: )
-                      db.addTrace(trace)*/
-                      try {
-                        bool a = await Nearby().startAdvertising(
-                          loggedInUser.uid,
-                          strategy,
-                          onConnectionInitiated: null,
-                          onConnectionResult: (id, status) {
-                            print(status);
-                          },
-                          onDisconnected: (id) {
-                            print('Disconnected $id');
-                          },
-                        );
+                  Container(
+                    height: 80,
+                  ),
+                  Container(
+                    height: 70,
+                    padding: EdgeInsets.fromLTRB(80, 0, 80, 0),
+                    child: RaisedButton(
+                      padding: const EdgeInsets.all(2.0),
+                      shape: StadiumBorder(),
+                      //elevation: 5.0,
+                      color:  _hasBeenPressed ? Colors.green : Colors.blue[300],
+                      onPressed: () async {
+                        setState(() {
+                          _hasBeenPressed = !_hasBeenPressed;
+                        });
 
-                        print('ADVERTISING ${a.toString()}');
+                        if(_hasBeenPressed){
+                          try {
+                            bool a = await Nearby().startAdvertising(
+                              loggedInUser.uid,
+                              strategy,
+                              onConnectionInitiated: null,
+                              onConnectionResult: (id, status) {
+                                print(status);
+                              },
+                              onDisconnected: (id) {
+                                print('Disconnected $id');
+                              },
+                            );
 
-                        //_makePostRequest(); //POST
-                      } catch (e) {
-                        print(e);
-                      }
-                      discovery();
-                    },
-                    child: Text(
-                      'Empezar a rastrear contactos',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontFamily: 'Open Sans',
+                            print('ADVERTISING ${a.toString()}');
+
+                            //_makePostRequest(); //POST
+                          } catch (e) {
+                            print(e);
+                          }
+                          discovery();
+                        }
+                      },
+                      child: Text(
+                        'Empezar a rastrear contactos',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontFamily: 'Open Sans',
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Container(
-                  height: 15,
-                ),
-                Container(
-                  height: 70,
-                  padding: EdgeInsets.fromLTRB(80, 0, 80, 0),
-                  child: RaisedButton(
-                    shape:  StadiumBorder(),
-                    //elevation: 5.0,
-                    color: Colors.blue[300],
-                    onPressed: () async {
-                    },
-                    child: Text(
-                      'Comunica tu positivo a COVID-19',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontFamily: 'Open Sans',
+                  Container(
+                    height: 15,
+                  ),
+                  Container(
+                    height: 70,
+                    padding: EdgeInsets.fromLTRB(80, 0, 80, 0),
+                    child: RaisedButton(
+                      shape:  StadiumBorder(),
+                      //elevation: 5.0,
+                      color: Colors.blue[300],
+                      onPressed: () async {
+                      },
+                      child: Text(
+                        'Comunica tu resultado positivo a COVID-19',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontFamily: 'Open Sans',
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                  Container(
+                    height: 30,
+                  ),
+                ],
+              ),
             );
           }
           else {
@@ -322,25 +331,6 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
         },
       ),
     );
-  }
-
-  _showList (BuildContext context) {
-    return FutureBuilder(
-      future: db.getAllTraces(),
-      builder: ( context, snapshot){
-        if (!snapshot.hasData){
-          return Center(child: CircularProgressIndicator());
-        }
-
-        return ListView.builder(
-        itemCount: snapshot.data.length,
-        itemBuilder: (context, index){
-        return Text (snapshot.data[index].userid);
-        },
-        );
-      },
-    );
-
   }
 }
 
