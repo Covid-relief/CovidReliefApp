@@ -24,4 +24,10 @@ class Trace {
         id=map['id'];
   }
 
+  Map<String, dynamic> toJson() =>
+      {
+        'contact': userid,
+        'time': contactTime,
+      };
+
 }
