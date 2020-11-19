@@ -18,12 +18,12 @@ class DBProvider {
 
   initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, "Suspensions.db");
+    String path = join(documentsDirectory.path, "traces.db");
     return await openDatabase(path,
-        version: 1, onOpen: (db) {}, onCreate: _createTables);
+        version: 1, onOpen: (db) {}, onCreate: _createTable);
   }
 
-  void _createTables(Database db, int version) async {
+  void _createTable(Database db, int version) async {
     await db.execute("CREATE TABLE traces ("
         "id integer primary key AUTOINCREMENT,"
         "contact TEXT,"
@@ -31,9 +31,16 @@ class DBProvider {
         ")");
   }
 
+  tableIsEmpty()async{
+    final db = _database;
+    int count = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM traces'));
+    return count;
+  }
+
   addTrace(Trace trace) async {
     //replace if traces already exists
     final db = _database;
+
     var raw = await db.insert(
       "traces",
       trace.toMap(),
@@ -44,9 +51,12 @@ class DBProvider {
 
   getAllTraces() async {
    final db = _database;
-   var response = await db.query("traces");
-   List<Trace> list =response.isNotEmpty ? response.map((c) => Trace.fromMap(c)).toList() : [];
-   return list;
+   int numtraces= await tableIsEmpty();
+   if (numtraces!=0){
+     var response = await db.query("traces");
+     List<Trace> list =response.isNotEmpty ? response.map((c) => Trace.fromMap(c)).toList() : [];
+     return list;
+   }
  }
 
  deleteAllTraces() async {
