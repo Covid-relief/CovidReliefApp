@@ -2,6 +2,7 @@ import 'package:CovidRelief/models/signup.dart';
 import 'package:CovidRelief/models/trace.dart';
 import 'package:CovidRelief/services/litedatabase.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
@@ -29,8 +30,7 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
 
   String testText = '';
   final _auth = FirebaseAuth.instance;
-  DBProvider db= DBProvider(); //create SQLite database
-
+  DBProvider db = DBProvider(); //create SQLite database
 
   bool _hasBeenPressed = false;
 
@@ -38,7 +38,8 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
     // set up POST request arguments
     String url = 'https://jsonplaceholder.typicode.com/posts';
     Map<String, String> headers = {"Content-type": "application/json"};
-    String json = '{"user":"lindseydelaroca@ufm.edu","key":"10c8dde1b7417b76de55465169fd4fa3","day":"2020-11-16","contacts": [{"key":"98191d4ef294b24de30b55cef2d62726", "timestamp":"2020-10-23T16:19:12"},{"key":"45ee479816aba875127e1c2a84d341fd", "timestamp":"2020-10-22T15:24:52"},{"key":"3c3775565679380036998edb4cbb4c8a", "timestamp":"2020-10-21T13:24:12"},{"key":"e992ca593dca3fdff71c01c10bb23c0a", "timestamp":"2020-10-21T13:24:12"}]} ';
+    String json =
+        '{"user":"lindseydelaroca@ufm.edu","key":"10c8dde1b7417b76de55465169fd4fa3","day":"2020-11-16","contacts": [{"key":"98191d4ef294b24de30b55cef2d62726", "timestamp":"2020-10-23T16:19:12"},{"key":"45ee479816aba875127e1c2a84d341fd", "timestamp":"2020-10-22T15:24:52"},{"key":"3c3775565679380036998edb4cbb4c8a", "timestamp":"2020-10-21T13:24:12"},{"key":"e992ca593dca3fdff71c01c10bb23c0a", "timestamp":"2020-10-21T13:24:12"}]} ';
     // make POST request
     Response response = await post(url, headers: headers, body: json);
     // check the status code for the result
@@ -53,9 +54,7 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
     // }
   }
 
-
   void discovery() async {
-
     try {
       bool a = await Nearby().startDiscovery(loggedInUser.uid, strategy,
           onEndpointFound: (id, name, serviceId) async {
@@ -63,10 +62,11 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
 
         //  When I discover someone I will see their uid and add that uid to the database of my contacts
         //  also get the current time and add it to the database
-        var newTrace= Trace(userid: await getUsernameOfUID(uid: name),contactTime: DateTime.now());
+        var newTrace = Trace(
+            userid: await getUsernameOfUID(uid: name),
+            contactTime: DateTime.now());
         db.addTrace(newTrace); //ADDING TRACE TO SQLite
-
-          }, onEndpointLost: (id) {
+      }, onEndpointLost: (id) {
         print(id);
       });
       print('DISCOVERING: ${a.toString()}');
@@ -75,18 +75,19 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
     }
   }
 
-
-  /*void checkWifiAndParse() async {
+  void checkWifiAndParse() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.wifi) {
-      final Future<Database> db =
-          openDatabase(join(await getDatabasesPath(), 'contacts.db'));
-
-      final List<Map<String, dynamic>> maps = await db.query('contacts');
+      var traces = db.getAllTraces();
+      if (traces != null) {
+        _makePostRequest();
+      } else {
+        print("Connected to WiFi but no new traces found");
+      }
     } else {
       print("Error: Connected to internet but not to WiFi");
     }
-  }*/
+  }
 
   void getPermissions() {
     Nearby().askLocationAndExternalStoragePermission();
@@ -111,8 +112,7 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
       FirebaseUser user = await _auth.currentUser();
       final uid = user.uid;
       if (user != null) {
-        await _firestore.collection('users').document(uid).setData(
-            {
+        await _firestore.collection('users').document(uid).setData({
           'username': uid,
         });
         loggedInUser = user;
@@ -127,6 +127,8 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
     super.initState();
     getPermissions();
     getCurrentUser();
+    Timer timer;
+    timer = Timer.periodic(Duration(minutes: 15), (Timer t) => checkWifiAndParse());
   }
 
   @override
@@ -138,65 +140,74 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
         flexibleSpace: Container(
           decoration: new BoxDecoration(
             gradient: new LinearGradient(
-              colors: [
-                const Color(0xFFFF5252),
-                const Color(0xFFFF1744)
-              ],
-              begin: const FractionalOffset(0.0, 0.0),
-              end: const FractionalOffset(0.5, 0.0),
-              stops: [0.0, 0.5],
-              tileMode: TileMode.clamp
-            ),
+                colors: [const Color(0xFFFF5252), const Color(0xFFFF1744)],
+                begin: const FractionalOffset(0.0, 0.0),
+                end: const FractionalOffset(0.5, 0.0),
+                stops: [0.0, 0.5],
+                tileMode: TileMode.clamp),
           ),
         ),
       ),
-          drawer: Drawer(
-            child: ListView(
-              children: [
-                DrawerHeader(
-                  decoration: BoxDecoration(
-                    color: Colors.redAccent[400],
-                  ),
-                  child: Text(
-                    'Covid Relief', 
-                    style: TextStyle(
-                      height: 5.0,
-                      color: Colors.white,
-                      fontSize: 30,
-                      fontWeight: FontWeight.w700,
-                      fontFamily: 'Open Sans',
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.redAccent[400],
+              ),
+              child: Text(
+                'Covid Relief',
+                style: TextStyle(
+                  height: 5.0,
+                  color: Colors.white,
+                  fontSize: 30,
+                  fontWeight: FontWeight.w700,
+                  fontFamily: 'Open Sans',
+                  fontStyle: FontStyle.italic,
                 ),
-                ListTile(
-                  leading: Icon(Icons.home),
-                  title: Text('Inicio',),
-                  onTap: () async {
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
-                  },
-                ),
-                ListTile(
-                  leading: Icon(Icons.account_circle),
-                  title: Text('Perfil',),
-                  onTap: () async {
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserProfile()),);
-                  },
-                ),
-                FlatButton.icon(
-                  icon: Icon(Icons.person),
-                  label: Text('Cerrar Sesión'),
-                  onPressed: () async {
-                    await _auth.signOut();
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Authenticate()),);
-                  },
-                ),
-              ],
+              ),
             ),
+            ListTile(
+              leading: Icon(Icons.home),
+              title: Text(
+                'Inicio',
+              ),
+              onTap: () async {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => Home()),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.account_circle),
+              title: Text(
+                'Perfil',
+              ),
+              onTap: () async {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => UserProfile()),
+                );
+              },
+            ),
+            FlatButton.icon(
+              icon: Icon(Icons.person),
+              label: Text('Cerrar Sesión'),
+              onPressed: () async {
+                await _auth.signOut();
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => Authenticate()),
+                );
+              },
+            ),
+          ],
+        ),
       ),
       body: FutureBuilder(
         future: db.initDB(),
-        builder: (BuildContext context,snapshot) {
+        builder: (BuildContext context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return Padding(
               padding: const EdgeInsets.all(15),
@@ -253,13 +264,13 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
                       padding: const EdgeInsets.all(2.0),
                       shape: StadiumBorder(),
                       //elevation: 5.0,
-                      color:  _hasBeenPressed ? Colors.green : Colors.blue[300],
+                      color: _hasBeenPressed ? Colors.green : Colors.blue[300],
                       onPressed: () async {
                         setState(() {
                           _hasBeenPressed = !_hasBeenPressed;
                         });
 
-                        if(_hasBeenPressed){
+                        if (_hasBeenPressed) {
                           try {
                             bool a = await Nearby().startAdvertising(
                               loggedInUser.uid,
@@ -300,11 +311,10 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
                     height: 70,
                     padding: EdgeInsets.fromLTRB(80, 0, 80, 0),
                     child: RaisedButton(
-                      shape:  StadiumBorder(),
+                      shape: StadiumBorder(),
                       //elevation: 5.0,
                       color: Colors.blue[300],
-                      onPressed: () async {
-                      },
+                      onPressed: () async {},
                       child: Text(
                         'Comunica tu resultado positivo a COVID-19',
                         textAlign: TextAlign.center,
@@ -322,8 +332,7 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
                 ],
               ),
             );
-          }
-          else {
+          } else {
             return Center(
               child: CircularProgressIndicator(),
             );
@@ -333,4 +342,3 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
     );
   }
 }
-
