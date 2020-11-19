@@ -10,7 +10,6 @@ import 'package:http/http.dart';
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:google_sign_in/google_sign_in.dart';
 
 
 class UserDataForm extends StatefulWidget {
@@ -48,7 +47,7 @@ class _UserDataFormState extends State<UserDataForm> {
     _email= await user.email;
   }
 
-  _makePostRequest() async {
+  _makeSignUpRequest() async {
     // set up POST request arguments
     String url = 'http://ec2-18-216-89-33.us-east-2.compute.amazonaws.com/sign-up';
     Map<String, String> headers = {"Content-type": "application/json"};
@@ -294,7 +293,7 @@ class _UserDataFormState extends State<UserDataForm> {
                           );
                           FirebaseMessaging firebaseMess = new FirebaseMessaging();
                           firebaseMess.subscribeToTopic("publicaciones");
-                          _makePostRequest();
+                          _makeSignUpRequest();
                           // redirect to profile page
                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
                         }

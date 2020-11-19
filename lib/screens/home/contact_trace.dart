@@ -1,9 +1,11 @@
-import 'package:CovidRelief/models/signup.dart';
+import 'dart:convert';
+import 'package:CovidRelief/models/contact.dart';
 import 'package:CovidRelief/models/trace.dart';
 import 'package:CovidRelief/services/litedatabase.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:nearby_connections/nearby_connections.dart';
 import 'package:CovidRelief/screens/home/home.dart';
@@ -11,7 +13,6 @@ import 'package:CovidRelief/screens/authenticate/authenticate.dart';
 import 'package:CovidRelief/screens/home/user_profile.dart';
 import 'package:http/http.dart';
 import 'dart:async';
-import 'constants.dart';
 
 class NearbyInterface extends StatefulWidget {
   static const String id = 'nearby_interface';
@@ -26,33 +27,83 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
   final Strategy strategy = Strategy.P2P_STAR;
   FirebaseUser loggedInUser;
   final FirebaseAuth auth = FirebaseAuth.instance;
-
+  dynamic user;
   String testText = '';
   final _auth = FirebaseAuth.instance;
-  DBProvider db= DBProvider(); //create SQLite database
 
-
+  //Turn button green
   bool _hasBeenPressed = false;
 
-  _makePostRequest() async {
+
+  String _uid;
+  String _email;
+
+  void getCurrentUserInfo() async {
+    user = await auth.currentUser();
+    _uid = await user.uid;
+    _email= await user.email;
+  }
+
+  _makeContactsRequest() async {
+    final DateTime now = DateTime.now();
+    final DateFormat formatter = DateFormat('yyyy-MM-dd');
+    final String formatted = formatter.format(now);
+
+    List<Trace> contacts= await DBProvider.db.getAllTraces();
+
+    Contact contact = new Contact(user: _email, key: _uid,day: formatted, traces: contacts);
+    Map<String, dynamic> map = contact.toJson();
+
     // set up POST request arguments
-    String url = 'https://jsonplaceholder.typicode.com/posts';
+    String url = 'http://ec2-18-216-89-33.us-east-2.compute.amazonaws.com/contact';
     Map<String, String> headers = {"Content-type": "application/json"};
-    String json = '{"user":"lindseydelaroca@ufm.edu","key":"10c8dde1b7417b76de55465169fd4fa3","day":"2020-11-16","contacts": [{"key":"98191d4ef294b24de30b55cef2d62726", "timestamp":"2020-10-23T16:19:12"},{"key":"45ee479816aba875127e1c2a84d341fd", "timestamp":"2020-10-22T15:24:52"},{"key":"3c3775565679380036998edb4cbb4c8a", "timestamp":"2020-10-21T13:24:12"},{"key":"e992ca593dca3fdff71c01c10bb23c0a", "timestamp":"2020-10-21T13:24:12"}]} ';
+    String json = jsonEncode(map);
     // make POST request
     Response response = await post(url, headers: headers, body: json);
     // check the status code for the result
     int statusCode = response.statusCode;
+    print(statusCode);
     // this API passes back the id of the new item added to the body
     String body = response.body;
-    // {
-    //   "title": "Hello",
-    //   "body": "body text",
-    //   "userId": 1,
-    //   "id": 101
-    // }
+    print(body);
+
+    await DBProvider.db.deleteAllTraces();
   }
 
+  _makeNotifyRequest() async {
+    final DateTime now = DateTime.now();
+    final DateFormat formatter = DateFormat('yyyy-MM-dd');
+    final String formatted = formatter.format(now);
+
+    List<Trace> contacts= await DBProvider.db.getAllTraces();
+
+    if(contacts.isNotEmpty){
+      Contact contact = new Contact(user: _email, key: _uid,day: formatted, traces: contacts);
+      Map<String, dynamic> map = contact.toJson();
+      String json = jsonEncode(map);
+    }
+    else{
+      Contact contact = new Contact(user: _email, key: _uid,day: formatted);
+      Map<String, dynamic> map = contact.toJson();
+      String json = jsonEncode(map);
+
+    }
+
+    // set up POST request arguments
+    String url = 'http://ec2-18-216-89-33.us-east-2.compute.amazonaws.com/notify';
+    Map<String, String> headers = {"Content-type": "application/json"};
+
+    // make POST request
+    Response response = await post(url, headers: headers, body: json);
+    // check the status code for the result
+    int statusCode = response.statusCode;
+    print(statusCode);
+    // this API passes back the id of the new item added to the body
+    String body = response.body;
+    print(body);
+
+    await DBProvider.db.deleteAllTraces();
+  }
 
   void discovery() async {
 
@@ -64,7 +115,8 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
         //  When I discover someone I will see their uid and add that uid to the database of my contacts
         //  also get the current time and add it to the database
         var newTrace= Trace(userid: await getUsernameOfUID(uid: name),contactTime: DateTime.now());
-        db.addTrace(newTrace); //ADDING TRACE TO SQLite
+         //ADDING TRACE TO SQLite
+        DBProvider.db.addTrace(newTrace);
 
           }, onEndpointLost: (id) {
         print(id);
@@ -195,7 +247,7 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
             ),
       ),
       body: FutureBuilder(
-        future: db.initDB(),
+        future: DBProvider.db.getAllTraces(),
         builder: (BuildContext context,snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return Padding(
@@ -274,8 +326,6 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
                             );
 
                             print('ADVERTISING ${a.toString()}');
-
-                            //_makePostRequest(); //POST
                           } catch (e) {
                             print(e);
                           }
@@ -304,6 +354,7 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
                       //elevation: 5.0,
                       color: Colors.blue[300],
                       onPressed: () async {
+                        _makeNotifyRequest();
                       },
                       child: Text(
                         'Comunica tu resultado positivo a COVID-19',

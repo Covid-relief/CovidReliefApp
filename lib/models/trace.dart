@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 class Trace {
   int id;
@@ -11,23 +10,17 @@ class Trace {
     this.contactTime,
   });
 
+  //Add to db
   Map<String, dynamic> toMap() {
     return {
       "contact": userid,
       "time": contactTime,
     };
   }
-
-  Trace.fromMap(Map<String, dynamic> map){
-        userid = map['contact'];
-        contactTime =map['time'];
-        id=map['id'];
-  }
-
-  Map<String, dynamic> toJson() =>
-      {
-        'contact': userid,
-        'time': contactTime,
-      };
+  //Retrieve from db
+  factory Trace.fromMap(Map<String, dynamic> json) => new Trace(
+    userid: json["contact"],
+    contactTime: json["time"],
+  );
 
 }
